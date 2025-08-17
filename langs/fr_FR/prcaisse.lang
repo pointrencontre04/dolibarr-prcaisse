@@ -1,0 +1,42 @@
+# Translation file
+
+#
+# Generic
+#
+
+# Module label 'ModulePRCaisseName'
+ModulePRCaisseName = PR Caisse
+# Module description 'ModulePRCaisseDesc'
+ModulePRCaisseDesc = Modification de TakePOS pour les besoins spécifiques de l'épicerie du Point Rencontre
+
+#
+# Admin page
+#
+PRCaisseSetup = PRCaisse setup
+Settings = Settings
+PRCaisseSetupPage = PRCaisse setup page
+NewSection=New section
+PRCAISSE_MYPARAM1 = My param 1
+PRCAISSE_MYPARAM1Tooltip = My param 1 tooltip
+PRCAISSE_MYPARAM2=My param 2
+PRCAISSE_MYPARAM2Tooltip=My param 2 tooltip
+
+
+#
+# About page
+#
+About = About
+PRCaisseAbout = About PRCaisse
+PRCaisseAboutPage = PRCaisse about page
+
+#
+# Sample page
+#
+PRCaisseArea = Home PRCaisse
+MyPageName = My page name
+
+#
+# Sample widget
+#
+MyWidget = My widget
+MyWidgetDescription = My widget description

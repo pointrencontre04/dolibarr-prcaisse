@@ -1,0 +1,219 @@
+/**
+ * Stylesheet for custom position and color of TakePOS
+ */
+.bodytakepos .container {
+  display: flex;
+}
+.bodytakepos .header {
+  width: 350px;
+  max-width: 350px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  border-right: solid 1px #e0e0e0;
+}
+.bodytakepos .header .topnav {
+  display: flex;
+  flex-direction: column;
+}
+.bodytakepos .header .topnav .topnav-left {
+  float: none;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.bodytakepos .header .topnav .topnav-left #shoppingcart {
+  order: 2;
+}
+.bodytakepos .header .topnav .topnav-left #customerandsales {
+  order: 3;
+  min-height: 250px;
+  background-color: #fff;
+}
+.bodytakepos .header .topnav .topnav-left #customer {
+  width: 100%;
+  min-width: 100%;
+  background-color: #f0f0f0;
+}
+.bodytakepos .header .topnav .topnav-left #customer:hover {
+  background-color: #ddd;
+}
+.bodytakepos .header .topnav .topnav-right {
+  float: none;
+  display: flex;
+  flex-direction: column;
+}
+.bodytakepos .header .topnav .topnav-right .login_block_other.takepos {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 9px 8px 0 9px;
+  width: calc((100vw - 350px) / 2 - 16px);
+  display: flex;
+  flex-direction: row;
+}
+.bodytakepos .header .topnav .topnav-right .login_block_other.takepos #search {
+  float: none;
+  max-width: none;
+  flex: 1;
+}
+.bodytakepos .header, .bodytakepos .topnav {
+  background-color: #f0f0f0;
+  color: #000;
+}
+.bodytakepos .header a, .bodytakepos .topnav a {
+  color: #000;
+}
+.bodytakepos #topmenu-login-dropdown {
+  width: 100%;
+}
+.bodytakepos #topmenu-login-dropdown .login-dropdown-a {
+  width: 100%;
+}
+.bodytakepos #topmenu-login-dropdown .login-dropdown-a .atoploginusername {
+  max-width: auto;
+}
+.bodytakepos .dropdown-menu {
+  top: auto !important;
+  right: auto;
+  left: 0;
+  bottom: 50px;
+}
+.bodytakepos .row1withhead {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: calc((100% - 350px) / 2);
+}
+.bodytakepos .row1withhead .div1, .bodytakepos .row1withhead .div2, .bodytakepos .row1withhead .div3 {
+  float: none;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.bodytakepos .row1withhead .div2, .bodytakepos .row1withhead .div3 {
+  width: 50%;
+}
+.bodytakepos .row1withhead #poslines {
+  min-height: 50vh;
+}
+.bodytakepos .row1withhead button {
+  padding: 10px;
+}
+.bodytakepos .row2withhead {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  width: calc((100% - 350px) / 2);
+  margin-top: 60px;
+}
+.bodytakepos .row2withhead .div4, .bodytakepos .row2withhead .div5 {
+  width: 100%;
+}
+.bodytakepos button.calcbutton {
+  background-color: #0f740f !important;
+}
+.bodytakepos button.calcbutton.poscolorblue {
+  background-color: #55f !important;
+}
+.bodytakepos button.calcbutton2 {
+  background-color: #555 !important;
+}
+.bodytakepos button.calcbutton2.poscolordelete {
+  background-color: #FF5555 !important;
+  color: #FFFFFF !important;
+}
+.bodytakepos button.actionbutton {
+  background-color: #ccc !important;
+  height: auto;
+  /*
+  &#action1 {
+  	background-color: #55f !important;
+  	color: #fff !important;
+  }
+  &#action2 {
+  	background-color: #ccc !important;
+  }
+  &#action3 {
+  	background-color: #FFB100 !important;
+  }
+  &#action4 {
+  	background-color: #fa6cff !important;
+  }
+  &#action5 {
+  	background-color: #ceb8ff !important;
+  }
+  */
+}
+.bodytakepos button.actionbutton#action6 {
+  background-color: #555 !important;
+  color: #fff !important;
+}
+.bodytakepos .div3 {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.bodytakepos .div3 button.actionbutton {
+  width: calc(50% - 2px);
+}
+.bodytakepos tr.selected, .bodytakepos tr.selected td {
+  background-color: #ddd !important;
+  color: #000 !important;
+}
+.bodytakepos .fa-trash {
+  color: #fff !important;
+}
+.bodytakepos .div4 {
+  max-height: 25%;
+}
+.bodytakepos .div5 {
+  float: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.bodytakepos .div5 .wrapper2 {
+  float: none;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 16.6666666667%;
+  height: auto;
+  max-height: calc(60% - 10px);
+  padding: 10px;
+}
+.bodytakepos .div5 .wrapper2 .imgwrapper {
+  position: initial;
+  order: 1;
+  width: auto;
+  width: calc(100% - 20px);
+  max-height: calc(100% - 75px);
+}
+.bodytakepos .div5 .wrapper2 .productprice {
+  position: initial;
+  order: 2;
+  width: 100%;
+  padding: 0;
+  padding-top: 10px;
+  background: transparent;
+  color: #000;
+  font-size: 16pt;
+  font-weight: bold;
+}
+.bodytakepos .div5 .wrapper2 .description {
+  position: initial;
+  order: 3;
+  width: calc(100% - 10px);
+  height: 12pt;
+  padding: 0;
+  padding-top: 10px;
+  font-size: 12pt;
+  line-height: 12pt;
+  flex: 1;
+}
+
+button.calcbutton {
+  background-color: #0f740f !important;
+}

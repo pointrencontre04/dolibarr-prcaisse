@@ -1,0 +1,266 @@
+/**
+ * Stylesheet for custom position and color of TakePOS
+ */
+
+ .bodytakepos {
+
+	.container {
+		display: flex;
+	}
+
+	.header {
+		width: 350px;
+		max-width: 350px;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		border-right: solid 1px #e0e0e0;
+
+		.topnav {
+
+			display: flex;
+			flex-direction: column;
+
+			.topnav-left {
+				float: none;
+				display: flex;
+				flex-direction: column;
+				flex: 1;
+
+				#shoppingcart {
+					order: 2;
+				}
+				#customerandsales {
+					order: 3;
+					min-height: 250px;
+					background-color: #fff;
+				}
+				#customer {
+					width: 100%;
+					min-width: 100%;
+					background-color: #f0f0f0;
+
+					&:hover {
+						background-color: #ddd;
+					}
+				}
+			}
+
+			.topnav-right {
+				float: none;
+				display: flex;
+				flex-direction: column;
+
+				.login_block_other.takepos {
+					position: absolute;
+					top: 0;
+					right: 0;
+					padding: 9px 8px 0 9px;
+					width: calc((100vw - 350px) / 2 - 2 * 8px);
+					display: flex;
+					flex-direction: row;
+
+					#search {
+						float: none;
+						max-width: none;
+						flex: 1;
+					}
+				}
+			}
+		}
+	}
+
+	.header, .topnav {
+		background-color: #f0f0f0;
+		color: #000;
+
+		a {
+			color: #000;
+		}
+	}
+
+	#topmenu-login-dropdown {
+		width: 100%;
+
+		.login-dropdown-a {
+			width: 100%;
+
+			.atoploginusername {
+				max-width: auto;
+			}
+		}
+	}
+
+	// User dropdown menu
+	.dropdown-menu {
+		top: auto !important;
+		right: auto;
+		left: 0;
+		bottom: 50px;
+	}
+
+	.row1withhead {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		width: calc((100% - 350px) / 2);
+
+		.div1, .div2, .div3 {
+			float: none;
+			width: 100%;
+			margin-bottom: 10px;
+		}
+
+		.div2, .div3 {
+			width: 50%;
+		}
+
+		#poslines {
+			min-height: 50vh;
+		}
+
+		button {
+			padding: 10px;
+		}
+	}
+
+	.row2withhead {
+		display: flex;
+		flex-direction: column;
+		height: calc(100vh - 60px);
+		width: calc((100% - 350px) / 2);
+		margin-top: 60px;
+
+		.div4, .div5 {
+			width: 100%;
+		}
+	}
+
+	button.calcbutton {
+		background-color: #0f740f !important;
+		//border: solid 1px #e0e0e0;
+	}
+
+	button.calcbutton.poscolorblue {
+		background-color: #55f !important;
+	}
+
+	button.calcbutton2 {
+		background-color: #555 !important;
+	}
+
+	button.calcbutton2.poscolordelete {
+		background-color: #FF5555 !important;
+		color: #FFFFFF !important;
+	}
+
+	button.actionbutton {
+		background-color: #ccc !important;
+		height: auto;
+
+		/*
+		&#action1 {
+			background-color: #55f !important;
+			color: #fff !important;
+		}
+		&#action2 {
+			background-color: #ccc !important;
+		}
+		&#action3 {
+			background-color: #FFB100 !important;
+		}
+		&#action4 {
+			background-color: #fa6cff !important;
+		}
+		&#action5 {
+			background-color: #ceb8ff !important;
+		}
+		*/
+		&#action6 {
+			background-color: #555 !important;
+			color: #fff !important;
+		}
+	}
+
+	.div3 {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+
+		button.actionbutton {
+			width: calc(50% - 2px);
+		}
+	}
+
+	tr.selected, tr.selected td {
+		background-color: #ddd !important;
+		color: #000 !important;
+	}
+
+	.fa-trash {
+		color: #fff !important;
+	}
+
+	.div4 {
+		max-height: 25%;
+	}
+
+	.div5 {
+		float: none;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+
+		.wrapper2 {
+			float: none;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			width: calc(100% / 6);
+			height: auto;
+			//height: calc(60% - 10px);
+			max-height: calc(60% - 10px);
+			padding: 10px;
+
+			.imgwrapper {
+				position: initial;
+				order: 1;
+				width: auto;
+				width: calc(100% - 2 * 10px);
+				max-height: calc(100% - 75px);
+				//width: calc(30% - 10px);
+			}
+			.productprice {
+				position: initial;
+				order: 2;
+				width: 100%;
+				//width: calc(70% - 10px);
+				//height: calc(60% - 10px);
+				padding: 0;
+				padding-top: 10px;
+				background: transparent;
+				color: #000;
+				font-size: 16pt;
+				font-weight: bold;
+			}
+			.description {
+				position: initial;
+				order: 3;
+				width: calc(100% - 10px);
+				//height: calc(40% - 10px);
+				height: 12pt;
+				padding: 0;
+				padding-top: 10px;
+				font-size: 12pt;
+				line-height: 12pt;
+				flex: 1;
+			}
+		}
+	}
+}
+
+button.calcbutton {
+	background-color: #0f740f !important;
+}
