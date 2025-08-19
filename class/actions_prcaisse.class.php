@@ -88,24 +88,24 @@ class ActionsPRCaisse extends CommonHookActions
 	{
 		global $langs, $conf, $user;
 
-	    $module_path = dol_buildpath('/pointrencontre/callbacks/get_encours.php', 1);
+		$module_path = dol_buildpath('/pointrencontre/callbacks/get_encours.php', 1);
 		/*
-        $out = '
-        $(document).ready(function() {
-        	$("#topnav-left").append(\'<div id="client_encours" style="font-weight:bold; margin-top:10px;"></div>\');
+		$out = '
+		$(document).ready(function() {
+			$("#topnav-left").append(\'<div id="client_encours" style="font-weight:bold; margin-top:10px;"></div>\');
 
-            $(document).on("change", "#customer_id", function() {
-                var id = $(this).val();
-                if (id) {
-                    $.get("' . $module_path . '?id=" + id, function(data) {
-                        $("#client_encours").text("Encours : " + data + " €");
-                    });
-                } else {
-                    $("#client_encours").text("");
-                }
-            });
-        });
-        ';
+			$(document).on("change", "#customer_id", function() {
+				var id = $(this).val();
+				if (id) {
+					$.get("' . $module_path . '?id=" + id, function(data) {
+						$("#client_encours").text("Encours : " + data + " €");
+					});
+				} else {
+					$("#client_encours").text("");
+				}
+			});
+		});
+		';
 
 		$this->results = $out;
 		$this->resprints = $out;
@@ -113,8 +113,8 @@ class ActionsPRCaisse extends CommonHookActions
 
 		$this->resprints = '<script>console.log("Hook completeTakePosInvoiceHeader exécuté");</script>';
 
-        return 0;
-    }
+		return 0;
+	}
 
 	/**
 	 * Execute action addHtmlHeader
