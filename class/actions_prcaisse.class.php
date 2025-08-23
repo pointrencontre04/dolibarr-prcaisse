@@ -88,7 +88,6 @@ class ActionsPRCaisse extends CommonHookActions
 	{
 		global $langs, $conf, $user;
 
-		$module_path = dol_buildpath('/pointrencontre/callbacks/get_encours.php', 1);
 		/*
 		$out = '
 		$(document).ready(function() {
@@ -111,7 +110,63 @@ class ActionsPRCaisse extends CommonHookActions
 		$this->resprints = $out;
 		*/
 
-		$this->resprints = '<script>console.log("Hook completeTakePosInvoiceHeader exécuté");</script>';
+		$callback_url = dol_buildpath('/prcaisse/callbacks/get_customer_infos.php', 1);
+
+		ob_start();
+		$invoice_id = $object->id;
+		$invoice_customer_id = $object->socid;
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+
+				if (jQuery('#customer_infos').length == 0) {
+					jQuery('#customerandsales').append('<div id="customer_infos"></div>');
+				}
+
+				const params = {
+					id: <?php echo $invoice_customer_id; ?>
+				};
+
+				jQuery.ajax({
+					url: '<?php echo $callback_url; ?>',
+					method: 'GET',
+					data: params,
+					success: function(data) {
+						$('#customer_infos').html(data);
+					},
+				});
+			});
+		</script>
+		<?php
+		$resprints = ob_get_clean();
+
+		$this->resprints = $resprints;
+
+		return 0;
+	}
+
+	/**
+	 * Execute action addMoreActionsButtons
+	 *
+	 * @param	array<string,mixed>	$parameters		Array of parameters
+	 * @param	CommonObject		$object			The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
+	 * @param	string				$action			'add', 'update', 'view'
+	 * @param	Hookmanager			$hookmanager	Hookmanager
+	 * @return	int									Return integer <0 if KO,
+	 *												=0 if OK but we want to process standard actions too,
+	 *												>0 if OK and we want to replace standard actions.
+	 */
+	public function addMoreActionsButtons(&$parameters, &$object, &$action, $hookmanager)
+	{
+		global $langs, $conf, $user;
+
+		/**
+		 * Add actions to pay with BonAlim
+		 */
+		if (true || isModEnabled('prbonalim')) {
+			//$this->results = $parameters['action_buttons'];
+			return 0;
+		}
 
 		return 0;
 	}
