@@ -67,6 +67,22 @@ if (!$authorized) {
 // Récupération de l'encours
 $encours = $thirdparty->getOutstandingBills();
 
+if ($encours['total_ttc'] == 0) {
+    $encours_classes = 'status_ok';
+}
+if ($encours['total_ttc'] > 0 && $encours['total_ttc'] < 50) {
+    $encours_classes = 'status_warn';
+}
+if ($encours['total_ttc'] >= 50) {
+    $encours_classes = 'status_crit';
+}
+
+// Récupération des remises et avances
+$credit_total = $thirdparty->getAvailableDiscounts();
+if ($credit_total > 0) {
+    $credit_classes = 'status_ok';
+}
+
 // Calcul du nombre de personnes dans la famille
 $nombrecontacts = 1;
 $sql = "SELECT COUNT(rowid) FROM ".MAIN_DB_PREFIX."socpeople WHERE fk_soc = ".((int) $thirdparty->id);
@@ -81,9 +97,21 @@ if (!$nombrecontacts) {
 
 ?>
 <div class="customer_infos_content">
-    <div class="famille"><span class="label">Membres du foyer&nbsp;:</span><span class="value"><?php echo $nombrecontacts; ?>
-    <div class="encours"><span class="label">Montant encours&nbsp;:</span><span class="value"><?php echo price($encours['total_ttc'], 0, $langs, 0, 0, -1, $conf->currency); ?>
-    <div class="bonalim"><span class="label">Bons alimentaires disponibles&nbsp;:</span><span class="value"><?php echo price($bonsalim_total); ?></div>
-    <div class="bonalim"><span class="label">Avance disponible&nbsp;:</span><span class="value"><?php echo price($credit_total); ?></div>
+    <div class="famille">
+        <span class="label">Membres du foyer&nbsp;:</span>
+        <span class="value"><?php echo $nombrecontacts; ?></span>
+    </div>
+    <div class="encours <?php echo $encours_classes; ?>">
+        <span class="label">Montant encours&nbsp;:</span>
+        <span class="value"><?php echo price($encours['total_ttc'], 0, $langs, 0, 0, -1, $conf->currency); ?></span>
+    </div>
+    <div class="bonalim">
+        <span class="label">Bons alimentaires disponibles&nbsp;:</span>
+        <span class="value"><?php echo price($bonsalim_total); ?></span>
+    </div>
+    <div class="credit <?php echo $credit_classes; ?>">
+        <span class="label">Avance disponible&nbsp;:</span>
+        <span class="value"><?php echo price($credit_total); ?></span>
+    </div>
 </div>
 

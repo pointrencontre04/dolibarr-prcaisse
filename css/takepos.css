@@ -29,6 +29,8 @@
   order: 3;
   min-height: 250px;
   background-color: #fff;
+  display: flex;
+  flex-direction: column;
 }
 .bodytakepos .header .topnav .topnav-left #customer {
   width: 100%;
@@ -37,6 +39,28 @@
 }
 .bodytakepos .header .topnav .topnav-left #customer:hover {
   background-color: #ddd;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content {
+  margin: 5px 8px;
+  font-size: 1em;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content > * {
+  margin: 5px 0;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .label {
+  margin-right: 5pt;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .value {
+  font-weight: bold;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_ok .value {
+  color: #0f740f;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_warn .value {
+  color: #ff6600;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_crit .value {
+  color: #ff0000;
 }
 .bodytakepos .header .topnav .topnav-right {
   float: none;

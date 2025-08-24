@@ -34,6 +34,8 @@
 					order: 3;
 					min-height: 250px;
 					background-color: #fff;
+					display: flex;
+					flex-direction: column;
 				}
 				#customer {
 					width: 100%;
@@ -42,6 +44,33 @@
 
 					&:hover {
 						background-color: #ddd;
+					}
+				}
+				#customer_infos {
+					.customer_infos_content {
+						margin: 5px 8px;
+						font-size: 1em;
+
+						& > * {
+							margin: 5px 0;
+						}
+						.label {
+							margin-right: 5pt;
+						}
+						.value {
+							font-weight: bold;
+						}
+
+						.status_ok .value {
+							color:#0f740f;
+						}
+						.status_warn .value {
+							color: #ff6600;
+						}
+						.status_crit .value {
+							color: #ff0000;
+						}
+
 					}
 				}
 			}
