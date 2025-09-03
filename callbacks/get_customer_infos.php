@@ -94,7 +94,7 @@ if ($encours['total_ttc'] >= 50) {
 }
 
 // Récupération des bons alimentaires disponibles
-if (isModEnabled('prbonalim')) {
+if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')) {
     $bonalim = new BonAlim($db);
     $bonalim_list = $bonalim->fetchAll(
         '',
@@ -125,23 +125,25 @@ $note_private = $thirdparty->note_private;
 
 // Récupération des dix dernières factures
 $invoice_history = [];
-$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."facture";
-$sql .= " WHERE fk_soc = ".((int) $thirdparty->id);
-$sql .= " ORDER BY datef DESC";
-$sql .= " LIMIT 10";
+if ($user->hasRight('facture', 'read')) {
+    $sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."facture";
+    $sql .= " WHERE fk_soc = ".((int) $thirdparty->id);
+    $sql .= " ORDER BY datef DESC";
+    $sql .= " LIMIT 10";
 
-$resql = $db->query($sql);
-if ($resql) {
-    while ($obj = $db->fetch_object($resql)) {
-        $invoice = new Facture($db);
-        $invoice->fetch($obj->rowid);
-        $invoice_history[] = [
-            'date'        => $invoice->date,
-            'amount'      => $invoice->total_ttc,
-            'status'      => $invoice->status,
-            'close_code'  => $invoice->close_code,
-            'encours'     => $invoice->getRemainToPay(),
-        ];
+    $resql = $db->query($sql);
+    if ($resql) {
+        while ($obj = $db->fetch_object($resql)) {
+            $invoice = new Facture($db);
+            $invoice->fetch($obj->rowid);
+            $invoice_history[] = [
+                'date'        => $invoice->date,
+                'amount'      => $invoice->total_ttc,
+                'status'      => $invoice->status,
+                'close_code'  => $invoice->close_code,
+                'encours'     => $invoice->getRemainToPay(),
+            ];
+        }
     }
 }
 
@@ -155,7 +157,7 @@ if ($resql) {
         <span class="label">Montant encours&nbsp;:</span>
         <span class="value"><?php echo price($encours['total_ttc'], 0, $langs, 0, 0, -1, $conf->currency); ?></span>
     </div>
-    <?php if (isModEnabled('prbonalim')): ?>
+    <?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')): ?>
     <div class="bonalim">
         <span class="label">Bons alimentaires disponibles&nbsp;:</span>
         <span class="value"><?php echo price($bonsalim_total, 0, $langs, 0, 0, -1, $conf->currency); ?></span>
