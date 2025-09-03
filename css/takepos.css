@@ -67,6 +67,43 @@
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_crit .value {
   color: #ff0000;
 }
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history {
+  display: flex;
+  flex-direction: column;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .label {
+  margin-bottom: 5px;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value {
+  font-weight: normal;
+  display: table;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line {
+  display: table-row;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line.invoice_history_table_header {
+  font-weight: bold;
+  background-color: #eee;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line > * {
+  display: table-cell;
+  padding: 2px 5px;
+  border: solid 1px #ddd;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .amount {
+  text-align: right;
+  color: #000;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .encours {
+  font-weight: bold;
+  text-align: right;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .encours.paid {
+  color: #0f740f;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .encours.unpaid {
+  color: #ff6600;
+}
 .bodytakepos .header .topnav .topnav-right {
   float: none;
   display: flex;
