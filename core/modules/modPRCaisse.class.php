@@ -121,8 +121,10 @@ class modPRCaisse extends DolibarrModules
 			/* BEGIN MODULEBUILDER HOOKSCONTEXTS */
 			'hooks' => array(
 				'takeposinvoice',
+				'takepospay',
 				'data' => array(
 					'takeposinvoice',
+					'takepospay',
 				),
 				'entity' => '0',
 			),
@@ -318,6 +320,7 @@ class modPRCaisse extends DolibarrModules
 		$r = 0;
 		// Add here entries to declare new menus
 		/* BEGIN MODULEBUILDER TOPMENU */
+		/*
 		$this->menu[$r++] = array(
 			'fk_menu' => '', // Will be stored into mainmenu + leftmenu. Use '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type' => 'top', // This is a Top menu entry
@@ -333,6 +336,7 @@ class modPRCaisse extends DolibarrModules
 			'target' => '',
 			'user' => 2, // 0=Menu for internal users, 1=external users, 2=both
 		);
+		*/
 		/* END MODULEBUILDER TOPMENU */
 
 		/* BEGIN MODULEBUILDER LEFTMENU MYOBJECT */
@@ -475,8 +479,11 @@ class modPRCaisse extends DolibarrModules
 		}
 
 		// Create extrafields during init
-		//include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
-		//$extrafields = new ExtraFields($this->db);
+		include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
+		$extrafields = new ExtraFields($this->db);
+		$result0=$extrafields->addExtraField('adhesion_fin', "Expiration Adhésion", 'date',    100, 0, 'thirdparty', 0, 0, '', '', 1, '', -1, '', '', '', 'prcaisse@prcaisse', 'isModEnabled("prcaisse")');
+		$result0=$extrafields->addExtraField('epicerie_fin', "Expiration Épicerie", 'date',    100, 0, 'thirdparty', 0, 0, '', '', 1, '', -1, '', '', '', 'prcaisse@prcaisse', 'isModEnabled("prcaisse")');
+
 		//$result0=$extrafields->addExtraField('prcaisse_separator1', "Separator 1", 'separator', 1,  0, 'thirdparty',   0, 0, '', array('options'=>array(1=>1)), 1, '', 1, 0, '', '', 'prcaisse@prcaisse', 'isModEnabled("prcaisse")');
 		//$result1=$extrafields->addExtraField('prcaisse_myattr1', "New Attr 1 label", 'boolean', 1,  3, 'thirdparty',   0, 0, '', '', 1, '', -1, 0, '', '', 'prcaisse@prcaisse', 'isModEnabled("prcaisse")');
 		//$result2=$extrafields->addExtraField('prcaisse_myattr2', "New Attr 2 label", 'varchar', 1, 10, 'project',      0, 0, '', '', 1, '', -1, 0, '', '', 'prcaisse@prcaisse', 'isModEnabled("prcaisse")');
