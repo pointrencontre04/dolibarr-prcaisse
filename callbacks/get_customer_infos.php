@@ -155,7 +155,7 @@ if ($user->hasRight('facture', 'read')) {
     </div>
     <div class="encours <?php echo $encours_classes; ?>">
         <span class="label">Montant encours&nbsp;:</span>
-        <span class="value"><?php echo price($encours['total_ttc'], 0, $langs, 0, 0, -1, $conf->currency); ?></span>
+        <span class="value"><?php echo price($encours['opened'], 0, $langs, 0, 0, -1, $conf->currency); ?></span>
     </div>
     <?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')): ?>
     <div class="bonalim">
