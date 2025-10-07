@@ -83,13 +83,13 @@ if (!$nombrecontacts) {
 // Récupération de l'encours
 $encours = $thirdparty->getOutstandingBills();
 
-if ($encours['total_ttc'] == 0) {
+if ($encours['opened'] == 0) {
     $encours_classes = 'status_ok';
 }
-if ($encours['total_ttc'] > 0 && $encours['total_ttc'] < 50) {
+if ($encours['opened'] > 0 && $encours['opened'] < 50) {
     $encours_classes = 'status_warn';
 }
-if ($encours['total_ttc'] >= 50) {
+if ($encours['opened'] >= 50) {
     $encours_classes = 'status_crit';
 }
 
