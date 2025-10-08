@@ -38,6 +38,15 @@ if (empty($id) || $id <= 0) {
     exit('Paramètre manquant ou invalide.');
 }
 
+// Exclude any Generic user from this script
+$numberofterminals = getDolGlobalString('TAKEPOS_NUM_TERMINALS', '1');
+for ($terminal = 1; $terminal <= $numberofterminals; $terminal++) {
+    $is_thirdparty_generic = ($id == getDolGlobalInt('CASHDESK_ID_THIRDPARTY'.$terminal));
+    if ($is_thirdparty_generic) {
+        exit;
+    }
+}
+
 // Récupération du tiers
 $thirdparty = new Societe($db);
 $res = $thirdparty->fetch($id);
