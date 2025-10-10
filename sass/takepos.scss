@@ -112,6 +112,9 @@
 										&.paid {
 											color: #0f740f;
 										}
+										&.closed {
+											color: #888;
+										}
 										&.unpaid {
 											color: #ff6600;
 										}

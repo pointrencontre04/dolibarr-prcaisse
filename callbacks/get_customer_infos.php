@@ -203,6 +203,8 @@ if ($user->hasRight('facture', 'read')) {
                     <span class="amount"><?php echo price($line['amount'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></span>
                     <?php if ($line['status'] == Facture::STATUS_CLOSED && $line['close_code'] == 0 && $line['encours'] == 0): ?>
                         <span class="encours paid">Payé</span>
+                    <?php elseif ($line['status'] == Facture::STATUS_ABANDONED): ?>
+                        <span class="encours closed">Fermé</span>
                     <?php else: ?>
                         <span class="encours unpaid"><?php echo price($line['encours'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></span>
                     <?php endif; ?>

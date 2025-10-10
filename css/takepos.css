@@ -101,6 +101,9 @@
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .encours.paid {
   color: #0f740f;
 }
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .encours.closed {
+  color: #888;
+}
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .encours.unpaid {
   color: #ff6600;
 }
