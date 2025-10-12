@@ -393,6 +393,8 @@ class ActionsPRCaisse extends CommonHookActions
 
 			if ($remaintopay > 0) {
 
+				// If no amount is specified, take the remaining
+				//  amount of invoice as amount of payment
 				if ($amountofpayment <= 0 || $amountofpayment > $remaintopay) {
 					$amountofpayment = $remaintopay;
 				}
@@ -415,9 +417,9 @@ class ActionsPRCaisse extends CommonHookActions
 				if ($bonalim_list) {
 					foreach ($bonalim_list as $b) {
 
-						if ($remaintopay <= $b->amount_left) {
+						if ($amountofpayment <= $b->amount_left) {
 							// Consume BonAlim partially
-							$res = $b->consume($remaintopay, $user);
+							$res = $b->consume($amountofpayment, $user);
 							if ($res < 0) {
 								$error++;
 								dol_htmloutput_errors($langs->trans('Error').' '.$$b->error, $$b->errors, 1);
@@ -427,7 +429,7 @@ class ActionsPRCaisse extends CommonHookActions
 							$payment = new Paiement($db);
 							$payment->datepaye = $now;
 							$payment->fk_account = $bankaccount;
-							$payment->amounts[$invoice->id] = $remaintopay;
+							$payment->amounts[$invoice->id] = $amountofpayment;
 							$payment->paiementid = modPRBonAlim::BONALIM_PAYMENT_ID;
 							$payment->num_payment = $invoice->ref;
 
@@ -437,19 +439,20 @@ class ActionsPRCaisse extends CommonHookActions
 								dol_htmloutput_errors($langs->trans('Error').' '.$payment->error, $payment->errors, 1);
 							}
 
-							$remaintopay = 0;
+							$amountofpayment = 0;
 
 							// Stop the Foreach loop
 							break 1;
 						} else {
 							// Consume BonAlim totally
+							$bonalim_amountleft = $b->amount_left;
 							$b->consume($b->amount_left, $user);
 
 							// Save Payment
 							$payment = new Paiement($db);
 							$payment->datepaye = $now;
 							$payment->fk_account = $bankaccount;
-							$payment->amounts[$invoice->id] = $b->amount_left;
+							$payment->amounts[$invoice->id] = $bonalim_amountleft;
 							$payment->paiementid = modPRBonAlim::BONALIM_PAYMENT_ID;
 							$payment->num_payment = $invoice->ref;
 
@@ -459,9 +462,11 @@ class ActionsPRCaisse extends CommonHookActions
 								dol_htmloutput_errors($langs->trans('Error').' '.$payment->error, $payment->errors, 1);
 							}
 
-							$remaintopay = $invoice->getRemainToPay();
+							// Remove from next payment the payment that has been done
+							$amountofpayment = $amountofpayment - $bonalim_amountleft;
 
 							// Continue the Foreach loop
+							// to get another BonAlim to pay the invoice
 						}
 					}
 				} else {
