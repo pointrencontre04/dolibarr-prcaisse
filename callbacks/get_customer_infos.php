@@ -122,6 +122,35 @@ if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')) {
     }
 }
 
+// Récupération des dates de fin Adhésion
+if (isset($thirdparty->array_options) && isset($thirdparty->array_options['options_adhesion_fin'])) {
+    $date_adhesion_fin = $thirdparty->array_options['options_adhesion_fin'];
+} else {
+    $date_adhesion_fin = null;
+}
+if ($date_adhesion_fin && time() > $date_adhesion_fin) {
+    $date_adhesion_classes = 'status_expired';
+} elseif ($date_adhesion_fin && time() <= $date_adhesion_fin) {
+    $date_adhesion_classes = 'status_valid';
+} else {
+    $date_adhesion_classes = '';
+}
+
+// Récupération des dates de fin Épicerie
+if (isset($thirdparty->array_options) && isset($thirdparty->array_options['options_epicerie_fin'])) {
+    $date_epicerie_fin = $thirdparty->array_options['options_epicerie_fin'];
+} else {
+    $date_epicerie_fin = null;
+}
+if ($date_epicerie_fin && time() > $date_epicerie_fin) {
+    $date_epicerie_classes = 'status_expired';
+} elseif ($date_epicerie_fin && time() <= $date_epicerie_fin) {
+    $date_epicerie_classes = 'status_valid';
+} else {
+    $date_epicerie_classes = '';
+}
+
+
 // Récupération des remises et avances
 $credit_total = $thirdparty->getAvailableDiscounts();
 if ($credit_total > 0) {
@@ -158,6 +187,22 @@ if ($user->hasRight('facture', 'read')) {
 
 ?>
 <div class="customer_infos_content">
+    <div class="date_adhesion <?php echo $date_adhesion_classes; ?>">
+        <span class="label">Date de fin adhésion&nbsp;:</span>
+        <?php if ($date_adhesion_fin): ?>
+            <span class="value"><?php echo date('d M Y', $date_adhesion_fin); ?></span>
+        <?php else: ?>
+            <span class="value">&empty;</span>
+        <?php endif; ?>
+    </div>
+    <div class="date_epicerie <?php echo $date_epicerie_classes; ?>">
+        <span class="label">Date de fin épicerie&nbsp;:</span>
+        <?php if ($date_adhesion_fin): ?>
+            <span class="value"><?php echo date('d M Y', $date_epicerie_fin); ?></span>
+        <?php else: ?>
+            <span class="value">&empty;</span>
+        <?php endif; ?>
+    </div>
     <div class="famille">
         <span class="label">Membres du foyer&nbsp;:</span>
         <span class="value"><?php echo $nombrecontacts; ?></span>
