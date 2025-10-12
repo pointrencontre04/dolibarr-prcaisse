@@ -1,6 +1,9 @@
 /**
  * Stylesheet for custom position and color of TakePOS
  */
+.bodytakepos {
+  font-size: 1.2em;
+}
 .bodytakepos .container {
   display: flex;
 }
@@ -65,6 +68,12 @@
   color: #ff6600;
 }
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_crit .value {
+  color: #ff0000;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_valid .value {
+  color: #0f740f;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_expired .value {
   color: #ff0000;
 }
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history {
@@ -193,22 +202,51 @@
 .bodytakepos .row2withhead .div4, .bodytakepos .row2withhead .div5 {
   width: 100%;
 }
+@media screen and (min-width: 1200px) {
+  .bodytakepos .invoice {
+    font-size: 18px;
+  }
+}
 .bodytakepos button.calcbutton {
   background-color: #0f740f !important;
+}
+@media screen and (min-width: 1200px) {
+  .bodytakepos button.calcbutton {
+    font-size: 32px;
+  }
 }
 .bodytakepos button.calcbutton.poscolorblue {
   background-color: #55f !important;
 }
+@media screen and (min-width: 1200px) {
+  .bodytakepos button.calcbutton.poscolorblue {
+    font-size: 32px;
+  }
+}
 .bodytakepos button.calcbutton2 {
   background-color: #555 !important;
+}
+@media screen and (min-width: 1200px) {
+  .bodytakepos button.calcbutton2 {
+    font-size: 18px;
+  }
 }
 .bodytakepos button.calcbutton2.poscolordelete {
   background-color: #FF5555 !important;
   color: #FFFFFF !important;
 }
+@media screen and (min-width: 1200px) {
+  .bodytakepos button.calcbutton2.poscolordelete {
+    font-size: 20px;
+  }
+}
 .bodytakepos button.actionbutton {
   background-color: #ccc !important;
-  height: auto;
+  font-size: 18px;
+  height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   /*
   &#action1 {
   	background-color: #55f !important;
@@ -231,6 +269,13 @@
 .bodytakepos button.actionbutton#action6 {
   background-color: #555 !important;
   color: #fff !important;
+}
+.bodytakepos button.actionbutton .trunc {
+  text-overflow: initial;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: initial;
 }
 .bodytakepos .div3 {
   display: flex;
@@ -310,6 +355,11 @@
 
 button.calcbutton {
   background-color: #0f740f !important;
+}
+@media screen and (min-width: 1200px) {
+  button.calcbutton {
+    font-size: 18px;
+  }
 }
 
 div.paymentbordline {

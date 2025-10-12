@@ -2,7 +2,9 @@
  * Stylesheet for custom position and color of TakePOS
  */
 
- .bodytakepos {
+.bodytakepos {
+
+	font-size: 1.2em;
 
 	.container {
 		display: flex;
@@ -72,6 +74,13 @@
 							color: #ff6600;
 						}
 						.status_crit .value {
+							color: #ff0000;
+						}
+
+						.status_valid .value {
+							color: #0f740f;
+						}
+						.status_expired .value {
 							color: #ff0000;
 						}
 
@@ -231,27 +240,51 @@
 		}
 	}
 
+	.invoice {
+		@media screen and (min-width: 1200px) {
+ 			font-size: 18px;
+		}
+	}
+
 	button.calcbutton {
 		background-color: #0f740f !important;
+		@media screen and (min-width: 1200px) {
+			font-size: 32px;
+		}
 		//border: solid 1px #e0e0e0;
 	}
 
 	button.calcbutton.poscolorblue {
 		background-color: #55f !important;
+		@media screen and (min-width: 1200px) {
+			font-size: 32px;
+		}
 	}
 
 	button.calcbutton2 {
 		background-color: #555 !important;
+		@media screen and (min-width: 1200px) {
+			font-size: 18px;
+		}
 	}
 
 	button.calcbutton2.poscolordelete {
 		background-color: #FF5555 !important;
 		color: #FFFFFF !important;
+		@media screen and (min-width: 1200px) {
+			font-size: 20px;
+		}
 	}
 
 	button.actionbutton {
 		background-color: #ccc !important;
-		height: auto;
+		font-size: 18px;
+		//height: auto;
+		height: 90px;
+
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
 
 		/*
 		&#action1 {
@@ -274,6 +307,14 @@
 		&#action6 {
 			background-color: #555 !important;
 			color: #fff !important;
+		}
+
+		.trunc {
+			text-overflow: initial;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+			white-space: initial;
 		}
 	}
 
@@ -366,6 +407,10 @@
 
 button.calcbutton {
 	background-color: #0f740f !important;
+
+	@media screen and (min-width: 1200px) {
+    	font-size: 18px;
+	}
 }
 
 div.paymentbordline {
