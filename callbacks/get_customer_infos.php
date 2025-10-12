@@ -197,7 +197,7 @@ if ($user->hasRight('facture', 'read')) {
     </div>
     <div class="date_epicerie <?php echo $date_epicerie_classes; ?>">
         <span class="label">Date de fin épicerie&nbsp;:</span>
-        <?php if ($date_adhesion_fin): ?>
+        <?php if ($date_epicerie_fin): ?>
             <span class="value"><?php echo date('d M Y', $date_epicerie_fin); ?></span>
         <?php else: ?>
             <span class="value">&empty;</span>
