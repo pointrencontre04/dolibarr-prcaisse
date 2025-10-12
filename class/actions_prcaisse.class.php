@@ -440,6 +440,7 @@ class ActionsPRCaisse extends CommonHookActions
 							}
 
 							$amountofpayment = 0;
+							$remaintopay = 0;
 
 							// Stop the Foreach loop
 							break 1;
@@ -464,6 +465,7 @@ class ActionsPRCaisse extends CommonHookActions
 
 							// Remove from next payment the payment that has been done
 							$amountofpayment = $amountofpayment - $bonalim_amountleft;
+							$remaintopay = $remaintopay - $bonalim_amountleft;
 
 							// Continue the Foreach loop
 							// to get another BonAlim to pay the invoice
