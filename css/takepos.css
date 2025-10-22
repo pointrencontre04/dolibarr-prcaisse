@@ -99,6 +99,9 @@
   padding: 2px 5px;
   border: solid 1px #ddd;
 }
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line.active {
+  background-color: #ddd;
+}
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .amount {
   text-align: right;
   color: #000;

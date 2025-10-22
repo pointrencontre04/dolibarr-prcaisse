@@ -139,7 +139,8 @@ class ActionsPRCaisse extends CommonHookActions
 				}
 
 				const params = {
-					id: <?php echo $invoice_customer_id; ?>
+					invoice_id: <?php echo $invoice_id; ?>,
+					thirdparty_id: <?php echo $invoice_customer_id; ?>
 				};
 
 				jQuery.ajax({

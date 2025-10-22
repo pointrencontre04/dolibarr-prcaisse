@@ -110,6 +110,10 @@
 										border: solid 1px #ddd;
 									}
 
+									&.active {
+										background-color: #ddd;
+									}
+
 									.amount {
 										text-align: right;
 										color: #000;

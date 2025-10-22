@@ -32,16 +32,18 @@ if (empty($_SESSION['takepos_customer_id'])) {
 }
 */
 
-$id = GETPOST('id', 'int');
-if (empty($id) || $id <= 0) {
+$thirdparty_id = GETPOST('thirdparty_id', 'int');
+if (empty($thirdparty_id) || $thirdparty_id <= 0) {
     http_response_code(400);
     exit('Paramètre manquant ou invalide.');
 }
 
+$invoice_id = GETPOST('invoice_id', 'int');
+
 // Exclude any Generic user from this script
 $numberofterminals = getDolGlobalString('TAKEPOS_NUM_TERMINALS', '1');
 for ($terminal = 1; $terminal <= $numberofterminals; $terminal++) {
-    $is_thirdparty_generic = ($id == getDolGlobalInt('CASHDESK_ID_THIRDPARTY'.$terminal));
+    $is_thirdparty_generic = ($thirdparty_id == getDolGlobalInt('CASHDESK_ID_THIRDPARTY'.$terminal));
     if ($is_thirdparty_generic) {
         exit;
     }
@@ -49,7 +51,7 @@ for ($terminal = 1; $terminal <= $numberofterminals; $terminal++) {
 
 // Récupération du tiers
 $thirdparty = new Societe($db);
-$res = $thirdparty->fetch($id);
+$res = $thirdparty->fetch($thirdparty_id);
 if ($res <= 0) {
     http_response_code(404);
     exit('Client introuvable.');
@@ -175,6 +177,7 @@ if ($user->hasRight('facture', 'read')) {
             $invoice = new Facture($db);
             $invoice->fetch($obj->rowid);
             $invoice_history[] = [
+                'facid'       => $invoice->id,
                 'date'        => $invoice->date,
                 'amount'      => $invoice->total_ttc,
                 'status'      => $invoice->status,
@@ -243,7 +246,7 @@ if ($user->hasRight('facture', 'read')) {
                 <span>À régler</span>
             </div>
             <?php foreach ($invoice_history as $line): ?>
-                <div class="invoice_history_line">
+                <div class="invoice_history_line <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>" onclick="$('#poslines').load('invoice.php?action=history&placeid=<?php echo (int) $line['facid']; ?>', function() {place='0'})">
                     <span class="date"><?php echo dol_print_date($line['date']) ?></span>
                     <span class="amount"><?php echo price($line['amount'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></span>
                     <?php if ($line['status'] == Facture::STATUS_CLOSED && $line['close_code'] == 0 && $line['encours'] == 0): ?>
