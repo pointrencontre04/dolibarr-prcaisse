@@ -181,13 +181,23 @@ if ($user->hasRight('facture', 'read')) {
         while ($obj = $db->fetch_object($resql)) {
             $invoice = new Facture($db);
             $invoice->fetch($obj->rowid);
+
+            // Calculate the amount without discounts
+            $total_ttc_gross = 0;
+            foreach ($invoice->lines as $line) {
+                if ($line->subprice > 0) {
+                    $total_ttc_gross += $line->subprice * $line->qty;
+                }
+            }
+
             $invoice_history[] = [
-                'facid'       => $invoice->id,
-                'date'        => $invoice->date,
-                'amount'      => $invoice->total_ttc,
-                'status'      => $invoice->status,
-                'close_code'  => $invoice->close_code,
-                'encours'     => $invoice->getRemainToPay(),
+                'facid'        => $invoice->id,
+                'date'         => $invoice->date,
+                'amount'       => $invoice->total_ttc,
+                'amount_gross' => $total_ttc_gross,
+                'status'       => $invoice->status,
+                'close_code'   => $invoice->close_code,
+                'encours'      => $invoice->getRemainToPay(),
             ];
         }
     }
@@ -253,7 +263,7 @@ if ($user->hasRight('facture', 'read')) {
             <?php foreach ($invoice_history as $line): ?>
                 <div class="invoice_history_line <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>" onclick="$('#poslines').load('invoice.php?action=history&placeid=<?php echo (int) $line['facid']; ?>', function() {place='0'})">
                     <span class="date"><?php echo dol_print_date($line['date']) ?></span>
-                    <span class="amount"><?php echo price($line['amount'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></span>
+                    <span class="amount"><?php echo price($line['amount_gross'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></span>
                     <?php if ($line['status'] == Facture::STATUS_CLOSED && $line['close_code'] == 0 && $line['encours'] == 0): ?>
                         <span class="encours paid">Payé</span>
                     <?php elseif ($line['status'] == Facture::STATUS_ABANDONED): ?>
