@@ -546,6 +546,61 @@ class ActionsPRCaisse extends CommonHookActions
 		return 1;
 	}
 
+	/**
+	 * Execute action printFieldListFooter
+	 *
+	 * @param	array<string,mixed>	$parameters		Array of parameters
+	 * @param	CommonObject		$object			The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
+	 * @param	string				$action			'add', 'update', 'view'
+	 * @param	Hookmanager			$hookmanager	Hookmanager
+	 * @return	int									Return integer <0 if KO,
+	 *												=0 if OK but we want to process standard actions too,
+	 *												>0 if OK and we want to replace standard actions.
+	 */
+	public function printFieldListFooter(&$parameters, &$object, &$action, $hookmanager)
+	{
+		global $langs, $conf, $user, $db;
+
+		if (!(in_array('poslist', $hookmanager->contextarray) AND in_array('thirdpartylist', $hookmanager->contextarray))) {
+			return 0;
+		}
+
+		// Enhance usability of search form
+
+		ob_start();
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+				var submitTimeout;
+				var inputField = $('#searchFormList table.liste .liste_titre_filter input[name="search_nom"]');
+				var lastText = inputField.val();
+
+				$('#searchFormList > .liste_titre').hide();
+
+				inputField.get(0).setSelectionRange(lastText.length, lastText.length);
+				inputField.focus();
+
+				inputField.on('keyup', function(e) {
+					clearTimeout(submitTimeout);
+					var callback = function(e) {
+						$(e.target).parents('form').submit();
+					};
+
+					if (inputField.val() != lastText) {
+						lastText = inputField.val();
+						submitTimeout = setTimeout(callback.bind(this, e), 2000);
+					}
+				});
+			});
+		</script>
+		<?php
+		$resprints .= ob_get_clean();
+
+		$this->resprints = $resprints;
+
+		return 0;
+	}
+
 
 	/**
 	 * Execute action addHtmlHeader
