@@ -168,15 +168,15 @@ $note_private = $thirdparty->note_private;
 // Récupération des dix dernières factures
 $invoice_history = [];
 if ($user->hasRight('facture', 'read')) {
-    $sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."facture";
-    $sql .= " WHERE fk_soc = ".((int) $thirdparty->id);
-    $sql .= " AND (";
-    $sql .= "(module_source = 'takepos' AND pos_source = '".((int) $pos_source)."') OR (module_source IS NULL)";
-    $sql .= ")";
-    $sql .= " ORDER BY datef DESC";
-    $sql .= " LIMIT 10";
+    $sql_history = "SELECT rowid FROM ".MAIN_DB_PREFIX."facture";
+    $sql_history .= " WHERE fk_soc = ".((int) $thirdparty->id);
+    $sql_history .= " AND (";
+    $sql_history .= "(module_source = 'takepos' AND pos_source = '".((int) $pos_source)."') OR (module_source IS NULL)";
+    $sql_history .= ")";
+    $sql_history .= " ORDER BY datef DESC";
+    $sql_history .= " LIMIT 10";
 
-    $resql = $db->query($sql);
+    $resql = $db->query($sql_history);
     if ($resql) {
         while ($obj = $db->fetch_object($resql)) {
             $invoice = new Facture($db);
@@ -185,8 +185,8 @@ if ($user->hasRight('facture', 'read')) {
             // Calculate the amount without discounts
             $total_ttc_gross = 0;
             foreach ($invoice->lines as $line) {
-                if ($line->subprice > 0) {
-                    $total_ttc_gross += $line->subprice * $line->qty;
+                if ($line->total_ttc > 0) {
+                    $total_ttc_gross += $line->total_ttc;
                 }
             }
 
@@ -202,6 +202,45 @@ if ($user->hasRight('facture', 'read')) {
         }
     }
 }
+
+// Récupération de toutes les factures impayées, à partir de la dixième facture
+$invoice_history_unpaid = [];
+if ($user->hasRight('facture', 'read')) {
+    $sql_unpaid = "SELECT unpaid.rowid FROM ".MAIN_DB_PREFIX."facture unpaid";
+    $sql_unpaid .= " LEFT JOIN (" . $sql_history . ") AS recent ON unpaid.rowid = recent.rowid";
+    $sql_unpaid .= " WHERE recent.rowid IS NULL";
+    $sql_unpaid .= " AND unpaid.fk_soc = ".((int) $thirdparty->id);
+    $sql_unpaid .= " AND unpaid.paye <> 1";
+    $sql_unpaid .= " AND unpaid.fk_statut <> ".((int) Facture::STATUS_DRAFT);
+    $sql_unpaid .= " ORDER BY unpaid.datef DESC";
+
+    $resql = $db->query($sql_unpaid);
+    if ($resql) {
+        while ($obj = $db->fetch_object($resql)) {
+            $invoice = new Facture($db);
+            $invoice->fetch($obj->rowid);
+
+            // Calculate the amount without discounts
+            $total_ttc_gross = 0;
+            foreach ($invoice->lines as $line) {
+                if ($line->total_ttc > 0) {
+                    $total_ttc_gross += $line->total_ttc;
+                }
+            }
+
+            $invoice_history_unpaid[] = [
+                'facid'        => $invoice->id,
+                'date'         => $invoice->date,
+                'amount'       => $invoice->total_ttc,
+                'amount_gross' => $total_ttc_gross,
+                'status'       => $invoice->status,
+                'close_code'   => $invoice->close_code,
+                'encours'      => $invoice->getRemainToPay(),
+            ];
+        }
+    }
+}
+
 
 ?>
 <div class="customer_infos_content">
@@ -253,7 +292,7 @@ if ($user->hasRight('facture', 'read')) {
     <?php endif; ?>
     <?php if ($invoice_history): ?>
     <div class="invoice_history">
-        <span class="label">Passages sur cette caisse</span>
+        <span class="label">10 derniers passages sur cette caisse</span>
         <div class="value">
             <div class="invoice_history_line invoice_history_table_header">
                 <span>Date</span>
@@ -261,6 +300,31 @@ if ($user->hasRight('facture', 'read')) {
                 <span>À régler</span>
             </div>
             <?php foreach ($invoice_history as $line): ?>
+                <div class="invoice_history_line <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>" onclick="$('#poslines').load('invoice.php?action=history&placeid=<?php echo (int) $line['facid']; ?>', function() {place='0'})">
+                    <span class="date"><?php echo dol_print_date($line['date']) ?></span>
+                    <span class="amount"><?php echo price($line['amount_gross'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></span>
+                    <?php if ($line['status'] == Facture::STATUS_CLOSED && $line['close_code'] == 0 && $line['encours'] == 0): ?>
+                        <span class="encours paid">Payé</span>
+                    <?php elseif ($line['status'] == Facture::STATUS_ABANDONED): ?>
+                        <span class="encours closed">Fermé</span>
+                    <?php else: ?>
+                        <span class="encours unpaid"><?php echo price($line['encours'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></span>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+    <?php if ($invoice_history_unpaid): ?>
+    <div class="invoice_history">
+        <span class="label">Autres factures impayées</span>
+        <div class="value">
+            <div class="invoice_history_line invoice_history_table_header">
+                <span>Date</span>
+                <span>Montant</span>
+                <span>À régler</span>
+            </div>
+            <?php foreach ($invoice_history_unpaid as $line): ?>
                 <div class="invoice_history_line <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>" onclick="$('#poslines').load('invoice.php?action=history&placeid=<?php echo (int) $line['facid']; ?>', function() {place='0'})">
                     <span class="date"><?php echo dol_print_date($line['date']) ?></span>
                     <span class="amount"><?php echo price($line['amount_gross'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></span>
