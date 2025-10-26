@@ -40,6 +40,8 @@ if (empty($thirdparty_id) || $thirdparty_id <= 0) {
 
 $invoice_id = GETPOST('invoice_id', 'int');
 
+$pos_source = (int) $_SESSION['takeposterminal'];
+
 // Exclude any Generic user from this script
 $numberofterminals = getDolGlobalString('TAKEPOS_NUM_TERMINALS', '1');
 for ($terminal = 1; $terminal <= $numberofterminals; $terminal++) {
@@ -168,6 +170,9 @@ $invoice_history = [];
 if ($user->hasRight('facture', 'read')) {
     $sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."facture";
     $sql .= " WHERE fk_soc = ".((int) $thirdparty->id);
+    $sql .= " AND (";
+    $sql .= "(module_source = 'takepos' AND pos_source = '".((int) $pos_source)."') OR (module_source IS NULL)";
+    $sql .= ")";
     $sql .= " ORDER BY datef DESC";
     $sql .= " LIMIT 10";
 
@@ -238,7 +243,7 @@ if ($user->hasRight('facture', 'read')) {
     <?php endif; ?>
     <?php if ($invoice_history): ?>
     <div class="invoice_history">
-        <span class="label">Historique des passages</span>
+        <span class="label">Passages sur cette caisse</span>
         <div class="value">
             <div class="invoice_history_line invoice_history_table_header">
                 <span>Date</span>
