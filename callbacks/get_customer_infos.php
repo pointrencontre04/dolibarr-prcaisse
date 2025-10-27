@@ -123,7 +123,7 @@ if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')) {
             $bonsalim_total += $b->amount_left;
         }
         if ($bonsalim_count > 0) {
-            $bonsalim_mean = $bonsalim_total / $bonsalim_count;
+            $bonsalim_mean = (int) ($bonsalim_total / $bonsalim_count);
         } else {
             $bonsalim_mean = 0;
         }
