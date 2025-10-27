@@ -60,12 +60,6 @@
 						& > * {
 							margin: 5px 0;
 						}
-						.label {
-							margin-right: 5pt;
-						}
-						.value {
-							font-weight: bold;
-						}
 
 						.status_ok .value {
 							color:#0f740f;
@@ -82,6 +76,33 @@
 						}
 						.status_expired .value {
 							color: #ff0000;
+						}
+
+						.customer_infos_general {
+
+							& > div {
+								display: table-row;
+							}
+
+							.label {
+								display: table-cell;
+								white-space: nowrap;
+								margin-right: 5pt;
+							}
+							.value {
+								display: table-cell;
+								font-weight: bold;
+							}
+						}
+
+						.customer_infos_notes {
+
+							.label {
+								margin-right: 5pt;
+							}
+							.value {
+								font-weight: bold;
+							}
 						}
 
 						.invoice_history {

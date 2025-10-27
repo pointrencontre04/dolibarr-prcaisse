@@ -55,12 +55,6 @@
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content > * {
   margin: 5px 0;
 }
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .label {
-  margin-right: 5pt;
-}
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .value {
-  font-weight: bold;
-}
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_ok .value {
   color: #0f740f;
 }
@@ -75,6 +69,24 @@
 }
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_expired .value {
   color: #ff0000;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .customer_infos_general > div {
+  display: table-row;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .customer_infos_general .label {
+  display: table-cell;
+  white-space: nowrap;
+  margin-right: 5pt;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .customer_infos_general .value {
+  display: table-cell;
+  font-weight: bold;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .customer_infos_notes .label {
+  margin-right: 5pt;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .customer_infos_notes .value {
+  font-weight: bold;
 }
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history {
   display: flex;

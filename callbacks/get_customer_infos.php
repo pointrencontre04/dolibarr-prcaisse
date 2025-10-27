@@ -252,71 +252,75 @@ if ($user->hasRight('facture', 'read')) {
 
 ?>
 <div class="customer_infos_content">
-    <div class="date_adhesion <?php echo $date_adhesion_classes; ?>">
-        <span class="label">Date de fin adhésion&nbsp;:</span>
-        <?php if ($date_adhesion_fin): ?>
-            <span class="value"><?php echo date('d M Y', $date_adhesion_fin); ?></span>
-        <?php else: ?>
-            <span class="value">&empty;</span>
+    <div class="customer_infos_general">
+        <div class="date_adhesion <?php echo $date_adhesion_classes; ?>">
+            <div class="label">Date de fin adhésion&nbsp;:</div>
+            <?php if ($date_adhesion_fin): ?>
+                <div class="value"><?php echo date('d M Y', $date_adhesion_fin); ?></div>
+            <?php else: ?>
+                <div class="value">&empty;</div>
+            <?php endif; ?>
+        </div>
+        <div class="date_epicerie <?php echo $date_epicerie_classes; ?>">
+            <div class="label">Date de fin épicerie&nbsp;:</div>
+            <?php if ($date_epicerie_fin): ?>
+                <div class="value"><?php echo date('d M Y', $date_epicerie_fin); ?></div>
+            <?php else: ?>
+                <div class="value">&empty;</div>
+            <?php endif; ?>
+        </div>
+        <div class="famille">
+            <div class="label">Membres du foyer&nbsp;:</div>
+            <div class="value"><?php echo $nombrecontacts; ?></div>
+        </div>
+        <div class="encours <?php echo $encours_classes; ?>">
+            <div class="label">Montant encours&nbsp;:</div>
+            <div class="value"><?php echo price($encours['opened'], 0, $langs, 0, 0, -1, $conf->currency); ?></div>
+        </div>
+        <?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')): ?>
+        <div class="bonalim">
+            <div class="label">Bons disponibles&nbsp;:</div>
+            <div class="value"><?php echo price($bonsalim_total, 0, $langs, 0, 0, -1, $conf->currency); ?> (<?php echo $bonsalim_count ?> &#x00D7; <?php echo $bonsalim_mean ?>)</div>
+        </div>
+        <?php endif; ?>
+        <div class="credit <?php echo $credit_classes; ?>">
+            <div class="label">Avance disponible&nbsp;:</div>
+            <div class="value"><?php echo price($credit_total, 0, $langs, 0, 0, -1, $conf->currency); ?></div>
+        </div>
+    </div>
+    <div class="customer_infos_notes">
+        <?php if ($note_public): ?>
+        <div class="note_public">
+            <div class="label">Note publique&nbsp;:</div>
+            <div class="value"><?php echo dol_escape_htmltag($note_public); ?></div>
+        </div>
+        <?php endif; ?>
+        <?php if ($note_private): ?>
+        <div class="note_private">
+            <div class="label">Note Privée&nbsp;:</div>
+            <div class="value"><?php echo dol_escape_htmltag($note_private); ?></div>
+        </div>
         <?php endif; ?>
     </div>
-    <div class="date_epicerie <?php echo $date_epicerie_classes; ?>">
-        <span class="label">Date de fin épicerie&nbsp;:</span>
-        <?php if ($date_epicerie_fin): ?>
-            <span class="value"><?php echo date('d M Y', $date_epicerie_fin); ?></span>
-        <?php else: ?>
-            <span class="value">&empty;</span>
-        <?php endif; ?>
-    </div>
-    <div class="famille">
-        <span class="label">Membres du foyer&nbsp;:</span>
-        <span class="value"><?php echo $nombrecontacts; ?></span>
-    </div>
-    <div class="encours <?php echo $encours_classes; ?>">
-        <span class="label">Montant encours&nbsp;:</span>
-        <span class="value"><?php echo price($encours['opened'], 0, $langs, 0, 0, -1, $conf->currency); ?></span>
-    </div>
-    <?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')): ?>
-    <div class="bonalim">
-        <span class="label">Bons disponibles&nbsp;:</span>
-        <span class="value"><?php echo price($bonsalim_total, 0, $langs, 0, 0, -1, $conf->currency); ?> (<?php echo $bonsalim_count ?> &#x00D7; <?php echo $bonsalim_mean ?>)</span>
-    </div>
-    <?php endif; ?>
-    <div class="credit <?php echo $credit_classes; ?>">
-        <span class="label">Avance disponible&nbsp;:</span>
-        <span class="value"><?php echo price($credit_total, 0, $langs, 0, 0, -1, $conf->currency); ?></span>
-    </div>
-    <?php if ($note_public): ?>
-    <div class="note_public">
-        <span class="label">Note publique&nbsp;:</span>
-        <span class="value"><?php echo dol_escape_htmltag($note_public); ?></span>
-    </div>
-    <?php endif; ?>
-    <?php if ($note_private): ?>
-    <div class="note_private">
-        <span class="label">Note Privée&nbsp;:</span>
-        <span class="value"><?php echo dol_escape_htmltag($note_private); ?></span>
-    </div>
-    <?php endif; ?>
     <?php if ($invoice_history): ?>
-    <div class="invoice_history">
-        <span class="label">10 derniers passages sur cette caisse</span>
+    <div class="invoice_history invoice_history_last">
+        <div class="label">10 derniers passages sur cette caisse</div>
         <div class="value">
             <div class="invoice_history_line invoice_history_table_header">
-                <span>Date</span>
-                <span>Montant</span>
-                <span>À régler</span>
+                <div>Date</div>
+                <div>Montant</div>
+                <div>À régler</div>
             </div>
             <?php foreach ($invoice_history as $line): ?>
                 <div class="invoice_history_line <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>" onclick="$('#poslines').load('invoice.php?action=history&placeid=<?php echo (int) $line['facid']; ?>', function() {place='0'})">
-                    <span class="date"><?php echo dol_print_date($line['date']) ?></span>
-                    <span class="amount"><?php echo price($line['amount_gross'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></span>
+                    <div class="date"><?php echo dol_print_date($line['date']) ?></div>
+                    <div class="amount"><?php echo price($line['amount_gross'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></div>
                     <?php if ($line['status'] == Facture::STATUS_CLOSED && $line['close_code'] == 0 && $line['encours'] == 0): ?>
-                        <span class="encours paid">Payé</span>
+                        <div class="encours paid">Payé</div>
                     <?php elseif ($line['status'] == Facture::STATUS_ABANDONED): ?>
-                        <span class="encours closed">Fermé</span>
+                        <div class="encours closed">Fermé</div>
                     <?php else: ?>
-                        <span class="encours unpaid"><?php echo price($line['encours'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></span>
+                        <div class="encours unpaid"><?php echo price($line['encours'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></div>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
@@ -324,24 +328,24 @@ if ($user->hasRight('facture', 'read')) {
     </div>
     <?php endif; ?>
     <?php if ($invoice_history_unpaid): ?>
-    <div class="invoice_history">
-        <span class="label">Autres factures impayées</span>
+    <div class="invoice_history invoice_history_unpaid">
+        <div class="label">Autres factures impayées</div>
         <div class="value">
             <div class="invoice_history_line invoice_history_table_header">
-                <span>Date</span>
-                <span>Montant</span>
-                <span>À régler</span>
+                <div>Date</div>
+                <div>Montant</div>
+                <div>À régler</div>
             </div>
             <?php foreach ($invoice_history_unpaid as $line): ?>
                 <div class="invoice_history_line <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>" onclick="$('#poslines').load('invoice.php?action=history&placeid=<?php echo (int) $line['facid']; ?>', function() {place='0'})">
-                    <span class="date"><?php echo dol_print_date($line['date']) ?></span>
-                    <span class="amount"><?php echo price($line['amount_gross'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></span>
+                    <div class="date"><?php echo dol_print_date($line['date']) ?></div>
+                    <div class="amount"><?php echo price($line['amount_gross'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></div>
                     <?php if ($line['status'] == Facture::STATUS_CLOSED && $line['close_code'] == 0 && $line['encours'] == 0): ?>
-                        <span class="encours paid">Payé</span>
+                        <div class="encours paid">Payé</div>
                     <?php elseif ($line['status'] == Facture::STATUS_ABANDONED): ?>
-                        <span class="encours closed">Fermé</span>
+                        <div class="encours closed">Fermé</div>
                     <?php else: ?>
-                        <span class="encours unpaid"><?php echo price($line['encours'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></span>
+                        <div class="encours unpaid"><?php echo price($line['encours'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></div>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
