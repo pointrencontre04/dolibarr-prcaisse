@@ -123,6 +123,7 @@ class modPRCaisse extends DolibarrModules
 				'takeposinvoice',
 				'takepospay',
 				'data' => array(
+					'takeposfrontend',
 					'takeposinvoice',
 					'takepospay',
 					'thirdpartylist',

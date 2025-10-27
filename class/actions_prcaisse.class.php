@@ -162,6 +162,40 @@ class ActionsPRCaisse extends CommonHookActions
 	}
 
 	/**
+	 * Execute action ActionButtons
+	 *
+	 * @param	array<string,mixed>	$parameters		Array of parameters
+	 * @param	CommonObject		$object			The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
+	 * @param	string				$action			'add', 'update', 'view'
+	 * @param	Hookmanager			$hookmanager	Hookmanager
+	 * @return	int									Return integer <0 if KO,
+	 *												=0 if OK but we want to process standard actions too,
+	 *												>0 if OK and we want to replace standard actions.
+	 */
+	public function ActionButtons(&$parameters, &$object, &$action, $hookmanager)
+	{
+		if (!in_array('takeposfrontend', $hookmanager->contextarray)) {
+			return 0;
+		}
+
+		/*
+
+		$results = $parameters['menus'];
+
+		foreach ($results as $key => $value) {
+			if ($value['action'] == 'Split();') {
+				$results[$key]['title'] = '';
+			}
+		}
+
+		$this->results[] = $results;
+
+		return 1;
+		*/
+		return 0;
+	}
+
+	/**
 	 * Execute action addMoreActionsButtons
 	 *
 	 * @param	array<string,mixed>	$parameters		Array of parameters
