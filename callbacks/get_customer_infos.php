@@ -117,12 +117,20 @@ if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')) {
         '(beneficiary:=:' . $thirdparty->id . ') AND (status:=:' . BonAlim::STATUS_CREDITED . ')'
     );
     if ($bonalim_list) {
+        $bonsalim_count = count($bonalim_list);
         $bonsalim_total = 0;
         foreach ($bonalim_list as $b) {
             $bonsalim_total += $b->amount_left;
         }
+        if ($bonsalim_count > 0) {
+            $bonsalim_mean = $bonsalim_total / $bonsalim_count;
+        } else {
+            $bonsalim_mean = 0;
+        }
     } else {
         $bonsalim_total = 0;
+        $bonsalim_count = 0;
+        $bonsalim_mean = 0;
     }
 }
 
@@ -270,8 +278,8 @@ if ($user->hasRight('facture', 'read')) {
     </div>
     <?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')): ?>
     <div class="bonalim">
-        <span class="label">Bons alimentaires disponibles&nbsp;:</span>
-        <span class="value"><?php echo price($bonsalim_total, 0, $langs, 0, 0, -1, $conf->currency); ?></span>
+        <span class="label">Bons disponibles&nbsp;:</span>
+        <span class="value"><?php echo price($bonsalim_total, 0, $langs, 0, 0, -1, $conf->currency); ?> (<?php echo $bonsalim_count ?> &#x00D7; <?php echo $bonsalim_mean ?>)</span>
     </div>
     <?php endif; ?>
     <div class="credit <?php echo $credit_classes; ?>">
