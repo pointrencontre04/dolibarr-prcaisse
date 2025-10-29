@@ -110,7 +110,12 @@ var PRCaisseSwitchInvoiceType = function() {
 		token: "<?php echo newToken(); ?>"
 	};
     console.log("Calling invoice type switch on invoiceid="+invoiceid);
-	jQuery.getJSON(callback_url, params, function(data) {
-		Refresh();
+	jQuery.ajax({
+		url: callback_url,
+		method: 'POST',
+		data: params,
+		success: function(data) {
+			Refresh();
+		},
 	});
 };
