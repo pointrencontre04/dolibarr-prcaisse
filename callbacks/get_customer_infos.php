@@ -127,17 +127,20 @@ if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')) {
     );
     if ($bonalim_list) {
         $bonsalim_count = count($bonalim_list);
-        $bonsalim_total = 0;
+        $bonsalim_total_left = 0;
+        $bonsalim_total_amount = 0;
         foreach ($bonalim_list as $b) {
-            $bonsalim_total += $b->amount_left;
+            $bonsalim_total_left += $b->amount_left;
+            $bonsalim_total_amount += $b->amount;
         }
         if ($bonsalim_count > 0) {
-            $bonsalim_mean = (int) ($bonsalim_total / $bonsalim_count);
+            $bonsalim_mean = (int) ($bonsalim_total_amount / $bonsalim_count);
         } else {
             $bonsalim_mean = 0;
         }
     } else {
-        $bonsalim_total = 0;
+        $bonsalim_total_left = 0;
+        $bonsalim_total_amount = 0;
         $bonsalim_count = 0;
         $bonsalim_mean = 0;
     }
@@ -292,7 +295,7 @@ if ($user->hasRight('facture', 'read')) {
         <?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')): ?>
         <div class="bonalim">
             <div class="label">Bons disponibles&nbsp;:</div>
-            <div class="value"><?php echo price($bonsalim_total, 0, $langs, 0, 0, -1, $conf->currency); ?> (<?php echo $bonsalim_count ?> &#x00D7; <?php echo $bonsalim_mean ?>)</div>
+            <div class="value"><?php echo price($bonsalim_total_left, 0, $langs, 0, 0, -1, $conf->currency); ?> (<?php echo $bonsalim_count ?> &#x00D7; <?php echo $bonsalim_mean ?>)</div>
         </div>
         <?php endif; ?>
         <div class="credit <?php echo $credit_classes; ?>">
