@@ -82,6 +82,13 @@
   display: table-cell;
   font-weight: bold;
 }
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .customer_infos_general .bonalim .value .bonalim_left {
+  font-weight: bold;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .customer_infos_general .bonalim .value .bonalim_total {
+  font-weight: normal;
+  font-size: 90%;
+}
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .customer_infos_notes .label {
   margin-right: 5pt;
 }

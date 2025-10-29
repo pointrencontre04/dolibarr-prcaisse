@@ -295,7 +295,7 @@ if ($user->hasRight('facture', 'read')) {
         <?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')): ?>
         <div class="bonalim">
             <div class="label">Bons disponibles&nbsp;:</div>
-            <div class="value"><?php echo price($bonsalim_total_left, 0, $langs, 0, 0, -1, $conf->currency); ?> (<?php echo $bonsalim_count ?> &#x00D7; <?php echo $bonsalim_mean ?>)</div>
+            <div class="value"><span class="bonalim_left"><?php echo price($bonsalim_total_left, 0, $langs, 0, 0, -1, $conf->currency); ?></span> <span class="bonalim_total">(<?php echo $bonsalim_count ?> &#x00D7; <?php echo $bonsalim_mean ?>)</span></div>
         </div>
         <?php endif; ?>
         <div class="credit <?php echo $credit_classes; ?>">

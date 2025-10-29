@@ -93,6 +93,16 @@
 								display: table-cell;
 								font-weight: bold;
 							}
+
+							.bonalim .value {
+								.bonalim_left {
+									font-weight: bold;
+								}
+								.bonalim_total {
+									font-weight: normal;
+									font-size: 90%;
+								}
+							}
 						}
 
 						.customer_infos_notes {
