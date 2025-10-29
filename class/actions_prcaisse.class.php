@@ -122,7 +122,6 @@ class ActionsPRCaisse extends CommonHookActions
 		$resprints = '';
 
 		$invoice_id = $object->id;
-		$invoice_customer_id = $object->socid;
 
 		/**
 		 * Add JavaScript callback to show
@@ -140,7 +139,7 @@ class ActionsPRCaisse extends CommonHookActions
 
 				const params = {
 					invoice_id: <?php echo $invoice_id; ?>,
-					thirdparty_id: <?php echo $invoice_customer_id; ?>
+					token: "<?php echo newToken(); ?>"
 				};
 
 				jQuery.ajax({
@@ -155,6 +154,29 @@ class ActionsPRCaisse extends CommonHookActions
 		</script>
 		<?php
 		$resprints .= ob_get_clean();
+
+		if ($object->type == Facture::TYPE_DEPOSIT && $object->status == Facture::STATUS_DRAFT) {
+			ob_start();
+			?>
+			<div class="invoice_header_info info_deposit">
+				<div class="title"><?php echo $langs->trans('InvoiceDeposit') ?></div>
+				<div class="legend">En encaissant cette facture, le montant sera converti en Avance dans le compte client.</div>
+			</div>
+			<?php
+			$resprints .= ob_get_clean();
+		}
+
+		if ($object->type == Facture::TYPE_DEPOSIT && ($object->status == Facture::STATUS_VALIDATED || $object->status == Facture::STATUS_CLOSED)) {
+			ob_start();
+			?>
+			<div class="invoice_header_info info_deposit">
+				<div class="title"><?php echo $langs->trans('InvoiceDeposit') ?></div>
+				<div class="legend">Cette facture a été convertie en Avance dans le compte client.</div>
+			</div>
+			<?php
+			$resprints .= ob_get_clean();
+		}
+
 
 		$this->resprints = $resprints;
 
@@ -178,21 +200,21 @@ class ActionsPRCaisse extends CommonHookActions
 			return 0;
 		}
 
-		/*
+		// Replace the Split button with a button to
+		// convert the invoice to a TYPE_DEPOSIT
 
 		$results = $parameters['menus'];
 
 		foreach ($results as $key => $value) {
 			if ($value['action'] == 'Split();') {
-				$results[$key]['title'] = '';
+				$results[$key]['title'] = '<span class="fa fa-money-check-alt paddingrightonly"></span><div class="trunc">Convertir en acompte</div>';
+				$results[$key]['action'] = 'PRCaisseSwitchInvoiceType();';
 			}
 		}
 
 		$this->results[] = $results;
 
 		return 1;
-		*/
-		return 0;
 	}
 
 	/**
@@ -251,6 +273,9 @@ class ActionsPRCaisse extends CommonHookActions
 					return 1;
 				}
 			}
+
+			// Check if owner of invoice has any TYPE_DEPOSIT invoice available
+
 		}
 
 		return 0;

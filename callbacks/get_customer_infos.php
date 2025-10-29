@@ -1,5 +1,6 @@
 <?php
 require '../../../main.inc.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
 
@@ -32,13 +33,21 @@ if (empty($_SESSION['takepos_customer_id'])) {
 }
 */
 
-$thirdparty_id = GETPOST('thirdparty_id', 'int');
+// Retrieve Facture object to handle
+$invoice_id = GETPOST('invoice_id', 'int');
+$invoice = new Facture($db);
+$res = $invoice->fetch($invoice_id);
+if ($res <= 0) {
+    http_response_code(404);
+    exit('Facture invalide.');
+}
+
+$thirdparty_id = $invoice->socid;
+
 if (empty($thirdparty_id) || $thirdparty_id <= 0) {
     http_response_code(400);
     exit('Paramètre manquant ou invalide.');
 }
-
-$invoice_id = GETPOST('invoice_id', 'int');
 
 $pos_source = (int) $_SESSION['takeposterminal'];
 

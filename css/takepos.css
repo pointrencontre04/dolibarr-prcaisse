@@ -222,6 +222,16 @@
     font-size: 18px;
   }
 }
+.bodytakepos .invoice .invoice_header_info.info_deposit {
+  background-color: #ccc;
+  color: #000;
+  margin: 15px 15px;
+  padding: 5px;
+}
+.bodytakepos .invoice .invoice_header_info.info_deposit .title {
+  text-transform: uppercase;
+  font-weight: bold;
+}
 .bodytakepos button.calcbutton {
   background-color: #0f740f !important;
 }

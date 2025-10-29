@@ -269,6 +269,20 @@
 		@media screen and (min-width: 1200px) {
  			font-size: 18px;
 		}
+
+		.invoice_header_info {
+			&.info_deposit {
+				background-color: #ccc;
+				color: #000;
+				margin: 15px 15px;
+				padding: 5px;
+
+				.title {
+					text-transform: uppercase;
+					font-weight: bold;
+				}
+			}
+		}
 	}
 
 	button.calcbutton {

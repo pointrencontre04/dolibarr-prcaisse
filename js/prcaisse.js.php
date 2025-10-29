@@ -99,3 +99,18 @@ if (empty($dolibarr_nocache)) {
 ?>
 
 /* Javascript library of module PRCaisse */
+
+<?php echo file_get_contents('takepos.js'); ?>
+
+var PRCaisseSwitchInvoiceType = function() {
+	const callback_url = "<?php echo dol_buildpath('/prcaisse/callbacks/switch_invoice_type.php', 1); ?>";
+    const invoiceid = $("#invoiceid").val();
+	const params = {
+		invoice_id: invoiceid,
+		token: "<?php echo newToken(); ?>"
+	};
+    console.log("Calling invoice type switch on invoiceid="+invoiceid);
+	jQuery.getJSON(callback_url, params, function(data) {
+		Refresh();
+	});
+};
