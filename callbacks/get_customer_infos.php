@@ -229,6 +229,8 @@ if ($user->hasRight('facture', 'read')) {
     $sql_unpaid .= " AND unpaid.fk_soc = ".((int) $thirdparty->id);
     $sql_unpaid .= " AND unpaid.paye <> 1";
     $sql_unpaid .= " AND unpaid.fk_statut <> ".((int) Facture::STATUS_DRAFT);
+    $sql_unpaid .= " AND unpaid.fk_statut <> ".((int) Facture::STATUS_CLOSED);
+    $sql_unpaid .= " AND unpaid.fk_statut <> ".((int) Facture::STATUS_ABANDONED);
     $sql_unpaid .= " ORDER BY unpaid.datef DESC";
 
     $resql = $db->query($sql_unpaid);
