@@ -16,6 +16,11 @@ jQuery(document).ready(function() {
                 e.preventDefault();
                 break;
 
+                case 46: // '.'
+                    Edit('.');
+                    e.preventDefault();
+                break;
+
                 case 13: // 'enter'
                     if (currentAction == 'qty') {
                         Edit('qty');
