@@ -213,6 +213,7 @@ if ($user->hasRight('facture', 'read')) {
                 'amount'       => $invoice->total_ttc,
                 'amount_gross' => $total_ttc_gross,
                 'status'       => $invoice->status,
+                'type'         => $invoice->type,
                 'close_code'   => $invoice->close_code,
                 'encours'      => $invoice->getRemainToPay(),
             ];
@@ -325,7 +326,13 @@ if ($user->hasRight('facture', 'read')) {
             <?php foreach ($invoice_history as $line): ?>
                 <div class="invoice_history_line <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>" onclick="$('#poslines').load('invoice.php?action=history&placeid=<?php echo (int) $line['facid']; ?>', function() {place='0'})">
                     <div class="date"><?php echo dol_print_date($line['date']) ?></div>
-                    <div class="amount"><?php echo price($line['amount_gross'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></div>
+                    <div class="amount">
+                        <div class="cell_inner">
+                            <?php echo ($line['type'] == Facture::TYPE_DEPOSIT ? '<span class="invoice_type invoice_type_deposit">A</span>' : ''); ?>
+                            <?php echo ($line['type'] == Facture::TYPE_STANDARD ? '<span class="invoice_type invoice_type_standard">D</span>' : ''); ?>
+                            <?php echo '<span>' . price($line['amount_gross'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) . '</span>'; ?>
+                        </div>
+                    </div>
                     <?php if ($line['status'] == Facture::STATUS_CLOSED && $line['close_code'] == 0 && $line['encours'] == 0): ?>
                         <div class="encours paid">Payé</div>
                     <?php elseif ($line['status'] == Facture::STATUS_ABANDONED): ?>

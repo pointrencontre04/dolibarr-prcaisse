@@ -127,12 +127,40 @@
 
 									& > * {
 										display: table-cell;
+										vertical-align: middle;
 										padding: 2px 5px;
 										border: solid 1px #ddd;
 									}
 
 									&.active {
 										background-color: #ddd;
+									}
+
+									.cell_inner {
+										display: flex;
+										justify-content: space-between;
+										align-items: center;
+
+										.invoice_type {
+											display: flex;
+											justify-content: center;
+											align-items: center;
+											width: 10px;
+											height: 10px;
+											border-radius: 10px;
+											font-size: 10px;
+											padding: 2px;
+											border: solid 1px #000;
+
+											&.invoice_type_deposit {
+												color: #0f740f;
+												border-color: #0f740f;
+											}
+											&.invoice_type_standard {
+												//color: #555;
+												visibility: hidden;
+											}
+										}
 									}
 
 									.amount {
