@@ -236,46 +236,50 @@ class ActionsPRCaisse extends CommonHookActions
 			return 0;
 		}
 
+		if (!$object->socid) {
+			return 0;
+		} else {
+			$thirdparty_id = $object->socid;
+			$thirdparty = new Societe($db);
+			if (!$thirdparty->fetch($thirdparty_id)) {
+				return 0;
+			}
+		}
+
 		/**
 		 * Add actions to pay with BonAlim
 		 */
 		if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'write')) {
 
 			// Check if owner of invoice has any BonAlim available
-			$thirdparty_id = $object->socid;
-			if ($thirdparty_id) {
-				$bonalim = new BonAlim($db);
-				$bonalim_list = $bonalim->fetchAll(
-					'',
-					'',
-					0,
-					0,
-					'(beneficiary:=:' . $thirdparty_id . ') AND (status:=:' . BonAlim::STATUS_CREDITED . ')'
-				);
-				if ($bonalim_list) {
-					$bonsalim_total = 0;
-					foreach ($bonalim_list as $b) {
-						$bonsalim_total += $b->amount_left;
-					}
-				} else {
-					$bonsalim_total = 0;
+			$bonalim = new BonAlim($db);
+			$bonalim_list = $bonalim->fetchAll(
+				'',
+				'',
+				0,
+				0,
+				'(beneficiary:=:' . $thirdparty_id . ') AND (status:=:' . BonAlim::STATUS_CREDITED . ')'
+			);
+			if ($bonalim_list) {
+				$bonsalim_total = 0;
+				foreach ($bonalim_list as $b) {
+					$bonsalim_total += $b->amount_left;
 				}
-
-				if ($bonsalim_total > 0) {
-					//var_dump($parameters['action_buttons']);
-					$this->results = $parameters['action_buttons'];
-					array_unshift($this->results, [
-						'class' => '',
-						'function' => 'ValidateBonAlim()',
-						'span' => '',
-						'text' => '<span class="fa fa-ticket-alt"></span></span><br>Bons Alimentaires<span>',
-					]);
-					return 1;
-				}
+			} else {
+				$bonsalim_total = 0;
 			}
 
-			// Check if owner of invoice has any TYPE_DEPOSIT invoice available
-
+			if ($bonsalim_total > 0) {
+				//var_dump($parameters['action_buttons']);
+				$this->results = $parameters['action_buttons'];
+				array_unshift($this->results, [
+					'class' => '',
+					'function' => 'ValidateBonAlim()',
+					'span' => '',
+					'text' => '<span class="fa fa-ticket-alt"></span></span><br>Bons Alimentaires<span>',
+				]);
+				return 1;
+			}
 		}
 
 		return 0;
@@ -325,10 +329,6 @@ class ActionsPRCaisse extends CommonHookActions
 				function ValidateBonAlim() {
                 	console.log("Launch ValidateBonAlim");
 
-					var accountid = $("#selectaccountid").val();
-					var amountpayed = $("#change1").val();
-					var excess = $("#change2").val();
-
 					var invoiceid = <?php echo($invoice_id > 0 ? $invoice_id : 0); ?>;
 					var accountid = $("#selectaccountid").val();
 					var amountpayed = $("#change1").val();
@@ -350,7 +350,6 @@ class ActionsPRCaisse extends CommonHookActions
 
 					return true;
 		        }
-
 			</script>
 			<?php
 			$resprints .= ob_get_clean();
