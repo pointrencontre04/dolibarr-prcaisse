@@ -165,7 +165,7 @@ print '<input type="submit" class="button" value="' . $langs->trans("Search") . 
 
 print '</form>';
 
-
+print '</div></div>';
 
 /* BEGIN MODULEBUILDER DRAFT MYOBJECT
 // Draft MyObject
@@ -238,8 +238,7 @@ if (isModEnabled('prcaisse') && $user->hasRight('prcaisse', 'read')) {
 }
 END MODULEBUILDER DRAFT MYOBJECT */
 
-
-print '</div><div class="prcaisse_customer_card">';
+print '<div class="prcaisse_customer_card">';
 
 // Récupération du tiers
 $thirdparty = new Societe($db);
@@ -396,7 +395,7 @@ if ($user->hasRight('facture', 'read')) {
 	$sql_history = "SELECT rowid FROM ".MAIN_DB_PREFIX."facture";
 	$sql_history .= " WHERE fk_soc = ".((int) $thirdparty->id);
 	$sql_history .= " ORDER BY datef DESC";
-	$sql_history .= " LIMIT 10";
+	$sql_history .= " LIMIT 5";
 
 	$resql = $db->query($sql_history);
 	if ($resql) {
@@ -414,6 +413,7 @@ if ($user->hasRight('facture', 'read')) {
 
 			$invoice_history[] = [
 				'facid'        => $invoice->id,
+				'ref'          => $invoice->ref,
 				'date'         => $invoice->date,
 				'amount'       => $invoice->total_ttc,
 				'amount_gross' => $total_ttc_gross,
@@ -456,6 +456,7 @@ if ($user->hasRight('facture', 'read')) {
 
 			$invoice_history_unpaid[] = [
 				'facid'        => $invoice->id,
+				'ref'          => $invoice->ref,
 				'date'         => $invoice->date,
 				'amount'       => $invoice->total_ttc,
 				'amount_gross' => $total_ttc_gross,
@@ -468,204 +469,175 @@ if ($user->hasRight('facture', 'read')) {
 	}
 }
 
+print '<div class="fichecenter">';
+// View
+
+//$head = societe_prepare_head($thirdparty);
+//print dol_get_fiche_head($head, 'card', $langs->trans("ThirdParty"), -1, 'company', 0, '', '', 0, '', 1);
+
+dol_banner_tab($thirdparty, 'socid', '', 0, 'rowid', 'nom');
+
+print '</div>';
 
 ?>
-<div class="customer_infos_content">
-	<div class="customer_infos_content_column">
-		<div class="titre inline-block">Détail du compte</div>
-		<table class="customer_infos_general">
-			<tr class="date_adhesion <?php echo $date_adhesion_classes; ?>">
-				<td class="label">Date de fin adhésion&nbsp;:</div>
-				<?php if ($date_adhesion_fin): ?>
-					<td class="value"><?php echo date('d M Y', $date_adhesion_fin); ?></div>
-				<?php else: ?>
-					<td class="value">&empty;</div>
-				<?php endif; ?>
-			</tr>
-			<tr class="date_epicerie <?php echo $date_epicerie_classes; ?>">
-				<td class="label">Date de fin épicerie&nbsp;:</div>
-				<?php if ($date_epicerie_fin): ?>
-					<td class="value"><?php echo date('d M Y', $date_epicerie_fin); ?></div>
-				<?php else: ?>
-					<td class="value">&empty;</div>
-				<?php endif; ?>
-			</tr>
-			<tr class="famille">
-				<td class="label">Membres du foyer&nbsp;:</div>
-				<td class="value"><?php echo $nombrecontacts; ?></div>
+<div class="customer_infos_content tabBar">
+	<div class="fichecenter">
+		<div class="fichehalfleft">
+			<table class="centpercent notopnoleftnoright table-fiche-title">
+				<tr class="toptitle"><td class="nobordernopadding valignmiddle col-title"><div class="titre inline-block">Détail du compte</div></td></tr>
+			</table>
+			<table class="border tableforfield centpercent">
+				<tr class="date_adhesion <?php echo $date_adhesion_classes; ?>">
+					<td>Date de fin adhésion&nbsp;:</div>
+					<?php if ($date_adhesion_fin): ?>
+						<td><?php echo date('d M Y', $date_adhesion_fin); ?></div>
+					<?php else: ?>
+						<td>&empty;</div>
+					<?php endif; ?>
 				</tr>
-			<tr class="encours <?php echo $encours_classes; ?>">
-				<td class="label">Montant encours&nbsp;:</div>
-				<td class="value"><?php echo price($encours['opened'], 0, $langs, 0, 0, -1, $conf->currency); ?></div>
+				<tr class="date_epicerie <?php echo $date_epicerie_classes; ?>">
+					<td>Date de fin épicerie&nbsp;:</div>
+					<?php if ($date_epicerie_fin): ?>
+						<td><?php echo date('d M Y', $date_epicerie_fin); ?></div>
+					<?php else: ?>
+						<td>&empty;</div>
+					<?php endif; ?>
 				</tr>
-			<?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')): ?>
-			<tr class="bonalim">
-				<td class="label">Bons disponibles&nbsp;:</div>
-				<td class="value"><span class="bonalim_left"><?php echo price($bonsalim_total_left, 0, $langs, 0, 0, -1, $conf->currency); ?></span> <span class="bonalim_total">(<?php echo $bonsalim_count ?> &#x00D7; <?php echo $bonsalim_mean ?>)</span></div>
-			</tr>
-			<?php endif; ?>
-			<tr class="credit <?php echo $credit_classes; ?>">
-				<td class="label">Avance disponible&nbsp;:</div>
-				<td class="value"><?php echo price($credit_total, 0, $langs, 0, 0, -1, $conf->currency); ?></div>
-			</tr>
-		</table>
-		<div class="titre inline-block">Informations complémentaires</div>
-		<div class="customer_infos_notes">
-			<?php if ($note_public): ?>
-			<div class="note_public">
-				<div class="label">Note publique&nbsp;:</div>
-				<div class="value"><?php echo dol_escape_htmltag($note_public); ?></div>
-			</div>
-			<?php endif; ?>
-			<?php if ($note_private): ?>
-			<div class="note_private">
-				<div class="label">Note Privée&nbsp;:</div>
-				<div class="value"><?php echo dol_escape_htmltag($note_private); ?></div>
-			</div>
-			<?php endif; ?>
+				<tr class="famille">
+					<td>Membres du foyer&nbsp;:</div>
+					<td><?php echo $nombrecontacts; ?></div>
+					</tr>
+				<tr class="encours <?php echo $encours_classes; ?>">
+					<td>Montant encours&nbsp;:</div>
+					<td><?php echo price($encours['opened'], 0, $langs, 0, 0, -1, $conf->currency); ?></div>
+					</tr>
+				<?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')): ?>
+				<tr class="bonalim">
+					<td>Bons disponibles&nbsp;:</div>
+					<td><span class="bonalim_left"><?php echo price($bonsalim_total_left, 0, $langs, 0, 0, -1, $conf->currency); ?></span> <span class="bonalim_total">(<?php echo $bonsalim_count ?> &#x00D7; <?php echo $bonsalim_mean ?>)</span></div>
+				</tr>
+				<?php endif; ?>
+				<tr class="credit <?php echo $credit_classes; ?>">
+					<td>Avance disponible&nbsp;:</div>
+					<td><?php echo price($credit_total, 0, $langs, 0, 0, -1, $conf->currency); ?></div>
+				</tr>
+			</table>
 		</div>
-		<div class="titre inline-block">Composition du foyer</div>
-		<?php
-		//show_contacts($conf, $langs, $db, $thirdparty, $_SERVER["PHP_SELF"] . '?thirdparty_id='.$thirdparty_id, 0);
-		?>
-		<div class="customer_contacts">
-			<div class="table">
-				<div class="table_row table_header">
-					<div><?php echo $langs->trans('Name'); ?></div>
-				</div>
+		<div class="fichehalfright">
+			<table class="centpercent notopnoleftnoright table-fiche-title">
+				<tr class="toptitle"><td class="nobordernopadding valignmiddle col-title"><div class="titre inline-block">Informations complémentaires</div></td></tr>
+			</table>
+			<table class="border tableforfield centpercent">
+				<tr>
+					<td>Note publique&nbsp;:</td>
+					<td><?php echo dol_escape_htmltag($note_public); ?></td>
+				</tr>
+				<tr>
+					<td>Note Privée&nbsp;:</td>
+					<td><?php echo dol_escape_htmltag($note_private); ?></td>
+				</tr>
+			</table>
+			<table class="centpercent notopnoleftnoright table-fiche-title">
+				<tr class="toptitle"><td class="nobordernopadding valignmiddle col-title"><div class="titre inline-block">Composition du foyer</div></td></tr>
+			</table>
+			<?php
+			//show_contacts($conf, $langs, $db, $thirdparty, $_SERVER["PHP_SELF"] . '?thirdparty_id='.$thirdparty_id, 0);
+			?>
+			<table class="border tableforfield centpercent">
 				<?php foreach ($contacts as $contact_id => $name): ?>
-					<div class="customer_contacts_contact table_row">
-						<div class="name"><?php echo $name ?></div>
-					</div>
+					<tr class="customer_contacts_contact table_row">
+						<td class="name"></td>
+						<td class="name"><?php echo $name ?></td>
+					</tr>
 				<?php endforeach; ?>
-			</div>
+			</table>
 		</div>
 	</div>
-	<div class="customer_infos_content_column">
-		<?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read') && $bonsalim_credited): ?>
-		<div class="titre inline-block">Bons disponibles</div>
-		<div class="customer_bonalim_credited">
-			<?php
-			$object = array_values($bonsalim_credited)[0];
-			$enabledfields = ['ref', 'amount', 'amount_left', 'issuer', 'date_start', 'date_end', 'status'];
-			$arrayfields = [];
+	<div class="fichecenter">
+		<div class="fichehalfleft">
+			<?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read') && $bonsalim_credited): ?>
+			<table class="centpercent notopnoleftnoright table-fiche-title">
+				<tr class="toptitle"><td class="nobordernopadding valignmiddle col-title"><div class="titre inline-block">Bons disponibles</div></td></tr>
+			</table>
+			<div class="customer_bonalim_credited">
+				<?php
+				$object = array_values($bonsalim_credited)[0];
+				$enabledfields = ['ref', 'amount', 'amount_left', 'issuer', 'date_start', 'date_end', 'status'];
+				$arrayfields = [];
 
-			foreach ($object->fields as $key => $val) {
-				// If $val['visible']==0, then we never show the field
-				if (in_array($key, $enabledfields)) {
-					$visible = (int) dol_eval((string) $val['visible'], 1);
-					$arrayfields[$key] = array(
-						'label' => $val['label'],
-						'checked' => (($visible < 0) ? 0 : 1),
-						'enabled' => (abs($visible) != 3 && (bool) dol_eval($val['enabled'], 1)),
-						'position' => $val['position'],
-						'help' => isset($val['help']) ? $val['help'] : ''
-					);
+				foreach ($object->fields as $key => $val) {
+					// If $val['visible']==0, then we never show the field
+					if (in_array($key, $enabledfields)) {
+						$visible = (int) dol_eval((string) $val['visible'], 1);
+						$arrayfields[$key] = array(
+							'label' => $val['label'],
+							'checked' => (($visible < 0) ? 0 : 1),
+							'enabled' => (abs($visible) != 3 && (bool) dol_eval($val['enabled'], 1)),
+							'position' => $val['position'],
+							'help' => isset($val['help']) ? $val['help'] : ''
+						);
+					}
 				}
-			}
 
-			$arrayfields = dol_sort_array($arrayfields, 'position');
-			$objects_list = $bonsalim_credited;
+				$arrayfields = dol_sort_array($arrayfields, 'position');
+				$objects_list = $bonsalim_credited;
 
-			require DOL_DOCUMENT_ROOT.'/custom/prbonalim/core/tpl/bonalim_list_simple.tpl.php';
-			?>
-		</div>
-		<?php endif; ?>
-		<?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read') && $bonsalim_history): ?>
-		<div class="titre inline-block">Historique des bons (5 derniers)</div>
-		<div class="customer_bonalim_history">
-			<?php
-			$object = array_values($bonsalim_history)[0];
-			$enabledfields = ['ref', 'amount', 'amount_left', 'issuer', 'date_start', 'date_end', 'status'];
-			$arrayfields = [];
+				require DOL_DOCUMENT_ROOT.'/custom/prbonalim/core/tpl/bonalim_list_simple.tpl.php';
+				?>
+			</div>
+			<?php endif; ?>
+			<?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read') && $bonsalim_history): ?>
+			<table class="centpercent notopnoleftnoright table-fiche-title">
+				<tr class="toptitle"><td class="nobordernopadding valignmiddle col-title"><div class="titre inline-block">Historique des bons (5 derniers)</div></td></tr>
+			</table>
+			<div class="customer_bonalim_history">
+				<?php
+				$object = array_values($bonsalim_history)[0];
+				$enabledfields = ['ref', 'amount', 'amount_left', 'issuer', 'date_start', 'date_end', 'status'];
+				$arrayfields = [];
 
-			foreach ($object->fields as $key => $val) {
-				// If $val['visible']==0, then we never show the field
-				if (in_array($key, $enabledfields)) {
-					$visible = (int) dol_eval((string) $val['visible'], 1);
-					$arrayfields[$key] = array(
-						'label' => $val['label'],
-						'checked' => (($visible < 0) ? 0 : 1),
-						'enabled' => (abs($visible) != 3 && (bool) dol_eval($val['enabled'], 1)),
-						'position' => $val['position'],
-						'help' => isset($val['help']) ? $val['help'] : ''
-					);
+				foreach ($object->fields as $key => $val) {
+					// If $val['visible']==0, then we never show the field
+					if (in_array($key, $enabledfields)) {
+						$visible = (int) dol_eval((string) $val['visible'], 1);
+						$arrayfields[$key] = array(
+							'label' => $val['label'],
+							'checked' => (($visible < 0) ? 0 : 1),
+							'enabled' => (abs($visible) != 3 && (bool) dol_eval($val['enabled'], 1)),
+							'position' => $val['position'],
+							'help' => isset($val['help']) ? $val['help'] : ''
+						);
+					}
 				}
-			}
 
-			$arrayfields = dol_sort_array($arrayfields, 'position');
-			$objects_list = $bonsalim_history;
+				$arrayfields = dol_sort_array($arrayfields, 'position');
+				$objects_list = $bonsalim_history;
 
-			require DOL_DOCUMENT_ROOT.'/custom/prbonalim/core/tpl/bonalim_list_simple.tpl.php';
+				require DOL_DOCUMENT_ROOT.'/custom/prbonalim/core/tpl/bonalim_list_simple.tpl.php';
+				?>
+			</div>
+			<?php endif; ?>
+		</div>
+		<div class="fichehalfright">
+			<?php if ($invoice_history): ?>
+			<table class="centpercent notopnoleftnoright table-fiche-title">
+				<tr class="toptitle"><td class="nobordernopadding valignmiddle col-title"><div class="titre inline-block">5 dernières factures</div></td></tr>
+			</table>
+			<?php
+				$arrayoflines = $invoice_history;
+				require DOL_DOCUMENT_ROOT.'/custom/prcaisse/core/tpl/invoices_admin_table.tpl.php';
 			?>
+			<?php endif; ?>
+			<?php if ($invoice_history_unpaid): ?>
+			<table class="centpercent notopnoleftnoright table-fiche-title">
+				<tr class="toptitle"><td class="nobordernopadding valignmiddle col-title"><div class="titre inline-block">Autres factures impayées</div></td></tr>
+			</table>
+			<?php
+				$arrayoflines = $invoice_history_unpaid;
+				require DOL_DOCUMENT_ROOT.'/custom/prcaisse/core/tpl/invoices_admin_table.tpl.php';
+			?>
+			<?php endif; ?>
 		</div>
-		<?php endif; ?>
-	</div>
-	<div class="customer_infos_content_column">
-		<?php if ($invoice_history): ?>
-		<div class="invoice_history invoice_history_last">
-			<div class="label titre">10 dernières factures</div>
-			<div class="value">
-				<div class="invoice_history_line table_row table_header">
-					<div>Réf</div>
-					<div>Date</div>
-					<div>Caisse</div>
-					<div>Montant</div>
-					<div>À régler</div>
-				</div>
-				<?php foreach ($invoice_history as $line): ?>
-					<div class="invoice_history_line table_row <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>">
-						<div class="ref"><?php echo $line['ref'] ?></div>
-						<div class="date"><?php echo dol_print_date($line['date']) ?></div>
-						<div class="pos_source"><?php echo getDolGlobalString('TAKEPOS_TERMINAL_NAME_' . $line['pos_source']); ?></div>
-						<div class="amount">
-							<div class="cell_inner">
-								<?php echo ($line['type'] == Facture::TYPE_DEPOSIT ? '<span class="invoice_type invoice_type_deposit">A</span>' : ''); ?>
-								<?php echo ($line['type'] == Facture::TYPE_STANDARD ? '<span class="invoice_type invoice_type_standard">D</span>' : ''); ?>
-								<?php echo '<span>' . price($line['amount_gross'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) . '</span>'; ?>
-							</div>
-						</div>
-						<?php if ($line['status'] == Facture::STATUS_CLOSED && $line['close_code'] == 0 && $line['encours'] == 0): ?>
-							<div class="encours paid">Payé</div>
-						<?php elseif ($line['status'] == Facture::STATUS_ABANDONED): ?>
-							<div class="encours closed">Fermé</div>
-						<?php else: ?>
-							<div class="encours unpaid"><?php echo price($line['encours'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></div>
-						<?php endif; ?>
-					</div>
-				<?php endforeach; ?>
-			</div>
-		</div>
-		<?php endif; ?>
-		<?php if ($invoice_history_unpaid): ?>
-		<div class="invoice_history invoice_history_unpaid">
-			<div class="label titre">Autres factures impayées</div>
-			<div class="value">
-				<div class="invoice_history_line table_row table_header">
-					<div>Réf</div>
-					<div>Date</div>
-					<div>Caisse</div>
-					<div>Montant</div>
-					<div>À régler</div>
-				</div>
-				<?php foreach ($invoice_history_unpaid as $line): ?>
-					<div class="invoice_history_line table_row <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>">
-						<div class="ref"><?php echo $line['ref'] ?></div>
-						<div class="date"><?php echo dol_print_date($line['date']) ?></div>
-						<div class="pos_source"><?php echo getDolGlobalString('TAKEPOS_TERMINAL_NAME_' . $line['pos_source']); ?></div>
-						<div class="amount"><?php echo price($line['amount_gross'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></div>
-						<?php if ($line['status'] == Facture::STATUS_CLOSED && $line['close_code'] == 0 && $line['encours'] == 0): ?>
-							<div class="encours paid">Payé</div>
-						<?php elseif ($line['status'] == Facture::STATUS_ABANDONED): ?>
-							<div class="encours closed">Fermé</div>
-						<?php else: ?>
-							<div class="encours unpaid"><?php echo price($line['encours'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></div>
-						<?php endif; ?>
-					</div>
-				<?php endforeach; ?>
-			</div>
-		</div>
-		<?php endif; ?>
 	</div>
 </div>
 

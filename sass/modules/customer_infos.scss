@@ -1,4 +1,5 @@
 @use "table_display";
+@use "status_codes";
 
 %customer_infos {
 	.customer_infos_content {
@@ -9,22 +10,7 @@
 			margin: 5px 0;
 		}
 
-		.status_ok .value {
-			color:#0f740f;
-		}
-		.status_warn .value {
-			color: #ff6600;
-		}
-		.status_crit .value {
-			color: #ff0000;
-		}
-
-		.status_valid .value {
-			color: #0f740f;
-		}
-		.status_expired .value {
-			color: #ff0000;
-		}
+		@extend %status_codes;
 
 		.customer_infos_general {
 
@@ -86,27 +72,6 @@
 						display: flex;
 						justify-content: space-between;
 						align-items: center;
-
-						.invoice_type {
-							display: flex;
-							justify-content: center;
-							align-items: center;
-							width: 10px;
-							height: 10px;
-							border-radius: 10px;
-							font-size: 10px;
-							padding: 2px;
-							border: solid 1px #000;
-
-							&.invoice_type_deposit {
-								color: #0f740f;
-								border-color: #0f740f;
-							}
-							&.invoice_type_standard {
-								//color: #555;
-								visibility: hidden;
-							}
-						}
 					}
 
 					.amount {

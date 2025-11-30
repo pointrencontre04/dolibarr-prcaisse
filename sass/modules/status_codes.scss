@@ -1,0 +1,52 @@
+%status_codes {
+	.status_ok {
+		color:#0f740f;
+	}
+	.status_warn {
+		color: #ff6600;
+	}
+	.status_crit {
+		color: #ff0000;
+	}
+
+	.status_valid {
+		color: #0f740f;
+	}
+	.status_expired {
+		color: #ff0000;
+	}
+
+	.encours {
+		&.paid {
+			color: #0f740f;
+		}
+		&.closed {
+			color: #888;
+		}
+		&.unpaid {
+			color: #ff6600;
+		}
+	}
+
+	.invoice_type {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 10px;
+		height: 10px;
+		border-radius: 10px;
+		font-size: 10px;
+		padding: 2px;
+		border: solid 1px #000;
+
+		&.invoice_type_deposit {
+			color: #0f740f;
+			border-color: #0f740f;
+		}
+		&.invoice_type_standard {
+			//color: #555;
+			visibility: hidden;
+		}
+	}
+
+}

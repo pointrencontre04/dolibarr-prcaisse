@@ -288,9 +288,9 @@ if ($user->hasRight('facture', 'read')) {
             <div class="label">Membres du foyer&nbsp;:</div>
             <div class="value"><?php echo $nombrecontacts; ?></div>
         </div>
-        <div class="encours <?php echo $encours_classes; ?>">
+        <div class="encours">
             <div class="label">Montant encours&nbsp;:</div>
-            <div class="value"><?php echo price($encours['opened'], 0, $langs, 0, 0, -1, $conf->currency); ?></div>
+            <div class="value <?php echo $encours_classes; ?>"><?php echo price($encours['opened'], 0, $langs, 0, 0, -1, $conf->currency); ?></div>
         </div>
         <?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read')): ?>
         <div class="bonalim">
@@ -298,9 +298,9 @@ if ($user->hasRight('facture', 'read')) {
             <div class="value"><span class="bonalim_left"><?php echo price($bonsalim_total_left, 0, $langs, 0, 0, -1, $conf->currency); ?></span> <span class="bonalim_total">(<?php echo $bonsalim_count ?> &#x00D7; <?php echo $bonsalim_mean ?>)</span></div>
         </div>
         <?php endif; ?>
-        <div class="credit <?php echo $credit_classes; ?>">
+        <div class="credit">
             <div class="label">Avance disponible&nbsp;:</div>
-            <div class="value"><?php echo price($credit_total, 0, $langs, 0, 0, -1, $conf->currency); ?></div>
+            <div class="value <?php echo $credit_classes; ?>"><?php echo price($credit_total, 0, $langs, 0, 0, -1, $conf->currency); ?></div>
         </div>
     </div>
     <div class="customer_infos_notes">

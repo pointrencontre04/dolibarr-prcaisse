@@ -3,10 +3,14 @@
  */
 
 @use "modules/customer_infos";
+@use "modules/status_codes";
 
 .prcaisse_customer_card {
-	@extend %customer_infos;
+	@extend %status_codes;
 
+	padding-top: 10px;
+
+	/*
 	.customer_infos_content_column {
 
 		width: calc(50% - 350px);
@@ -14,6 +18,15 @@
 
 		&:nth-child(1) {
 			width: 350px;
+		}
+	}
+	*/
+
+	.invoice_history_line {
+		.cell_inner {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 		}
 	}
 }

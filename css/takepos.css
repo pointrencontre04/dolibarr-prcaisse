@@ -1,21 +1,64 @@
 /**
  * Stylesheet for custom position and color of TakePOS
  */
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value {
+.table, .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value {
   display: table;
 }
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .table_row {
+.table .table_row, .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .table_row {
   display: table-row;
 }
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .table_row.table_header {
+.table .table_row.table_header, .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .table_row.table_header {
   font-weight: bold;
   background-color: #eee;
 }
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .table_row > * {
+.table .table_row > *, .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .table_row > * {
   display: table-cell;
   vertical-align: middle;
   padding: 2px 5px;
   border: solid 1px #ddd;
+}
+
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_ok {
+  color: #0f740f;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_warn {
+  color: #ff6600;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_crit {
+  color: #ff0000;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_valid {
+  color: #0f740f;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_expired {
+  color: #ff0000;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .encours.paid {
+  color: #0f740f;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .encours.closed {
+  color: #888;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .encours.unpaid {
+  color: #ff6600;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_type {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  font-size: 10px;
+  padding: 2px;
+  border: solid 1px #000;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_type.invoice_type_deposit {
+  color: #0f740f;
+  border-color: #0f740f;
+}
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_type.invoice_type_standard {
+  visibility: hidden;
 }
 
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content {
@@ -24,21 +67,6 @@
 }
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content > * {
   margin: 5px 0;
-}
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_ok .value {
-  color: #0f740f;
-}
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_warn .value {
-  color: #ff6600;
-}
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_crit .value {
-  color: #ff0000;
-}
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_valid .value {
-  color: #0f740f;
-}
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .status_expired .value {
-  color: #ff0000;
 }
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .customer_infos_general > div {
   display: table-row;
