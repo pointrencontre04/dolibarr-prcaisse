@@ -322,15 +322,14 @@ class modPRCaisse extends DolibarrModules
 		$r = 0;
 		// Add here entries to declare new menus
 		/* BEGIN MODULEBUILDER TOPMENU */
-		/*
 		$this->menu[$r++] = array(
 			'fk_menu' => '', // Will be stored into mainmenu + leftmenu. Use '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type' => 'top', // This is a Top menu entry
-			'titre' => 'ModulePRCaisseName',
+			'titre' => $langs->trans("PRCaisseArea"),
 			'prefix' => img_picto('', $this->picto, 'class="pictofixedwidth valignmiddle"'),
 			'mainmenu' => 'prcaisse',
 			'leftmenu' => '',
-			'url' => '/prcaisse/prcaisseindex.php',
+			'url' => '/prcaisse/prcaisse_index.php',
 			'langs' => 'prcaisse@prcaisse', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position' => 1000 + $r,
 			'enabled' => 'isModEnabled("prcaisse")', // Define condition to show or hide menu entry. Use 'isModEnabled("prcaisse")' if entry must be visible if module is enabled.
@@ -338,42 +337,45 @@ class modPRCaisse extends DolibarrModules
 			'target' => '',
 			'user' => 2, // 0=Menu for internal users, 1=external users, 2=both
 		);
-		*/
 		/* END MODULEBUILDER TOPMENU */
 
 		/* BEGIN MODULEBUILDER LEFTMENU MYOBJECT */
-		/*
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			'fk_menu' => 'fk_mainmenu=prcaisse',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type' => 'left',                          // This is a Left menu entry
-			'titre' => 'MyObject',
+			'titre' => $langs->trans("PRCaisseArea"),
 			'prefix' => img_picto('', $this->picto, 'class="pictofixedwidth valignmiddle paddingright"'),
 			'mainmenu' => 'prcaisse',
-			'leftmenu' => 'myobject',
-			'url' => '/prcaisse/prcaisseindex.php',
+			'leftmenu' => 'prcaisse_index',
+			'url' => '/prcaisse/prcaisse_index.php',
 			'langs' => 'prcaisse@prcaisse',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position' => 1000 + $r,
 			'enabled' => 'isModEnabled("prcaisse")', // Define condition to show or hide menu entry. Use 'isModEnabled("prcaisse")' if entry must be visible if module is enabled.
-			'perms' => '$user->hasRight("prcaisse", "myobject", "read")',
+			'perms' => '1',
 			'target' => '',
 			'user' => 2,				                // 0=Menu for internal users, 1=external users, 2=both
-			'object' => 'MyObject'
+			'object' => '',
 		);
-		$this->menu[$r++]=array(
-			'fk_menu' => 'fk_mainmenu=prcaisse,fk_leftmenu=myobject',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+		/* END MODULEBUILDER LEFTMENU BONS ALIMENTAIRES */
+		/* BEGIN MODULEBUILDER LEFTMENU BONALIM */
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=prcaisse,fk_leftmenu=prcaisse_index',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type' => 'left',			                // This is a Left menu entry
-			'titre' => 'New_MyObject',
+			'titre' => $langs->trans('CustomerSummaryPage'),
 			'mainmenu' => 'prcaisse',
-			'leftmenu' => 'prcaisse_myobject_new',
-			'url' => '/prcaisse/myobject_card.php?action=create',
+			'leftmenu' => 'prcaisse_customers',
+			'url' => '/prcaisse/prcaisse_customers.php',
 			'langs' => 'prcaisse@prcaisse',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position' => 1000 + $r,
 			'enabled' => 'isModEnabled("prcaisse")', // Define condition to show or hide menu entry. Use 'isModEnabled("prcaisse")' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms' => '$user->hasRight("prcaisse", "myobject", "write")'
+			'perms' => '1',
 			'target' => '',
 			'user' => 2,				                // 0=Menu for internal users, 1=external users, 2=both
-			'object' => 'MyObject'
+			'object' => '',
 		);
+		/* END MODULEBUILDER LEFTMENU BONS ALIMENTAIRES */
+		/* BEGIN MODULEBUILDER LEFTMENU BONALIM */
+		/*
 		$this->menu[$r++]=array(
 			'fk_menu' => 'fk_mainmenu=prcaisse,fk_leftmenu=myobject',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type' => 'left',			                // This is a Left menu entry
@@ -384,7 +386,7 @@ class modPRCaisse extends DolibarrModules
 			'langs' => 'prcaisse@prcaisse',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position' => 1000 + $r,
 			'enabled' => 'isModEnabled("prcaisse")', // Define condition to show or hide menu entry. Use 'isModEnabled("prcaisse")' if entry must be visible if module is enabled.
-			'perms' => '$user->hasRight("prcaisse", "myobject", "read")'
+			'perms' => '$user->hasRight("prcaisse", "myobject", "read")',
 			'target' => '',
 			'user' => 2,				                // 0=Menu for internal users, 1=external users, 2=both
 			'object' => 'MyObject'

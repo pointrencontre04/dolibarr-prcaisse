@@ -2,6 +2,8 @@
  * Stylesheet for custom position and color of TakePOS
  */
 
+@use "modules/customer_infos";
+
 .bodytakepos {
 
 	font-size: 1.2em;
@@ -53,149 +55,7 @@
 					}
 				}
 				#customer_infos {
-					.customer_infos_content {
-						margin: 5px 8px;
-						font-size: 1em;
-
-						& > * {
-							margin: 5px 0;
-						}
-
-						.status_ok .value {
-							color:#0f740f;
-						}
-						.status_warn .value {
-							color: #ff6600;
-						}
-						.status_crit .value {
-							color: #ff0000;
-						}
-
-						.status_valid .value {
-							color: #0f740f;
-						}
-						.status_expired .value {
-							color: #ff0000;
-						}
-
-						.customer_infos_general {
-
-							& > div {
-								display: table-row;
-							}
-
-							.label {
-								display: table-cell;
-								white-space: nowrap;
-								margin-right: 5pt;
-							}
-							.value {
-								display: table-cell;
-								font-weight: bold;
-							}
-
-							.bonalim .value {
-								.bonalim_left {
-									font-weight: bold;
-								}
-								.bonalim_total {
-									font-weight: normal;
-									font-size: 90%;
-								}
-							}
-						}
-
-						.customer_infos_notes {
-
-							.label {
-								margin-right: 5pt;
-							}
-							.value {
-								font-weight: bold;
-							}
-						}
-
-						.invoice_history {
-							display: flex;
-							flex-direction: column;
-
-							.label {
-								margin-bottom: 5px;
-							}
-
-							.value {
-								font-weight: normal;
-								display: table;
-
-								.invoice_history_line {
-									display: table-row;
-
-									&.invoice_history_table_header {
-										font-weight: bold;
-										background-color: #eee;
-									}
-
-									& > * {
-										display: table-cell;
-										vertical-align: middle;
-										padding: 2px 5px;
-										border: solid 1px #ddd;
-									}
-
-									&.active {
-										background-color: #ddd;
-									}
-
-									.cell_inner {
-										display: flex;
-										justify-content: space-between;
-										align-items: center;
-
-										.invoice_type {
-											display: flex;
-											justify-content: center;
-											align-items: center;
-											width: 10px;
-											height: 10px;
-											border-radius: 10px;
-											font-size: 10px;
-											padding: 2px;
-											border: solid 1px #000;
-
-											&.invoice_type_deposit {
-												color: #0f740f;
-												border-color: #0f740f;
-											}
-											&.invoice_type_standard {
-												//color: #555;
-												visibility: hidden;
-											}
-										}
-									}
-
-									.amount {
-										text-align: right;
-										color: #000;
-									}
-
-									.encours {
-										font-weight: bold;
-										text-align: right;
-										&.paid {
-											color: #0f740f;
-										}
-										&.closed {
-											color: #888;
-										}
-										&.unpaid {
-											color: #ff6600;
-										}
-									}
-								}
-							}
-						}
-
-					}
+					@extend %customer_infos;
 				}
 			}
 

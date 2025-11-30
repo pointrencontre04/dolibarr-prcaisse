@@ -1,0 +1,120 @@
+/**
+ * Stylesheet for customer card
+ */
+.table, .prcaisse_customer_card .customer_infos_content .invoice_history .value {
+  display: table;
+}
+.table .table_row, .prcaisse_customer_card .customer_infos_content .invoice_history .value .table_row {
+  display: table-row;
+}
+.table .table_row.table_header, .prcaisse_customer_card .customer_infos_content .invoice_history .value .table_row.table_header {
+  font-weight: bold;
+  background-color: #eee;
+}
+.table .table_row > *, .prcaisse_customer_card .customer_infos_content .invoice_history .value .table_row > * {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 2px 5px;
+  border: solid 1px #ddd;
+}
+
+.prcaisse_customer_card .customer_infos_content {
+  margin: 5px 8px;
+  font-size: 1em;
+}
+.prcaisse_customer_card .customer_infos_content > * {
+  margin: 5px 0;
+}
+.prcaisse_customer_card .customer_infos_content .status_ok .value {
+  color: #0f740f;
+}
+.prcaisse_customer_card .customer_infos_content .status_warn .value {
+  color: #ff6600;
+}
+.prcaisse_customer_card .customer_infos_content .status_crit .value {
+  color: #ff0000;
+}
+.prcaisse_customer_card .customer_infos_content .status_valid .value {
+  color: #0f740f;
+}
+.prcaisse_customer_card .customer_infos_content .status_expired .value {
+  color: #ff0000;
+}
+.prcaisse_customer_card .customer_infos_content .customer_infos_general > div {
+  display: table-row;
+}
+.prcaisse_customer_card .customer_infos_content .customer_infos_general .label {
+  display: table-cell;
+  white-space: nowrap;
+  margin-right: 5pt;
+}
+.prcaisse_customer_card .customer_infos_content .customer_infos_general .value {
+  display: table-cell;
+  font-weight: bold;
+}
+.prcaisse_customer_card .customer_infos_content .customer_infos_general .bonalim .value .bonalim_left {
+  font-weight: bold;
+}
+.prcaisse_customer_card .customer_infos_content .customer_infos_general .bonalim .value .bonalim_total {
+  font-weight: normal;
+  font-size: 90%;
+}
+.prcaisse_customer_card .customer_infos_content .customer_infos_notes .label {
+  margin-right: 5pt;
+}
+.prcaisse_customer_card .customer_infos_content .customer_infos_notes .value {
+  font-weight: bold;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history {
+  display: flex;
+  flex-direction: column;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history .label {
+  margin-bottom: 5px;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history .value {
+  font-weight: normal;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history .value .invoice_history_line.active {
+  background-color: #ddd;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history .value .invoice_history_line .cell_inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history .value .invoice_history_line .cell_inner .invoice_type {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  font-size: 10px;
+  padding: 2px;
+  border: solid 1px #000;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history .value .invoice_history_line .cell_inner .invoice_type.invoice_type_deposit {
+  color: #0f740f;
+  border-color: #0f740f;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history .value .invoice_history_line .cell_inner .invoice_type.invoice_type_standard {
+  visibility: hidden;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history .value .invoice_history_line .amount {
+  text-align: right;
+  color: #000;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history .value .invoice_history_line .encours {
+  font-weight: bold;
+  text-align: right;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history .value .invoice_history_line .encours.paid {
+  color: #0f740f;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history .value .invoice_history_line .encours.closed {
+  color: #888;
+}
+.prcaisse_customer_card .customer_infos_content .invoice_history .value .invoice_history_line .encours.unpaid {
+  color: #ff6600;
+}

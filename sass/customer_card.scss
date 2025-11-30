@@ -1,0 +1,19 @@
+/**
+ * Stylesheet for customer card
+ */
+
+@use "modules/customer_infos";
+
+.prcaisse_customer_card {
+	@extend %customer_infos;
+
+	.customer_infos_content_column {
+
+		width: calc(50% - 350px);
+		padding: 10px 0;
+
+		&:nth-child(1) {
+			width: 350px;
+		}
+	}
+}

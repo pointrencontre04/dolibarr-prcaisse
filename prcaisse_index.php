@@ -21,7 +21,7 @@
  */
 
 /**
- *	\file       prcaisse/prcaisseindex.php
+ *	\file       prcaisse/prcaisse_index.php
  *	\ingroup    prcaisse
  *	\brief      Home page of prcaisse top menu
  */

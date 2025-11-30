@@ -282,6 +282,19 @@ class ActionsPRCaisse extends CommonHookActions
 			}
 		}
 
+		/**
+		 * Check if owner of invoice has any discount available
+		 */
+		if ($thirdparty->getAvailableDiscounts() > 0) {
+			$this->results = $parameters['action_buttons'];
+			array_unshift($this->results, [
+				'class' => '',
+				'function' => 'ValidateAddDiscount()',
+				'span' => '',
+				'text' => '<span class="fa fa-ticket-alt"></span></span><br>Appliquer les acomptes<span>',
+			]);
+		}
+
 		return 0;
 	}
 
@@ -346,6 +359,45 @@ class ActionsPRCaisse extends CommonHookActions
 							console.log("Amount is not complete, so we do NOT close popup and reload it.");
 							location.reload();
 						}
+					});
+
+					return true;
+		        }
+
+				function ValidateAddDiscount() {
+                	console.log("Launch ValidateAddDiscount");
+
+					var invoiceid = <?php echo($invoice_id > 0 ? $invoice_id : 0); ?>;
+					var accountid = $("#selectaccountid").val();
+					var amountpayed = $("#change1").val();
+					var excess = $("#change2").val();
+					if (amountpayed > <?php echo $invoice->total_ttc; ?>) {
+						amountpayed = <?php echo $invoice->total_ttc; ?>;
+					}
+					console.log("We click on the payment mode to pay amount = "+amountpayed);
+					const callback_url = "<?php echo dol_buildpath('/prcaisse/callbacks/apply_discounts.php', 1); ?>";
+					const params = {
+						place: <?php echo $place; ?>,
+						invoice_id: invoiceid,
+						amount: amountpayed,
+						excess: excess,
+						accountid: accountid,
+						token: "<?php echo newToken(); ?>"
+					};
+					jQuery.ajax({
+						url: callback_url
+						method: 'POST',
+						data: params,
+						success: function(data) {
+							if (amountpayed > <?php echo $remaintopay; ?> || amountpayed == <?php echo $remaintopay; ?> || amountpayed==0 ) {
+								console.log("Close popup");
+								parent.$.colorbox.close();
+							}
+							else {
+								console.log("Amount is not complete, so we do NOT close popup and reload it.");
+								location.reload();
+							}
+						},
 					});
 
 					return true;

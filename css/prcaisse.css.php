@@ -110,3 +110,4 @@ div.mainmenu.prcaisse {
 */
 
 <?php echo file_get_contents('takepos.css'); ?>
+<?php echo file_get_contents('customer_card.css'); ?>

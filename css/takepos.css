@@ -1,53 +1,23 @@
 /**
  * Stylesheet for custom position and color of TakePOS
  */
-.bodytakepos {
-  font-size: 1.2em;
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value {
+  display: table;
 }
-.bodytakepos .container {
-  display: flex;
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .table_row {
+  display: table-row;
 }
-.bodytakepos .header {
-  width: 280px;
-  max-width: 350px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  border-right: solid 1px #e0e0e0;
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .table_row.table_header {
+  font-weight: bold;
+  background-color: #eee;
 }
-@media (min-width: 1400px) {
-  .bodytakepos .header {
-    width: 350px;
-  }
+.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .table_row > * {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 2px 5px;
+  border: solid 1px #ddd;
 }
-.bodytakepos .header .topnav {
-  display: flex;
-  flex-direction: column;
-}
-.bodytakepos .header .topnav .topnav-left {
-  float: none;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-.bodytakepos .header .topnav .topnav-left #shoppingcart {
-  order: 2;
-}
-.bodytakepos .header .topnav .topnav-left #customerandsales {
-  order: 3;
-  min-height: 250px;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-}
-.bodytakepos .header .topnav .topnav-left #customer {
-  width: 100%;
-  min-width: 100%;
-  background-color: #f0f0f0;
-}
-.bodytakepos .header .topnav .topnav-left #customer:hover {
-  background-color: #ddd;
-}
+
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content {
   margin: 5px 8px;
   font-size: 1em;
@@ -104,20 +74,6 @@
 }
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value {
   font-weight: normal;
-  display: table;
-}
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line {
-  display: table-row;
-}
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line.invoice_history_table_header {
-  font-weight: bold;
-  background-color: #eee;
-}
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line > * {
-  display: table-cell;
-  vertical-align: middle;
-  padding: 2px 5px;
-  border: solid 1px #ddd;
 }
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line.active {
   background-color: #ddd;
@@ -161,6 +117,54 @@
 }
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .encours.unpaid {
   color: #ff6600;
+}
+
+.bodytakepos {
+  font-size: 1.2em;
+}
+.bodytakepos .container {
+  display: flex;
+}
+.bodytakepos .header {
+  width: 280px;
+  max-width: 350px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  border-right: solid 1px #e0e0e0;
+}
+@media (min-width: 1400px) {
+  .bodytakepos .header {
+    width: 350px;
+  }
+}
+.bodytakepos .header .topnav {
+  display: flex;
+  flex-direction: column;
+}
+.bodytakepos .header .topnav .topnav-left {
+  float: none;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.bodytakepos .header .topnav .topnav-left #shoppingcart {
+  order: 2;
+}
+.bodytakepos .header .topnav .topnav-left #customerandsales {
+  order: 3;
+  min-height: 250px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.bodytakepos .header .topnav .topnav-left #customer {
+  width: 100%;
+  min-width: 100%;
+  background-color: #f0f0f0;
+}
+.bodytakepos .header .topnav .topnav-left #customer:hover {
+  background-color: #ddd;
 }
 .bodytakepos .header .topnav .topnav-right {
   float: none;

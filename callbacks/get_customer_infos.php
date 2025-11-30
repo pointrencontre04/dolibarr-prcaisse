@@ -321,13 +321,13 @@ if ($user->hasRight('facture', 'read')) {
     <div class="invoice_history invoice_history_last">
         <div class="label">10 derniers passages sur cette caisse</div>
         <div class="value">
-            <div class="invoice_history_line invoice_history_table_header">
+            <div class="invoice_history_line table_row table_header">
                 <div>Date</div>
                 <div>Montant</div>
                 <div>À régler</div>
             </div>
             <?php foreach ($invoice_history as $line): ?>
-                <div class="invoice_history_line <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>" onclick="$('#poslines').load('invoice.php?action=history&placeid=<?php echo (int) $line['facid']; ?>', function() {place='0'})">
+                <div class="invoice_history_line table_row <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>" onclick="$('#poslines').load('invoice.php?action=history&placeid=<?php echo (int) $line['facid']; ?>', function() {place='0'})">
                     <div class="date"><?php echo dol_print_date($line['date']) ?></div>
                     <div class="amount">
                         <div class="cell_inner">
@@ -352,13 +352,13 @@ if ($user->hasRight('facture', 'read')) {
     <div class="invoice_history invoice_history_unpaid">
         <div class="label">Autres factures impayées</div>
         <div class="value">
-            <div class="invoice_history_line invoice_history_table_header">
+            <div class="invoice_history_line table_header">
                 <div>Date</div>
                 <div>Montant</div>
                 <div>À régler</div>
             </div>
             <?php foreach ($invoice_history_unpaid as $line): ?>
-                <div class="invoice_history_line <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>" onclick="$('#poslines').load('invoice.php?action=history&placeid=<?php echo (int) $line['facid']; ?>', function() {place='0'})">
+                <div class="invoice_history_line table_row <?php if ($invoice_id && $invoice_id == $line['facid']) { echo 'active'; } ?>" onclick="$('#poslines').load('invoice.php?action=history&placeid=<?php echo (int) $line['facid']; ?>', function() {place='0'})">
                     <div class="date"><?php echo dol_print_date($line['date']) ?></div>
                     <div class="amount"><?php echo price($line['amount_gross'], 0, $langs, 0, 0, -1, $conf->currency, 0, $langs, 0, 0, -1, $conf->currency) ?></div>
                     <?php if ($line['status'] == Facture::STATUS_CLOSED && $line['close_code'] == 0 && $line['encours'] == 0): ?>

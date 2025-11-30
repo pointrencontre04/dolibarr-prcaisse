@@ -1,0 +1,20 @@
+.table, %table_display {
+	display: table;
+
+	.table_row {
+		display: table-row;
+
+		&.table_header {
+			font-weight: bold;
+			background-color: #eee;
+		}
+
+		& > * {
+			display: table-cell;
+			vertical-align: middle;
+			padding: 2px 5px;
+			border: solid 1px #ddd;
+		}
+	}
+
+}

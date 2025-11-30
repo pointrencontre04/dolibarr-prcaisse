@@ -30,10 +30,12 @@ PRCaisseAbout = About PRCaisse
 PRCaisseAboutPage = PRCaisse about page
 
 #
-# Sample page
+# Customer Page
 #
-PRCaisseArea = Home PRCaisse
+PRCaisseArea = Outils de suivi
+CustomerSummaryPage = Vue détaillée d'un client
 MyPageName = My page name
+PleaseSelectValidThirdParty = Merci de sélectionner un client valide
 
 #
 # Sample widget
