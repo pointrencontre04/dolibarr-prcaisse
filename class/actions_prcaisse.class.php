@@ -285,6 +285,7 @@ class ActionsPRCaisse extends CommonHookActions
 		/**
 		 * Check if owner of invoice has any discount available
 		 */
+		/*
 		if ($thirdparty->getAvailableDiscounts() > 0) {
 			$this->results = $parameters['action_buttons'];
 			array_unshift($this->results, [
@@ -294,6 +295,7 @@ class ActionsPRCaisse extends CommonHookActions
 				'text' => '<span class="fa fa-ticket-alt"></span></span><br>Appliquer les acomptes<span>',
 			]);
 		}
+		*/
 
 		return 0;
 	}
