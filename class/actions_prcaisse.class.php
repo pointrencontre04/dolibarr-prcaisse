@@ -385,7 +385,7 @@ class ActionsPRCaisse extends CommonHookActions
 						token: "<?php echo newToken(); ?>"
 					};
 					jQuery.ajax({
-						url: callback_url
+						url: callback_url,
 						method: 'POST',
 						data: params,
 						success: function(data) {
