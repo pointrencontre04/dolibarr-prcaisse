@@ -232,6 +232,8 @@ class ActionsPRCaisse extends CommonHookActions
 	{
 		global $langs, $conf, $user, $db;
 
+		$action_buttons = [];
+
 		if (!in_array('takepospay', $hookmanager->contextarray)) {
 			return 0;
 		}
@@ -250,6 +252,7 @@ class ActionsPRCaisse extends CommonHookActions
 		 * Add actions to pay with BonAlim
 		 */
 		if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'write')) {
+
 
 			// Check if owner of invoice has any BonAlim available
 			$bonalim = new BonAlim($db);
@@ -270,34 +273,35 @@ class ActionsPRCaisse extends CommonHookActions
 			}
 
 			if ($bonsalim_total > 0) {
-				//var_dump($parameters['action_buttons']);
-				$this->results = $parameters['action_buttons'];
-				array_unshift($this->results, [
+				$action_buttons[] = [
 					'class' => '',
 					'function' => 'ValidateBonAlim()',
 					'span' => '',
 					'text' => '<span class="fa fa-ticket-alt"></span></span><br>Bons Alimentaires<span>',
-				]);
-				return 1;
+				];
 			}
 		}
 
 		/**
 		 * Check if owner of invoice has any discount available
 		 */
-		/*
 		if ($thirdparty->getAvailableDiscounts() > 0) {
-			$this->results = $parameters['action_buttons'];
-			array_unshift($this->results, [
+			$action_buttons[] = [
 				'class' => '',
 				'function' => 'ValidateAddDiscount()',
 				'span' => '',
 				'text' => '<span class="fa fa-ticket-alt"></span></span><br>Appliquer les acomptes<span>',
-			]);
+			];
+			$replace_actions = 1;
 		}
-		*/
 
-		return 0;
+		if ($action_buttons) {
+			//$this->results = $parameters['action_buttons'];
+			$this->results = $action_buttons;
+			return 0;
+		} else {
+			return 0;
+		}
 	}
 
 	/**
@@ -546,7 +550,7 @@ class ActionsPRCaisse extends CommonHookActions
 							$payment->paiementid = modPRBonAlim::BONALIM_PAYMENT_ID;
 							$payment->num_payment = $invoice->ref;
 
-							$res = $payment->create($user);
+							$res = $payment->create($user, 1);
 							if ($res < 0) {
 								$error++;
 								dol_htmloutput_errors($langs->trans('Error').' '.$payment->error, $payment->errors, 1);
@@ -570,7 +574,7 @@ class ActionsPRCaisse extends CommonHookActions
 							$payment->paiementid = modPRBonAlim::BONALIM_PAYMENT_ID;
 							$payment->num_payment = $invoice->ref;
 
-							$res = $payment->create($user);
+							$res = $payment->create($user, 1);
 							if ($res < 0) {
 								$error++;
 								dol_htmloutput_errors($langs->trans('Error').' '.$payment->error, $payment->errors, 1);
