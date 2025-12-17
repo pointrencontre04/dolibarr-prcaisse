@@ -74,6 +74,15 @@
   	}
   }
   */
+  /*
+  div.fichehalfleft.largescreenonly,
+  div.fichehalfright.largescreenonly {
+  	@media only screen and (max-width: 1920px) {
+  		float: none !important;
+     		width: auto !important;
+  	}
+  }
+  */
 }
 .prcaisse_customer_card .invoice_history_line .cell_inner {
   display: flex;

@@ -352,7 +352,7 @@ if ($user->hasRight('facture', 'read')) {
     <div class="invoice_history invoice_history_unpaid">
         <div class="label">Autres factures impayées</div>
         <div class="value">
-            <div class="invoice_history_line table_header">
+            <div class="invoice_history_line table_row table_header">
                 <div>Date</div>
                 <div>Montant</div>
                 <div>À régler</div>

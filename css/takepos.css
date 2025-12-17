@@ -111,24 +111,6 @@
   justify-content: space-between;
   align-items: center;
 }
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .cell_inner .invoice_type {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 10px;
-  height: 10px;
-  border-radius: 10px;
-  font-size: 10px;
-  padding: 2px;
-  border: solid 1px #000;
-}
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .cell_inner .invoice_type.invoice_type_deposit {
-  color: #0f740f;
-  border-color: #0f740f;
-}
-.bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .cell_inner .invoice_type.invoice_type_standard {
-  visibility: hidden;
-}
 .bodytakepos .header .topnav .topnav-left #customer_infos .customer_infos_content .invoice_history .value .invoice_history_line .amount {
   text-align: right;
   color: #000;
@@ -453,10 +435,10 @@ button.calcbutton {
 div.paymentbordline {
   background-color: #555 !important;
 }
-div.paymentbordline #totaldisplay, div.paymentbordline.paymentbordlinereceived .takepospay > span, div.paymentbordline.paymentbordlinechange .takepospay > span {
+div.paymentbordline #totaldisplay, div.paymentbordline.paymentbordlinereceived .takepospay > span, div.paymentbordline.paymentbordlinechange .takepospay > span, div.paymentbordline.paymentbordlineremain .takepospay > span {
   font-size: 150%;
   font-weight: bold;
 }
-div.paymentbordline #totaldisplay.colorgreen, div.paymentbordline.paymentbordlinereceived .takepospay > span.colorgreen, div.paymentbordline.paymentbordlinechange .takepospay > span.colorgreen {
+div.paymentbordline #totaldisplay.colorgreen, div.paymentbordline.paymentbordlinereceived .takepospay > span.colorgreen, div.paymentbordline.paymentbordlinechange .takepospay > span.colorgreen, div.paymentbordline.paymentbordlineremain .takepospay > span.colorgreen {
   color: lightgreen !important;
 }

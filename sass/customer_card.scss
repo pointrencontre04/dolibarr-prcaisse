@@ -29,4 +29,14 @@
 			align-items: center;
 		}
 	}
+
+	/*
+	div.fichehalfleft.largescreenonly,
+	div.fichehalfright.largescreenonly {
+		@media only screen and (max-width: 1920px) {
+			float: none !important;
+    		width: auto !important;
+		}
+	}
+	*/
 }

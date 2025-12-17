@@ -554,7 +554,7 @@ print '</div>';
 		</div>
 	</div>
 	<div class="fichecenter">
-		<div class="fichehalfleft">
+		<div class="fichehalfleft largescreenonly">
 			<?php if (isModEnabled('prbonalim') && $user->hasRight('bonalim@prbonalim', 'read') && $bonsalim_credited): ?>
 			<table class="centpercent notopnoleftnoright table-fiche-title">
 				<tr class="toptitle"><td class="nobordernopadding valignmiddle col-title"><div class="titre inline-block">Bons disponibles</div></td></tr>
@@ -618,7 +618,7 @@ print '</div>';
 			</div>
 			<?php endif; ?>
 		</div>
-		<div class="fichehalfright">
+		<div class="fichehalfright largescreenonly">
 			<?php if ($invoice_history): ?>
 			<table class="centpercent notopnoleftnoright table-fiche-title">
 				<tr class="toptitle"><td class="nobordernopadding valignmiddle col-title"><div class="titre inline-block">5 dernières factures</div></td></tr>

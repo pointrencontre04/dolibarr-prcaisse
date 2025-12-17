@@ -353,7 +353,10 @@ button.calcbutton {
 div.paymentbordline {
 	background-color: #555 !important;
 
-	#totaldisplay, &.paymentbordlinereceived .takepospay > span, &.paymentbordlinechange .takepospay > span {
+	#totaldisplay,
+	&.paymentbordlinereceived .takepospay > span,
+	&.paymentbordlinechange .takepospay > span,
+	&.paymentbordlineremain .takepospay > span {
 		font-size: 150%;
 		font-weight: bold;
 
