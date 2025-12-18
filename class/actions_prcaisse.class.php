@@ -124,6 +124,33 @@ class ActionsPRCaisse extends CommonHookActions
 		$invoice_id = $object->id;
 
 		/**
+		 * Try to provide persistence of selected line
+		 * when reloading the invoice table
+		 */
+		ob_start();
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+				var selected = jQuery('#poslines #tablelines tr.selected');
+				var lastselected = null;
+				if (selected.length > 0) {
+					Cookies.set('prcaisse_takepos_lastselected', selected.attr('id'));
+					lastselected = selected.attr('id');
+				} else {
+					lastselected = Cookies.get('prcaisse_takepos_lastselected');
+					if (lastselected) {
+						jQuery('#' + lastselected).click();
+					}
+				}
+				jQuery('#poslines #tablelines tr').click(function() {
+					Cookies.set('prcaisse_takepos_lastselected', jQuery(this).attr('id'));
+				});
+			});
+		</script>
+		<?php
+		$resprints .= ob_get_clean();
+
+		/**
 		 * Add JavaScript callback to show
 		 * customer informations on left pane
 		 */
@@ -155,6 +182,10 @@ class ActionsPRCaisse extends CommonHookActions
 		<?php
 		$resprints .= ob_get_clean();
 
+		/**
+		 * Display informations about Deposits
+		 */
+
 		if ($object->type == Facture::TYPE_DEPOSIT && $object->status == Facture::STATUS_DRAFT) {
 			ob_start();
 			?>
@@ -165,7 +196,6 @@ class ActionsPRCaisse extends CommonHookActions
 			<?php
 			$resprints .= ob_get_clean();
 		}
-
 		if ($object->type == Facture::TYPE_DEPOSIT && ($object->status == Facture::STATUS_VALIDATED || $object->status == Facture::STATUS_CLOSED)) {
 			ob_start();
 			?>
@@ -176,7 +206,6 @@ class ActionsPRCaisse extends CommonHookActions
 			<?php
 			$resprints .= ob_get_clean();
 		}
-
 
 		$this->resprints = $resprints;
 

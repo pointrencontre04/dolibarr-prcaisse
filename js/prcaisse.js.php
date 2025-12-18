@@ -100,6 +100,8 @@ if (empty($dolibarr_nocache)) {
 
 /* Javascript library of module PRCaisse */
 
+<?php echo file_get_contents('js.cookie.min.js'); ?>
+
 <?php echo file_get_contents('takepos.js'); ?>
 
 var PRCaisseSwitchInvoiceType = function() {

@@ -144,6 +144,16 @@
 		button {
 			padding: 10px;
 		}
+
+		tr.selected {
+			background-color: #dfd !important;
+
+			td {
+				background-color: inherit !important;
+				border-top: solid thin #0a0 !important;
+				border-bottom: solid thin #0a0 !important;
+			}
+		}
 	}
 
 	.row2withhead {

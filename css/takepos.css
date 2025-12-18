@@ -247,6 +247,14 @@
 .bodytakepos .row1withhead button {
   padding: 10px;
 }
+.bodytakepos .row1withhead tr.selected {
+  background-color: #dfd !important;
+}
+.bodytakepos .row1withhead tr.selected td {
+  background-color: inherit !important;
+  border-top: solid thin #0a0 !important;
+  border-bottom: solid thin #0a0 !important;
+}
 .bodytakepos .row2withhead {
   display: flex;
   flex-direction: column;
