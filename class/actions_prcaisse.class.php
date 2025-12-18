@@ -448,6 +448,62 @@ class ActionsPRCaisse extends CommonHookActions
 	}
 
 	/**
+	 * Execute action completeTakePosInvoiceParentLine
+	 *
+	 * @param	array<string,mixed>	$parameters		Array of parameters
+	 * @param	CommonObject		$object			The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
+	 * @param	string				$action			'add', 'update', 'view'
+	 * @param	Hookmanager			$hookmanager	Hookmanager
+	 * @return	int									Return integer <0 if KO,
+	 *												=0 if OK but we want to process standard actions too,
+	 *												>0 if OK and we want to replace standard actions.
+	 */
+	/*
+	public function completeTakePosInvoiceParentLine(&$parameters, &$object, &$action, $hookmanager)
+	{
+		global $langs, $conf, $user, $db;
+
+		if (!in_array('takeposinvoice', $hookmanager->contextarray)) {
+			return 0;
+		}
+	}
+	*/
+
+	/**
+	 * Execute action completeTakePosInvoiceLine
+	 *
+	 * @param	array<string,mixed>	$parameters		Array of parameters
+	 * @param	CommonObject		$object			The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
+	 * @param	string				$action			'add', 'update', 'view'
+	 * @param	Hookmanager			$hookmanager	Hookmanager
+	 * @return	int									Return integer <0 if KO,
+	 *												=0 if OK but we want to process standard actions too,
+	 *												>0 if OK and we want to replace standard actions.
+	 */
+	/*
+	public function completeTakePosInvoiceLine(&$parameters, &$object, &$action, $hookmanager)
+	{
+		global $langs, $conf, $user, $db;
+
+		if (!in_array('takeposinvoice', $hookmanager->contextarray)) {
+			return 0;
+		}
+
+		$resprints = '';
+
+		ob_start();
+		?>
+		<td>
+			<?php var_dump($parameters['line']->subprice); ?>
+		</td>
+		<?php
+		$resprints .= ob_get_clean();
+
+		$this->resprints = $resprints;
+	}
+	*/
+
+	/**
 	 * Execute action doActions
 	 *
 	 * @param	array<string,mixed>	$parameters		Array of parameters
