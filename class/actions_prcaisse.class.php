@@ -389,6 +389,7 @@ class ActionsPRCaisse extends CommonHookActions
 						if (amountpayed > <?php echo $remaintopay; ?> || amountpayed == <?php echo $remaintopay; ?> || amountpayed==0 ) {
 							console.log("Close popup");
 							parent.$.colorbox.close();
+							parent.Refresh();
 						}
 						else {
 							console.log("Amount is not complete, so we do NOT close popup and reload it.");
@@ -427,6 +428,7 @@ class ActionsPRCaisse extends CommonHookActions
 							if (amountpayed > <?php echo $remaintopay; ?> || amountpayed == <?php echo $remaintopay; ?> || amountpayed==0 ) {
 								console.log("Close popup");
 								parent.$.colorbox.close();
+								parent.Refresh();
 							}
 							else {
 								console.log("Amount is not complete, so we do NOT close popup and reload it.");
