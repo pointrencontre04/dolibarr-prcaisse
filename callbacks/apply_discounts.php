@@ -130,6 +130,7 @@ $resql = $db->query($sql);
 $num = $db->num_rows($resql);
 if ($num > 0) {
     $db->begin();
+    $i = 0;
     while ($i < $num && $remaintopay > 0) {
         $obj = $db->fetch_object($resql);
         $discountamount = $obj->amount_ttc;
@@ -256,6 +257,7 @@ if ($num > 0) {
             $invoice->setPaid($user);
         }
 
+	$i++;
     }
     $db->commit();
 }
