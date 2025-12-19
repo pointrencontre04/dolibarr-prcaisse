@@ -257,7 +257,7 @@ if ($num > 0) {
             $invoice->setPaid($user);
         }
 
-	$i++;
+	    $i++;
     }
     $db->commit();
 }
