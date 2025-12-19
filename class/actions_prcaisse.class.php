@@ -768,6 +768,8 @@ class ActionsPRCaisse extends CommonHookActions
 			return 0;
 		}
 
+		$resprints = '';
+
 		// Enhance usability of search form
 
 		ob_start();
