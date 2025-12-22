@@ -18,7 +18,7 @@ if (empty($user->id)) {
 }
 
 if (!$user->hasRight('takepos', 'run')) {
-	accessforbidden('Access to TakePOS forbidden');
+    accessforbidden('Access to TakePOS forbidden');
 }
 
 if (!$user->rights->facture->lire) {
@@ -238,26 +238,26 @@ if ($num > 0) {
                     exit;
                 }
             }
+
+            // Apply discount
+            $result = $invoice->insert_discount($newid1);
+            echo 'Applying discount ' . $newid1 . ' for invoice ' . $invoice->id;
+
+            if ($result < 0) {
+                $db->rollback();
+                exit($invoice->error);
+            }
+
+            $remaintopay = $invoice->getRemainToPay(); // Should be 0
+
+            // Close invoice
+            if ($remaintopay <= 0) {
+                $invoice->validate($user);
+                $invoice->setPaid($user);
+            }
         }
 
-        // Apply discount
-        $result = $invoice->insert_discount($newid1);
-        echo 'Applying discount ' . $newid1 . ' for invoice ' . $invoice->id;
-
-        if ($result < 0) {
-            $db->rollback();
-            exit($invoice->error);
-        }
-
-        $remaintopay = $invoice->getRemainToPay(); // Should be 0
-
-        // Close invoice
-        if ($remaintopay <= 0) {
-            $invoice->validate($user);
-            $invoice->setPaid($user);
-        }
-
-	    $i++;
+        $i++;
     }
     $db->commit();
 }
