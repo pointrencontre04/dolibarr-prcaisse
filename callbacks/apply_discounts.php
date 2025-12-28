@@ -157,8 +157,8 @@ if ($num > 0) {
             // Split amount, then apply discount and close invoice
 
             // Split amount
-            $amount_ttc_1 = $amountpayed;
-            $amount_ttc_2 = $discountamount - $amountpayed;
+            $amount_ttc_1 = $remaintopay;
+            $amount_ttc_2 = $discountamount - $remaintopay;
 
             $error = 0;
             $remid = $obj->rowid;
