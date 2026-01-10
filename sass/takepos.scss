@@ -6,7 +6,10 @@
 
 .bodytakepos {
 
-	font-size: 1.2em;
+	font-size: 1em;
+	@media (min-width: 1400px) {
+		font-size: 1.2em;
+	}
 
 	.container {
 		display: flex;
@@ -174,7 +177,7 @@
 	}
 
 	.invoice {
-		@media screen and (min-width: 1200px) {
+		@media screen and (min-width: 1400px) {
  			font-size: 18px;
 		}
 
@@ -195,7 +198,7 @@
 
 	button.calcbutton {
 		background-color: #0f740f !important;
-		@media screen and (min-width: 1200px) {
+		@media screen and (min-width: 1400px) {
 			font-size: 32px;
 		}
 		//border: solid 1px #e0e0e0;
@@ -203,14 +206,14 @@
 
 	button.calcbutton.poscolorblue {
 		background-color: #55f !important;
-		@media screen and (min-width: 1200px) {
+		@media screen and (min-width: 1400px) {
 			font-size: 32px;
 		}
 	}
 
 	button.calcbutton2 {
 		background-color: #555 !important;
-		@media screen and (min-width: 1200px) {
+		@media screen and (min-width: 1400px) {
 			font-size: 18px;
 		}
 	}
@@ -218,16 +221,20 @@
 	button.calcbutton2.poscolordelete {
 		background-color: #FF5555 !important;
 		color: #FFFFFF !important;
-		@media screen and (min-width: 1200px) {
+		@media screen and (min-width: 1400px) {
 			font-size: 20px;
 		}
 	}
 
 	button.actionbutton {
 		background-color: #ccc !important;
-		font-size: 18px;
 		//height: auto;
 		height: 90px;
+
+		font-size: 16px;
+		@media screen and (min-width: 1400px) {
+			font-size: 18px;
+		}
 
 		display: flex;
 		flex-direction: column;
@@ -344,9 +351,13 @@
 				height: 12pt;
 				padding: 0;
 				padding-top: 10px;
-				font-size: 12pt;
 				line-height: 12pt;
 				flex: 1;
+
+				font-size: 11pt;
+				@media screen and (min-width: 1400px) {
+					font-size: 12pt;
+				}
 			}
 		}
 	}
@@ -355,7 +366,8 @@
 button.calcbutton {
 	background-color: #0f740f !important;
 
-	@media screen and (min-width: 1200px) {
+	font-size: 16px;
+	@media screen and (min-width: 1400px) {
     	font-size: 18px;
 	}
 }

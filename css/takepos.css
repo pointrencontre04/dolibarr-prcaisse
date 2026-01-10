@@ -130,7 +130,12 @@
 }
 
 .bodytakepos {
-  font-size: 1.2em;
+  font-size: 1em;
+}
+@media (min-width: 1400px) {
+  .bodytakepos {
+    font-size: 1.2em;
+  }
 }
 .bodytakepos .container {
   display: flex;
@@ -270,7 +275,7 @@
 .bodytakepos .row2withhead .div4, .bodytakepos .row2withhead .div5 {
   width: 100%;
 }
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1400px) {
   .bodytakepos .invoice {
     font-size: 18px;
   }
@@ -288,7 +293,7 @@
 .bodytakepos button.calcbutton {
   background-color: #0f740f !important;
 }
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1400px) {
   .bodytakepos button.calcbutton {
     font-size: 32px;
   }
@@ -296,7 +301,7 @@
 .bodytakepos button.calcbutton.poscolorblue {
   background-color: #55f !important;
 }
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1400px) {
   .bodytakepos button.calcbutton.poscolorblue {
     font-size: 32px;
   }
@@ -304,7 +309,7 @@
 .bodytakepos button.calcbutton2 {
   background-color: #555 !important;
 }
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1400px) {
   .bodytakepos button.calcbutton2 {
     font-size: 18px;
   }
@@ -313,15 +318,15 @@
   background-color: #FF5555 !important;
   color: #FFFFFF !important;
 }
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1400px) {
   .bodytakepos button.calcbutton2.poscolordelete {
     font-size: 20px;
   }
 }
 .bodytakepos button.actionbutton {
   background-color: #ccc !important;
-  font-size: 18px;
   height: 90px;
+  font-size: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -343,6 +348,11 @@
   	background-color: #ceb8ff !important;
   }
   */
+}
+@media screen and (min-width: 1400px) {
+  .bodytakepos button.actionbutton {
+    font-size: 18px;
+  }
 }
 .bodytakepos button.actionbutton#action6 {
   background-color: #555 !important;
@@ -426,15 +436,21 @@
   height: 12pt;
   padding: 0;
   padding-top: 10px;
-  font-size: 12pt;
   line-height: 12pt;
   flex: 1;
+  font-size: 11pt;
+}
+@media screen and (min-width: 1400px) {
+  .bodytakepos .div5 .wrapper2 .description {
+    font-size: 12pt;
+  }
 }
 
 button.calcbutton {
   background-color: #0f740f !important;
+  font-size: 16px;
 }
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1400px) {
   button.calcbutton {
     font-size: 18px;
   }
