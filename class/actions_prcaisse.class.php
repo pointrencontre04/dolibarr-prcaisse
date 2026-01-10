@@ -623,7 +623,7 @@ class ActionsPRCaisse extends CommonHookActions
 
 						if ($amountofpayment <= $b->amount_left) {
 							// Consume BonAlim partially
-							$res = $b->consume($amountofpayment, $user);
+							$res = $b->consume($amountofpayment, $invoice->id, $user);
 							if ($res < 0) {
 								$error++;
 								dol_htmloutput_errors($langs->trans('Error').' '.$$b->error, $$b->errors, 1);
@@ -651,7 +651,7 @@ class ActionsPRCaisse extends CommonHookActions
 						} else {
 							// Consume BonAlim totally
 							$bonalim_amountleft = $b->amount_left;
-							$b->consume($b->amount_left, $user);
+							$b->consume($b->amount_left, $invoice->id, $user);
 
 							// Save Payment
 							$payment = new Paiement($db);
