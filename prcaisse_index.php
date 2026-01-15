@@ -63,6 +63,10 @@ if (!$res) {
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 
+require_once __DIR__.'/core/boxes/prcaissewidgetsalestoday.php';
+require_once __DIR__.'/core/boxes/prcaissewidgetsalesweek.php';
+require_once __DIR__.'/core/boxes/prcaissewidgetsalesmonth.php';
+
 /**
  * @var Conf $conf
  * @var DoliDB $db
@@ -251,6 +255,28 @@ if (isModEnabled('prcaisse') && $user->hasRight('prcaisse', 'read')) {
 	}
 }
 */
+
+print '</div>';
+
+print '<div class="fichetwothirdright">';
+
+if (class_exists('prcaissewidgetsalestoday')) {
+	$box = new prcaissewidgetsalestoday($db);
+	$box->loadBox();
+	$box->showBox();
+}
+
+if (class_exists('prcaissewidgetsalesweek')) {
+	$box = new prcaissewidgetsalesweek($db);
+	$box->loadBox();
+	$box->showBox();
+}
+
+if (class_exists('prcaissewidgetsalesmonth')) {
+	$box = new prcaissewidgetsalesmonth($db);
+	$box->loadBox();
+	$box->showBox();
+}
 
 print '</div></div>';
 

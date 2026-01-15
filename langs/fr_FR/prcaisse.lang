@@ -38,7 +38,16 @@ MyPageName = My page name
 PleaseSelectValidThirdParty = Merci de sélectionner un client valide
 
 #
-# Sample widget
+# Widget Sales today
 #
-MyWidget = My widget
-MyWidgetDescription = My widget description
+SalesToday = Ventes de la journée
+
+#
+# Widget Sales this week
+#
+SalesThisWeek = Ventes de la semaine
+
+#
+# Widget Sales this month
+#
+SalesThisMonth = Ventes du mois
