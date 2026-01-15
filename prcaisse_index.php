@@ -258,7 +258,7 @@ if (isModEnabled('prcaisse') && $user->hasRight('prcaisse', 'read')) {
 
 print '</div>';
 
-print '<div class="fichetwothirdright">';
+print '<div class="fichethirdleft">';
 
 if (class_exists('prcaissewidgetsalestoday')) {
 	$box = new prcaissewidgetsalestoday($db);
