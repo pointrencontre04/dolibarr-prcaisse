@@ -619,6 +619,25 @@ if (empty($setupnotempty)) {
 	print '<br>'.$langs->trans("NothingToSetup");
 }
 
+/*
+ *  Repertoire
+ */
+print '<br>';
+print load_fiche_titre($langs->trans("PathToDocuments"), '', '');
+
+print '<div class="div-table-responsive-no-min">';
+print '<table class="noborder centpercent">'."\n";
+print '<tr class="liste_titre">'."\n";
+print '<td>'.$langs->trans("Name").'</td>'."\n";
+print '<td></td>'."\n";
+print "</tr>\n";
+print '<tr class="oddeven">'."\n";
+print '<td width="140">'.$langs->trans("PathDirectory").'</td>'."\n";
+print '<td>'.$conf->prcaisse->dir_output.'</td>'."\n";
+print '</tr>'."\n";
+print "</table>\n";
+print "</div>\n";
+
 // Page end
 print dol_get_fiche_end();
 

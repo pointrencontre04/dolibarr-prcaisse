@@ -38,6 +38,15 @@ MyPageName = My page name
 PleaseSelectValidThirdParty = Merci de sélectionner un client valide
 
 #
+# Sales Report Page
+#
+SalesReportPage = Rapport des passages
+SalesReports = Rapport des passages
+GenerateReportFrom = Générer un rapport sur la période du
+To = au
+Terminal = Terminal
+SalesCount = Nombre de passages
+
 # Widget Sales today
 #
 SalesToday = Ventes de la journée

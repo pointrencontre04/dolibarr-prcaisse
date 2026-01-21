@@ -356,8 +356,8 @@ class modPRCaisse extends DolibarrModules
 			'user' => 2,				                // 0=Menu for internal users, 1=external users, 2=both
 			'object' => '',
 		);
-		/* END MODULEBUILDER LEFTMENU BONS ALIMENTAIRES */
-		/* BEGIN MODULEBUILDER LEFTMENU BONALIM */
+		/* END MODULEBUILDER LEFTMENU MYOBJECT */
+		/* BEGIN MODULEBUILDER LEFTMENU MYOBJECT */
 		$this->menu[$r++] = array(
 			'fk_menu' => 'fk_mainmenu=prcaisse,fk_leftmenu=prcaisse_index',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type' => 'left',			                // This is a Left menu entry
@@ -373,8 +373,25 @@ class modPRCaisse extends DolibarrModules
 			'user' => 2,				                // 0=Menu for internal users, 1=external users, 2=both
 			'object' => '',
 		);
-		/* END MODULEBUILDER LEFTMENU BONS ALIMENTAIRES */
-		/* BEGIN MODULEBUILDER LEFTMENU BONALIM */
+		/* END MODULEBUILDER LEFTMENU MYOBJECT */
+		/* BEGIN MODULEBUILDER LEFTMENU MYOBJECT */
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=prcaisse,fk_leftmenu=prcaisse_index',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type' => 'left',			                // This is a Left menu entry
+			'titre' => $langs->trans('SalesReportPage'),
+			'mainmenu' => 'prcaisse',
+			'leftmenu' => 'prcaisse_report_sales',
+			'url' => '/prcaisse/prcaisse_report_sales.php',
+			'langs' => 'prcaisse@prcaisse',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position' => 1000 + $r,
+			'enabled' => 'isModEnabled("prcaisse")', // Define condition to show or hide menu entry. Use 'isModEnabled("prcaisse")' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms' => '1',
+			'target' => '',
+			'user' => 2,				                // 0=Menu for internal users, 1=external users, 2=both
+			'object' => '',
+		);
+		/* END MODULEBUILDER LEFTMENU MYOBJECT */
+		/* BEGIN MODULEBUILDER LEFTMENU MYOBJECT */
 		/*
 		$this->menu[$r++]=array(
 			'fk_menu' => 'fk_mainmenu=prcaisse,fk_leftmenu=myobject',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
