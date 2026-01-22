@@ -46,6 +46,7 @@ GenerateReportFrom = Générer un rapport sur la période du
 To = au
 Terminal = Terminal
 SalesCount = Nombre de passages
+NoTerminalName = Hors Caisse
 
 # Widget Sales today
 #

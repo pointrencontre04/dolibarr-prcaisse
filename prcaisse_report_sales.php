@@ -200,14 +200,17 @@ if ($action == 'builddoc' && $permissiontoread) {
 
 	foreach ($result as $terminal_id => $count) {
 
-		// Nom du terminal Dolibarr
-		$terminalname = getDolGlobalString(
-			'TAKEPOS_TERMINAL_NAME_'.$terminal_id,
-			$langs->trans("TerminalName", $terminal_id)
-		);
+		if ($terminal_id > 0) {
+			$terminal_name = getDolGlobalString(
+				'TAKEPOS_TERMINAL_NAME_'.$terminal_id,
+				$langs->trans("TerminalName", $terminal_id)
+			);
+		} else {
+			$terminal_name = $langs->trans("NoTerminalName");
+		}
 
 		print '<tr class="oddeven">';
-		print '<td>'.$terminalname.'</td>';
+		print '<td>'.$terminal_name.'</td>';
 		print '<td class="right">'.$count.'</td>';
 		print '</tr>';
 	}
