@@ -127,13 +127,13 @@ print '<input type="hidden" name="action" value="builddoc">';
 $current_quarter_start_date = strtotime(date('Y') . '-' . ( ( (int)((date('n') - 1) / 3) * 3 ) + 1 ) . '-01');
 $prev_quarter_start_date = strtotime('-3 months', $current_quarter_start_date);
 $prev_quarter_end_date   = strtotime('-1 day', $current_quarter_start_date);
-$startdate = GETPOST("startdate") ? GETPOST("startdate") : $prev_quarter_start_date;
-$enddate   = GETPOST("enddate")   ? GETPOST("enddate")   : $prev_quarter_end_date;
+$startdate = GETPOST("startdate") ? dol_mktime(0, 0, 0, GETPOST("startdatemonth"), GETPOST("startdateday"), GETPOST("startdateyear")) : $prev_quarter_start_date;
+$enddate   = GETPOST("enddate")   ? dol_mktime(23, 59, 59, GETPOST("enddatemonth"), GETPOST("enddateday"), GETPOST("enddateyear"))    : $prev_quarter_end_date;
 
 print $langs->trans("GenerateReportFrom");
-print $formother->select_date($startdate, 'startdate');
+print $formother->selectDate($startdate, 'startdate');
 print $langs->trans("To");
-print $formother->select_date($enddate,   'enddate');
+print $formother->selectDate($enddate,   'enddate');
 
 print '<input type="submit" class="button" value="'.$langs->trans("Create").'">';
 print '</form>';
