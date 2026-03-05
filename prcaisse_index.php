@@ -64,8 +64,11 @@ if (!$res) {
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 
 require_once __DIR__.'/core/boxes/prcaissewidgetsalestoday.php';
+require_once __DIR__.'/core/boxes/prcaissewidgetsalesyesterday.php';
 require_once __DIR__.'/core/boxes/prcaissewidgetsalesweek.php';
+require_once __DIR__.'/core/boxes/prcaissewidgetsaleslastweek.php';
 require_once __DIR__.'/core/boxes/prcaissewidgetsalesmonth.php';
+require_once __DIR__.'/core/boxes/prcaissewidgetsaleslastmonth.php';
 
 /**
  * @var Conf $conf
@@ -258,7 +261,7 @@ if (isModEnabled('prcaisse') && $user->hasRight('prcaisse', 'read')) {
 
 print '</div>';
 
-print '<div class="fichethirdleft">';
+print '<div class="fichehalfleft">';
 
 if (class_exists('prcaissewidgetsalestoday')) {
 	$box = new prcaissewidgetsalestoday($db);
@@ -278,7 +281,29 @@ if (class_exists('prcaissewidgetsalesmonth')) {
 	$box->showBox();
 }
 
-print '</div></div>';
+print '</div>';
+
+print '<div class="fichehalfright">';
+if (class_exists('prcaissewidgetsalesyesterday')) {
+	$box = new prcaissewidgetsalesyesterday($db);
+	$box->loadBox();
+	$box->showBox();
+}
+
+if (class_exists('prcaissewidgetsaleslastweek')) {
+	$box = new prcaissewidgetsaleslastweek($db);
+	$box->loadBox();
+	$box->showBox();
+}
+
+if (class_exists('prcaissewidgetsaleslastmonth')) {
+	$box = new prcaissewidgetsaleslastmonth($db);
+	$box->loadBox();
+	$box->showBox();
+}
+print '</div>';
+
+print '</div>';
 
 // End of page
 llxFooter();

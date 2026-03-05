@@ -52,12 +52,26 @@ NoTerminalName = Hors Caisse
 #
 SalesToday = Ventes de la journée
 
+# Widget Sales yesterday
+#
+SalesYesterday = Ventes de la journée précédente
+
 #
 # Widget Sales this week
 #
 SalesThisWeek = Ventes de la semaine
 
 #
+# Widget Sales last week
+#
+SalesLastWeek = Ventes de la semaine précédente
+
+#
 # Widget Sales this month
 #
 SalesThisMonth = Ventes du mois
+
+#
+# Widget Sales last month
+#
+SalesLastMonth = Ventes du mois précédent
