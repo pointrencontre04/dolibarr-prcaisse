@@ -130,6 +130,10 @@ $prev_quarter_end_date   = strtotime('-1 day', $current_quarter_start_date);
 $startdate = GETPOST("startdate") ? dol_mktime(0, 0, 0, GETPOST("startdatemonth"), GETPOST("startdateday"), GETPOST("startdateyear")) : $prev_quarter_start_date;
 $enddate   = GETPOST("enddate")   ? dol_mktime(23, 59, 59, GETPOST("enddatemonth"), GETPOST("enddateday"), GETPOST("enddateyear"))    : $prev_quarter_end_date;
 
+print $langs->trans("GenerateReportSummary");
+
+print '<br><br>';
+
 print $langs->trans("GenerateReportFrom");
 print $formother->selectDate($startdate, 'startdate');
 print $langs->trans("To");
@@ -143,6 +147,9 @@ clearstatcache();
 
 
 if ($action == 'builddoc' && $permissiontoread) {
+
+	$result_count = [];
+	$result_table = [];
 
 	$datestart = dol_mktime(
 		0, 0, 0,
@@ -160,14 +167,14 @@ if ($action == 'builddoc' && $permissiontoread) {
 
 	$entity = (int) $conf->entity;
 
-	$sql = "SELECT sub.pos_source, COUNT(*) as nb";
+	// Count fk_soc
+	$sql = "SELECT sub.pos_source, COUNT(sub.fk_soc) as passages_foyers";
 	$sql .= " FROM (";
 	$sql .= "   SELECT DISTINCT";
-	$sql .= "     sp.rowid AS fk_contact,";
+	$sql .= "     f.fk_soc,";
 	$sql .= "     f.pos_source,";
 	$sql .= "     DATE_FORMAT(f.datef, '%Y-%m-%d') AS daykey";
 	$sql .= "   FROM ".MAIN_DB_PREFIX."facture AS f";
-	$sql .= "   INNER JOIN ".MAIN_DB_PREFIX."socpeople AS sp ON sp.fk_soc = f.fk_soc";
 	$sql .= "   INNER JOIN ".MAIN_DB_PREFIX."societe_extrafields AS se ON se.fk_object = f.fk_soc";
 	$sql .= "   WHERE f.entity = ".$entity;
 	$sql .= "     AND f.datef >= '".$db->idate($datestart)."'";
@@ -183,10 +190,82 @@ if ($action == 'builddoc' && $permissiontoread) {
 		exit;
 	}
 
-	$result = [];
 	while ($obj = $db->fetch_object($resql)) {
 		$terminal_id = $obj->pos_source;
-		$result[$terminal_id] = (int) $obj->nb;
+		$result_count[$terminal_id]['foyers'] = (int) $obj->passages_foyers;
+	}
+	$db->free($resql);
+
+	// Count socpeople
+	$sql = "SELECT sub.pos_source, COUNT(sp.rowid) as passages_personnes";
+	$sql .= " FROM (";
+	$sql .= "   SELECT DISTINCT";
+	$sql .= "     f.fk_soc,";
+	$sql .= "     f.pos_source,";
+	$sql .= "     DATE_FORMAT(f.datef, '%Y-%m-%d') AS daykey";
+	$sql .= "   FROM ".MAIN_DB_PREFIX."facture AS f";
+	$sql .= "   INNER JOIN ".MAIN_DB_PREFIX."societe_extrafields AS se ON se.fk_object = f.fk_soc";
+	$sql .= "   WHERE f.entity = ".$entity;
+	$sql .= "     AND f.datef >= '".$db->idate($datestart)."'";
+	$sql .= "     AND f.datef <= '".$db->idate($dateend)."'";
+	$sql .= "     AND f.fk_statut > 0";
+	$sql .= "     AND se.epicerie_fin >= '".$db->idate($limitdate)."'";
+	$sql .= " ) AS sub";
+	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."socpeople AS sp ON sp.fk_soc = sub.fk_soc";
+	$sql .= " GROUP BY sub.pos_source";
+
+	$resql = $db->query($sql);
+	if (! $resql) {
+		dol_print_error($db);
+		exit;
+	}
+
+	while ($obj = $db->fetch_object($resql)) {
+		$terminal_id = $obj->pos_source;
+		$result_count[$terminal_id]['personnes'] = (int) $obj->passages_personnes;
+	}
+	$db->free($resql);
+
+	// Table
+	$sql  = "  SELECT sub_passages.pos_source, sub_passages.fk_soc, sub_passages.nom, sub_passages.epicerie_fin, COUNT(sub_passages.fk_soc) as passages_foyers, sub_socpeople.membres_foyers";
+	$sql .= "   FROM (";
+	$sql .= "     SELECT DISTINCT";
+	$sql .= "       f.fk_soc,";
+	$sql .= "       s.nom,";
+	$sql .= "       se.epicerie_fin,";
+	$sql .= "       f.pos_source,";
+	$sql .= "       DATE_FORMAT(f.datef, '%Y-%m-%d') AS daykey";
+	$sql .= "     FROM ".MAIN_DB_PREFIX."facture AS f";
+	$sql .= "     INNER JOIN ".MAIN_DB_PREFIX."societe AS s ON s.rowid = f.fk_soc";
+	$sql .= "     INNER JOIN ".MAIN_DB_PREFIX."societe_extrafields AS se ON se.fk_object = f.fk_soc";
+	$sql .= "     WHERE f.entity = ".$entity;
+	$sql .= "       AND f.datef >= '".$db->idate($datestart)."'";
+	$sql .= "       AND f.datef <= '".$db->idate($dateend)."'";
+	$sql .= "       AND f.fk_statut > 0";
+	$sql .= "       AND se.epicerie_fin >= '".$db->idate($limitdate)."'";
+	$sql .= "   ) AS sub_passages";
+	$sql .= " LEFT JOIN (";
+	$sql .= "   SELECT COUNT(sp.rowid) AS membres_foyers, sp.fk_soc FROM ".MAIN_DB_PREFIX."socpeople AS sp GROUP BY sp.fk_soc";
+	$sql .= " ) AS sub_socpeople ON sub_socpeople.fk_soc = sub_passages.fk_soc";
+	$sql .= "   GROUP BY sub_passages.pos_source, sub_passages.fk_soc";
+	$sql .= " ORDER BY pos_source, nom";
+
+	$resql = $db->query($sql);
+	if (! $resql) {
+		dol_print_error($db);
+		exit;
+	}
+
+	while ($obj = $db->fetch_object($resql)) {
+		$terminal_id = $obj->pos_source;
+		$result_table[$terminal_id][] = [
+			'socid'              => $obj->fk_soc,
+			'nom'                => $obj->nom,
+			'epicerie_fin'       => $obj->epicerie_fin,
+			'passages_foyer'     => $obj->passages_foyers,
+			'membres_foyer'      => $obj->membres_foyers,
+			'passages_personnes' => ((int) $obj->passages_foyers) * ((int) $obj->membres_foyers),
+		];
 	}
 	$db->free($resql);
 
@@ -195,10 +274,11 @@ if ($action == 'builddoc' && $permissiontoread) {
 
 	print '<tr class="liste_titre">';
 	print '<td>'.$langs->trans("Terminal").'</td>';
-	print '<td class="right">'.$langs->trans("SalesCount").'</td>';
+	print '<td class="right">'.$langs->trans("SalesCountSoc").'</td>';
+	print '<td class="right">'.$langs->trans("SalesCountPeople").'</td>';
 	print '</tr>';
 
-	foreach ($result as $terminal_id => $count) {
+	foreach ($result_count as $terminal_id => $count) {
 
 		if ($terminal_id > 0) {
 			$terminal_name = getDolGlobalString(
@@ -211,12 +291,59 @@ if ($action == 'builddoc' && $permissiontoread) {
 
 		print '<tr class="oddeven">';
 		print '<td>'.$terminal_name.'</td>';
-		print '<td class="right">'.$count.'</td>';
+		print '<td class="right">'.$count['foyers'].'</td>';
+		print '<td class="right">'.$count['personnes'].'</td>';
 		print '</tr>';
 	}
 
 	print '</table>';
 	print '</div>';
+
+	foreach ($result_table as $terminal_id => $count) {
+
+		if ($terminal_id > 0) {
+			$terminal_name = getDolGlobalString(
+				'TAKEPOS_TERMINAL_NAME_'.$terminal_id,
+				$langs->trans("TerminalName", $terminal_id)
+			);
+		} else {
+			$terminal_name = $langs->trans("NoTerminalName");
+		}
+
+		print '<div class="fichecenter">';
+
+		print '<table class="centpercent notopnoleftnoright table-fiche-title">';
+		print '<tr class="toptitle"><td class="nobordernopadding valignmiddle col-title"><div class="titre inline-block">'.$terminal_name.'</div></td></tr>';
+		print '</table>';
+
+		print '<div class="div-table-responsive">';
+		print '<table class="noborder centpercent">';
+
+		print '<tr class="liste_titre">';
+		print '<td class="right">'.$langs->trans("ThirdPartyName").'</td>';
+		print '<td class="right">'.$langs->trans("EpicerieEndDate").'</td>';
+		print '<td class="right">'.$langs->trans("PeopleCount").'</td>';
+		print '<td class="right">'.$langs->trans("SalesCountSoc").'</td>';
+		print '<td class="right">'.$langs->trans("SalesCountPeople").'</td>';
+		print '</tr>';
+
+		foreach ($count as $row) {
+			$icons = '';
+			//$soc_link = dol_buildpath('/societe/card.php?socid='.$row['socid'], 1);
+			//$icons .= '<a href="'.$soc_link.'">'.img_picto($langs->trans('ThirdParty'), 'fa-building', 'pictofixedwidth').'</a>';
+			$prcaisse_link = dol_buildpath('/custom/prcaisse/prcaisse_customers.php?thirdparty_id='.$row['socid'], 1);
+			print '<tr class="oddeven">';
+			print '<td><a href="'.$prcaisse_link.'">'.img_picto($langs->trans('PRCaisseArea'), 'fa-store', 'pictofixedwidth').' '.htmlspecialchars($row['nom']).$icons.'</a></td>';
+			print '<td class="right">'.htmlspecialchars($row['epicerie_fin']).'</td>';
+			print '<td class="right">'.htmlspecialchars($row['membres_foyer']).'</td>';
+			print '<td class="right">'.htmlspecialchars($row['passages_foyer']).'</td>';
+			print '<td class="right">'.htmlspecialchars($row['passages_personnes']).'</td>';
+			print '</tr>';
+		}
+
+		print '</table>';
+		print '</div>';
+	}
 }
 
 

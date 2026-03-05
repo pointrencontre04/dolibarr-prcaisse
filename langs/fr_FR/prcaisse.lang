@@ -42,11 +42,15 @@ PleaseSelectValidThirdParty = Merci de sélectionner un client valide
 #
 SalesReportPage = Rapport des passages
 SalesReports = Rapport des passages
+GenerateReportSummary = Les passages multiples sur la même journée et le même terminal ne comptent qu'une fois.<br>Sont exclus de ce rapport tous les clients qui n'ont jamais eu d'accès à l'épicerie, ou dont leur accès est dépassé depuis plus d'un an à la date de début de la période recherchée.
 GenerateReportFrom = Générer un rapport sur la période du
 To = au
 Terminal = Terminal
-SalesCount = Nombre de passages
+SalesCountSoc = Nombre de passages des Foyers
+SalesCountPeople = Nombre de passages des Personnes
 NoTerminalName = Hors Caisse
+EpicerieEndDate = Date de fin Épicerie
+PeopleCount = Nombre de membres du foyer
 
 # Widget Sales today
 #
