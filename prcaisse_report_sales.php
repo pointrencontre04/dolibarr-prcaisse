@@ -167,7 +167,9 @@ if ($action == 'builddoc' && $permissiontoread) {
 
 	$entity = (int) $conf->entity;
 
-	// Count fk_soc
+	/**
+	 * Count how many fk_soc appear in time range
+	 */
 	$sql = "SELECT sub.pos_source, COUNT(sub.fk_soc) as passages_foyers";
 	$sql .= " FROM (";
 	$sql .= "   SELECT DISTINCT";
@@ -192,11 +194,52 @@ if ($action == 'builddoc' && $permissiontoread) {
 
 	while ($obj = $db->fetch_object($resql)) {
 		$terminal_id = $obj->pos_source;
-		$result_count[$terminal_id]['foyers'] = (int) $obj->passages_foyers;
+		$result_count[$terminal_id]['foyers_total'] = (int) $obj->passages_foyers;
 	}
 	$db->free($resql);
 
-	// Count socpeople
+	/**
+	 * Count how many each fk_soc appear in time range
+	 */
+	$sql = "SELECT sub.pos_source, sub.fk_soc,COUNT(daykey) as passages_foyers";
+	$sql .= " FROM (";
+	$sql .= "   SELECT DISTINCT";
+	$sql .= "     f.fk_soc,";
+	$sql .= "     f.pos_source,";
+	$sql .= "     DATE_FORMAT(f.datef, '%Y-%m-%d') AS daykey";
+	$sql .= "   FROM ".MAIN_DB_PREFIX."facture AS f";
+	$sql .= "   INNER JOIN ".MAIN_DB_PREFIX."societe_extrafields AS se ON se.fk_object = f.fk_soc";
+	$sql .= "   WHERE f.entity = ".$entity;
+	$sql .= "     AND f.datef >= '".$db->idate($datestart)."'";
+	$sql .= "     AND f.datef <= '".$db->idate($dateend)."'";
+	$sql .= "     AND f.fk_statut > 0";
+	$sql .= "     AND se.epicerie_fin >= '".$db->idate($limitdate)."'";
+	$sql .= " ) AS sub";
+	$sql .= " GROUP BY sub.pos_source, sub.fk_soc";
+
+	$resql = $db->query($sql);
+	if (! $resql) {
+		dol_print_error($db);
+		exit;
+	}
+
+	while ($obj = $db->fetch_object($resql)) {
+		$terminal_id = $obj->pos_source;
+		if ($obj->passages_foyers == 1) {
+			@$result_count[$terminal_id]['foyers_1']++;
+		}
+		if ($obj->passages_foyers < 5) {
+			@$result_count[$terminal_id]['foyers_5']++;
+		}
+		if ($obj->passages_foyers >= 5) {
+			@$result_count[$terminal_id]['foyers_5+']++;
+		}
+	}
+	$db->free($resql);
+
+	/**
+	 * Count how many socpeople appear in time range
+	 */
 	$sql = "SELECT sub.pos_source, COUNT(sp.rowid) as passages_personnes";
 	$sql .= " FROM (";
 	$sql .= "   SELECT DISTINCT";
@@ -222,11 +265,13 @@ if ($action == 'builddoc' && $permissiontoread) {
 
 	while ($obj = $db->fetch_object($resql)) {
 		$terminal_id = $obj->pos_source;
-		$result_count[$terminal_id]['personnes'] = (int) $obj->passages_personnes;
+		$result_count[$terminal_id]['personnes_total'] = (int) $obj->passages_personnes;
 	}
 	$db->free($resql);
 
-	// Table
+	/**
+	 * Extract detailed count data for each Soc
+	 */
 	$sql  = "  SELECT sub_passages.pos_source, sub_passages.fk_soc, sub_passages.nom, sub_passages.epicerie_fin, COUNT(sub_passages.fk_soc) as passages_foyers, sub_socpeople.membres_foyers";
 	$sql .= "   FROM (";
 	$sql .= "     SELECT DISTINCT";
@@ -291,8 +336,40 @@ if ($action == 'builddoc' && $permissiontoread) {
 
 		print '<tr class="oddeven">';
 		print '<td>'.$terminal_name.'</td>';
-		print '<td class="right">'.$count['foyers'].'</td>';
-		print '<td class="right">'.$count['personnes'].'</td>';
+		print '<td class="right">'.$count['foyers_total'].'</td>';
+		print '<td class="right">'.$count['personnes_total'].'</td>';
+		print '</tr>';
+	}
+
+	print '</table>';
+	print '</div>';
+
+	print '<div class="div-table-responsive">';
+	print '<table class="noborder">';
+
+	print '<tr class="liste_titre">';
+	print '<td>'.$langs->trans("Terminal").'</td>';
+	print '<td class="right">'.$langs->trans("SalesCount1").'</td>';
+	print '<td class="right">'.$langs->trans("SalesCountLess5").'</td>';
+	print '<td class="right">'.$langs->trans("SalesCount5More").'</td>';
+	print '</tr>';
+
+	foreach ($result_count as $terminal_id => $count) {
+
+		if ($terminal_id > 0) {
+			$terminal_name = getDolGlobalString(
+				'TAKEPOS_TERMINAL_NAME_'.$terminal_id,
+				$langs->trans("TerminalName", $terminal_id)
+			);
+		} else {
+			$terminal_name = $langs->trans("NoTerminalName");
+		}
+
+		print '<tr class="oddeven">';
+		print '<td>'.$terminal_name.'</td>';
+		print '<td class="right">'.($count['foyers_1'] ?? 0).'</td>';
+		print '<td class="right">'.($count['foyers_5'] ?? 0).'</td>';
+		print '<td class="right">'.($count['foyers_5+'] ?? 0).'</td>';
 		print '</tr>';
 	}
 
