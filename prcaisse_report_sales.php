@@ -228,7 +228,7 @@ if ($action == 'builddoc' && $permissiontoread) {
 		if ($obj->passages_foyers == 1) {
 			@$result_count[$terminal_id]['foyers_1']++;
 		}
-		if ($obj->passages_foyers < 5) {
+		if ($obj->passages_foyers > 1 && $obj->passages_foyers < 5) {
 			@$result_count[$terminal_id]['foyers_5']++;
 		}
 		if ($obj->passages_foyers >= 5) {
