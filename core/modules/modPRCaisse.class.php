@@ -127,6 +127,7 @@ class modPRCaisse extends DolibarrModules
 					'takeposinvoice',
 					'takepospay',
 					'thirdpartylist',
+					'invoicelist',
 				),
 				'entity' => '0',
 			),

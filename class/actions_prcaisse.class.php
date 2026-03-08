@@ -25,6 +25,7 @@
  */
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/commonhookactions.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 
 if (isModEnabled('prbonalim')) {
     require_once DOL_DOCUMENT_ROOT . '/custom/prbonalim/core/modules/modPRBonAlim.class.php';
@@ -520,233 +521,471 @@ class ActionsPRCaisse extends CommonHookActions
 	{
 		global $langs, $conf, $user, $db;
 
-		$pay = GETPOST('pay', 'aZ09');
-		$amountofpayment = GETPOSTFLOAT('amount');
+		if (in_array('takeposinvoice', $hookmanager->contextarray)) {
 
-		if (!in_array('takeposinvoice', $hookmanager->contextarray)) {
-			return 0;
-		}
+			$pay = GETPOST('pay', 'aZ09');
+			$amountofpayment = GETPOSTFLOAT('amount');
 
-		if ($action != 'valid' || $pay != modPRBonAlim::BONALIM_PAYMENT_CODE) {
-			return 0;
-		}
-
-		if (!isModEnabled('prbonalim') || !$user->hasRight('bonalim@prbonalim', 'write')  || !$user->hasRight('bonalim@prbonalim', 'read')) {
-			return 0;
-		}
-
-		$invoice = $object;
-		$bankaccount = 0;
-		$accountname = '';
-		$error = 0;
-
-		$now = dol_now();
-		$res = 0;
-
-		if ($invoice->total_ttc < 0) {
-			return 0;
-		}
-
-		$db->begin();
-
-		$constantforkey = 'CASHDESK_NO_DECREASE_STOCK'.(isset($_SESSION["takeposterminal"]) ? $_SESSION["takeposterminal"] : '');
-		$allowstockchange = (getDolGlobalString($constantforkey) != "1");
-
-		if ($invoice->status != Facture::STATUS_DRAFT) {
-			//If invoice is validated but it is not fully paid is not error and make the payment
-			if ($invoice->getRemainToPay() > 0) {
-				$res = 1;
-			} else {
-				dol_syslog("Sale already validated");
-				dol_htmloutput_errors($langs->trans("InvoiceIsAlreadyValidated", "TakePos"), [], 1);
+			if ($action != 'valid' || $pay != modPRBonAlim::BONALIM_PAYMENT_CODE) {
+				return 0;
 			}
-		} elseif (count($invoice->lines) == 0) {
-			$error++;
-			dol_syslog('Sale without lines');
-			dol_htmloutput_errors($langs->trans("NoLinesToBill", "TakePos"), [], 1);
-		} elseif (isModEnabled('stock') && !isModEnabled('productbatch') && $allowstockchange) {
-			// Validation of invoice with change into stock when produt/lot module is NOT enabled and stock change NOT disabled.
-			// The case for isModEnabled('productbatch') is processed few lines later.
-			$savconst = getDolGlobalString('STOCK_CALCULATE_ON_BILL');
 
-			$conf->global->STOCK_CALCULATE_ON_BILL = 1;	// To force the change of stock during invoice validation
-
-			$constantforkey = 'CASHDESK_ID_WAREHOUSE'.(isset($_SESSION["takeposterminal"]) ? $_SESSION["takeposterminal"] : '');
-			dol_syslog("Validate invoice with stock change. Warehouse defined into constant ".$constantforkey." = ".getDolGlobalString($constantforkey));
-
-			// Validate invoice with stock change into warehouse getDolGlobalInt($constantforkey)
-			// Label of stock movement will be the same as when we validate invoice "Invoice XXXX validated"
-			$batch_rule = 0;	// Module productbatch is disabled here, so no need for a batch_rule.
-			$res = $invoice->validate($user, '', getDolGlobalInt($constantforkey), 0, $batch_rule);
-
-			// Restore setup
-			$conf->global->STOCK_CALCULATE_ON_BILL = $savconst;
-		} else {
-			// Validation of invoice with no change into stock (because param $idwarehouse is not fill)
-			$res = $invoice->validate($user);
-			if ($res < 0) {
-				$error++;
-				$langs->load("admin");
-				dol_htmloutput_errors($invoice->error == 'NotConfigured' ? $langs->trans("NotConfigured").' (TakePos numbering module)' : $invoice->error, $invoice->errors, 1);
+			if (!isModEnabled('prbonalim') || !$user->hasRight('bonalim@prbonalim', 'write')  || !$user->hasRight('bonalim@prbonalim', 'read')) {
+				return 0;
 			}
-		}
 
-		// Add the payment
-		if (!$error && $res >= 0) {
-			$remaintopay = $invoice->getRemainToPay();
+			$invoice = $object;
+			$bankaccount = 0;
+			$accountname = '';
+			$error = 0;
 
-			if ($remaintopay > 0) {
+			$now = dol_now();
+			$res = 0;
 
-				// If no amount is specified, take the remaining
-				//  amount of invoice as amount of payment
-				if ($amountofpayment <= 0 || $amountofpayment > $remaintopay) {
-					$amountofpayment = $remaintopay;
-				}
+			if ($invoice->total_ttc < 0) {
+				return 0;
+			}
 
-				// Consume BonAlim that are validated, older first
-				// (do not check date_start and date_end for BonAlim validity)
-				// TODO: check date_start and date_end for BonAlim validity
-				$bonalim = new BonAlim($db);
-				$bonalim_list = $bonalim->fetchAll(
-					'ASC',
-					'date_start',
-					0,
-					0,
-					'(beneficiary:=:' . $invoice->socid . ') AND (status:=:' . BonAlim::STATUS_CREDITED . ')'
-				);
+			$db->begin();
 
-				//$bankaccount = getDolGlobalInt('PRBONALIM_BANKACCOUNT_BONALIM');
-				$bankaccount = 0;
+			$constantforkey = 'CASHDESK_NO_DECREASE_STOCK'.(isset($_SESSION["takeposterminal"]) ? $_SESSION["takeposterminal"] : '');
+			$allowstockchange = (getDolGlobalString($constantforkey) != "1");
 
-				if ($bonalim_list) {
-					foreach ($bonalim_list as $b) {
-
-						if ($amountofpayment <= $b->amount_left) {
-							// Consume BonAlim partially
-							$res = $b->consume($amountofpayment, $invoice->id, $user);
-							if ($res < 0) {
-								$error++;
-								dol_htmloutput_errors($langs->trans('Error').' '.$$b->error, $$b->errors, 1);
-							}
-
-							// Save Payment
-							$payment = new Paiement($db);
-							$payment->datepaye = $now;
-							$payment->fk_account = $bankaccount;
-							$payment->amounts[$invoice->id] = $amountofpayment;
-							$payment->paiementid = modPRBonAlim::BONALIM_PAYMENT_ID;
-							$payment->num_payment = $invoice->ref;
-
-							$res = $payment->create($user, 1);
-							if ($res < 0) {
-								$error++;
-								dol_htmloutput_errors($langs->trans('Error').' '.$payment->error, $payment->errors, 1);
-							}
-
-							$amountofpayment = 0;
-							$remaintopay = 0;
-
-							// Stop the Foreach loop
-							break 1;
-						} else {
-							// Consume BonAlim totally
-							$bonalim_amountleft = $b->amount_left;
-							$b->consume($b->amount_left, $invoice->id, $user);
-
-							// Save Payment
-							$payment = new Paiement($db);
-							$payment->datepaye = $now;
-							$payment->fk_account = $bankaccount;
-							$payment->amounts[$invoice->id] = $bonalim_amountleft;
-							$payment->paiementid = modPRBonAlim::BONALIM_PAYMENT_ID;
-							$payment->num_payment = $invoice->ref;
-
-							$res = $payment->create($user, 1);
-							if ($res < 0) {
-								$error++;
-								dol_htmloutput_errors($langs->trans('Error').' '.$payment->error, $payment->errors, 1);
-							}
-
-							// Remove from next payment the payment that has been done
-							$amountofpayment = $amountofpayment - $bonalim_amountleft;
-							$remaintopay = $remaintopay - $bonalim_amountleft;
-
-							// Continue the Foreach loop
-							// to get another BonAlim to pay the invoice
-						}
-					}
+			if ($invoice->status != Facture::STATUS_DRAFT) {
+				//If invoice is validated but it is not fully paid is not error and make the payment
+				if ($invoice->getRemainToPay() > 0) {
+					$res = 1;
 				} else {
-					return 0;
+					dol_syslog("Sale already validated");
+					dol_htmloutput_errors($langs->trans("InvoiceIsAlreadyValidated", "TakePos"), [], 1);
 				}
-			}
+			} elseif (count($invoice->lines) == 0) {
+				$error++;
+				dol_syslog('Sale without lines');
+				dol_htmloutput_errors($langs->trans("NoLinesToBill", "TakePos"), [], 1);
+			} elseif (isModEnabled('stock') && !isModEnabled('productbatch') && $allowstockchange) {
+				// Validation of invoice with change into stock when produt/lot module is NOT enabled and stock change NOT disabled.
+				// The case for isModEnabled('productbatch') is processed few lines later.
+				$savconst = getDolGlobalString('STOCK_CALCULATE_ON_BILL');
 
-			if ($remaintopay == 0) {
-				dol_syslog("Invoice is paid, so we set it to status Paid");
-				$result = $invoice->setPaid($user);
-				if ($result > 0) {
-					$invoice->paye = 1;
-					$invoice->status = $invoice::STATUS_CLOSED;
-				}
-				// set payment method
-				$invoice->setPaymentMethods(modPRBonAlim::BONALIM_PAYMENT_ID);
+				$conf->global->STOCK_CALCULATE_ON_BILL = 1;	// To force the change of stock during invoice validation
+
+				$constantforkey = 'CASHDESK_ID_WAREHOUSE'.(isset($_SESSION["takeposterminal"]) ? $_SESSION["takeposterminal"] : '');
+				dol_syslog("Validate invoice with stock change. Warehouse defined into constant ".$constantforkey." = ".getDolGlobalString($constantforkey));
+
+				// Validate invoice with stock change into warehouse getDolGlobalInt($constantforkey)
+				// Label of stock movement will be the same as when we validate invoice "Invoice XXXX validated"
+				$batch_rule = 0;	// Module productbatch is disabled here, so no need for a batch_rule.
+				$res = $invoice->validate($user, '', getDolGlobalInt($constantforkey), 0, $batch_rule);
+
+				// Restore setup
+				$conf->global->STOCK_CALCULATE_ON_BILL = $savconst;
 			} else {
-				dol_syslog("Invoice is not paid, remain to pay = ".$remaintopay);
+				// Validation of invoice with no change into stock (because param $idwarehouse is not fill)
+				$res = $invoice->validate($user);
+				if ($res < 0) {
+					$error++;
+					$langs->load("admin");
+					dol_htmloutput_errors($invoice->error == 'NotConfigured' ? $langs->trans("NotConfigured").' (TakePos numbering module)' : $invoice->error, $invoice->errors, 1);
+				}
 			}
-		} else {
-			dol_htmloutput_errors($invoice->error, $invoice->errors, 1);
-		}
 
-		// Update stock for batch products
-		if (!$error && $res >= 0) {
-			if (isModEnabled('stock') && isModEnabled('productbatch') && $allowstockchange) {
-				// Update stocks
-				dol_syslog("Now we record the stock movement for each qualified line");
+			// Add the payment
+			if (!$error && $res >= 0) {
+				$remaintopay = $invoice->getRemainToPay();
 
-				// The case !isModEnabled('productbatch') was processed few lines before.
-				require_once DOL_DOCUMENT_ROOT . "/product/stock/class/mouvementstock.class.php";
-				$constantforkey = 'CASHDESK_ID_WAREHOUSE'.$_SESSION["takeposterminal"];
-				$inventorycode = dol_print_date(dol_now(), 'dayhourlog');
-				// Label of stock movement will be "TakePOS - Invoice XXXX"
-				$labeltakeposmovement = 'TakePOS - '.$langs->trans("Invoice").' '.$invoice->ref;
+				if ($remaintopay > 0) {
 
-				foreach ($invoice->lines as $line) {
-					// Use the warehouse id defined on invoice line else in the setup
-					$warehouseid = ($line->fk_warehouse ? $line->fk_warehouse : getDolGlobalInt($constantforkey));
+					// If no amount is specified, take the remaining
+					//  amount of invoice as amount of payment
+					if ($amountofpayment <= 0 || $amountofpayment > $remaintopay) {
+						$amountofpayment = $remaintopay;
+					}
 
-					// var_dump('fk_product='.$line->fk_product.' batch='.$line->batch.' warehouse='.$line->fk_warehouse.' qty='.$line->qty);
-					if ($line->batch != '' && $warehouseid > 0) {
-						$prod_batch = new Productbatch($db);
-						$prod_batch->find(0, '', '', $line->batch, $warehouseid);
+					// Consume BonAlim that are validated, older first
+					// (do not check date_start and date_end for BonAlim validity)
+					// TODO: check date_start and date_end for BonAlim validity
+					$bonalim = new BonAlim($db);
+					$bonalim_list = $bonalim->fetchAll(
+						'ASC',
+						'date_start',
+						0,
+						0,
+						'(beneficiary:=:' . $invoice->socid . ') AND (status:=:' . BonAlim::STATUS_CREDITED . ')'
+					);
 
-						$mouvP = new MouvementStock($db);
-						$mouvP->setOrigin($invoice->element, $invoice->id);
+					//$bankaccount = getDolGlobalInt('PRBONALIM_BANKACCOUNT_BONALIM');
+					$bankaccount = 0;
 
-						$res = $mouvP->livraison($user, $line->fk_product, $warehouseid, $line->qty, $line->price, $labeltakeposmovement, '', '', '', $prod_batch->batch, $prod_batch->id, $inventorycode);
-						if ($res < 0) {
-							dol_htmloutput_errors($mouvP->error, $mouvP->errors, 1);
-							$error++;
+					if ($bonalim_list) {
+						foreach ($bonalim_list as $b) {
+
+							if ($amountofpayment <= $b->amount_left) {
+								// Consume BonAlim partially
+								$res = $b->consume($amountofpayment, $invoice->id, $user);
+								if ($res < 0) {
+									$error++;
+									dol_htmloutput_errors($langs->trans('Error').' '.$$b->error, $$b->errors, 1);
+								}
+
+								// Save Payment
+								$payment = new Paiement($db);
+								$payment->datepaye = $now;
+								$payment->fk_account = $bankaccount;
+								$payment->amounts[$invoice->id] = $amountofpayment;
+								$payment->paiementid = modPRBonAlim::BONALIM_PAYMENT_ID;
+								$payment->num_payment = $invoice->ref;
+
+								$res = $payment->create($user, 1);
+								if ($res < 0) {
+									$error++;
+									dol_htmloutput_errors($langs->trans('Error').' '.$payment->error, $payment->errors, 1);
+								}
+
+								$amountofpayment = 0;
+								$remaintopay = 0;
+
+								// Stop the Foreach loop
+								break 1;
+							} else {
+								// Consume BonAlim totally
+								$bonalim_amountleft = $b->amount_left;
+								$b->consume($b->amount_left, $invoice->id, $user);
+
+								// Save Payment
+								$payment = new Paiement($db);
+								$payment->datepaye = $now;
+								$payment->fk_account = $bankaccount;
+								$payment->amounts[$invoice->id] = $bonalim_amountleft;
+								$payment->paiementid = modPRBonAlim::BONALIM_PAYMENT_ID;
+								$payment->num_payment = $invoice->ref;
+
+								$res = $payment->create($user, 1);
+								if ($res < 0) {
+									$error++;
+									dol_htmloutput_errors($langs->trans('Error').' '.$payment->error, $payment->errors, 1);
+								}
+
+								// Remove from next payment the payment that has been done
+								$amountofpayment = $amountofpayment - $bonalim_amountleft;
+								$remaintopay = $remaintopay - $bonalim_amountleft;
+
+								// Continue the Foreach loop
+								// to get another BonAlim to pay the invoice
+							}
 						}
 					} else {
-						$mouvP = new MouvementStock($db);
-						$mouvP->setOrigin($invoice->element, $invoice->id);
+						return 0;
+					}
+				}
 
-						$res = $mouvP->livraison($user, $line->fk_product, $warehouseid, $line->qty, $line->price, $labeltakeposmovement, '', '', '', '', 0, $inventorycode);
-						if ($res < 0) {
-							dol_htmloutput_errors($mouvP->error, $mouvP->errors, 1);
-							$error++;
+				if ($remaintopay == 0) {
+					dol_syslog("Invoice is paid, so we set it to status Paid");
+					$result = $invoice->setPaid($user);
+					if ($result > 0) {
+						$invoice->paye = 1;
+						$invoice->status = $invoice::STATUS_CLOSED;
+					}
+					// set payment method
+					$invoice->setPaymentMethods(modPRBonAlim::BONALIM_PAYMENT_ID);
+				} else {
+					dol_syslog("Invoice is not paid, remain to pay = ".$remaintopay);
+				}
+			} else {
+				dol_htmloutput_errors($invoice->error, $invoice->errors, 1);
+			}
+
+			// Update stock for batch products
+			if (!$error && $res >= 0) {
+				if (isModEnabled('stock') && isModEnabled('productbatch') && $allowstockchange) {
+					// Update stocks
+					dol_syslog("Now we record the stock movement for each qualified line");
+
+					// The case !isModEnabled('productbatch') was processed few lines before.
+					require_once DOL_DOCUMENT_ROOT . "/product/stock/class/mouvementstock.class.php";
+					$constantforkey = 'CASHDESK_ID_WAREHOUSE'.$_SESSION["takeposterminal"];
+					$inventorycode = dol_print_date(dol_now(), 'dayhourlog');
+					// Label of stock movement will be "TakePOS - Invoice XXXX"
+					$labeltakeposmovement = 'TakePOS - '.$langs->trans("Invoice").' '.$invoice->ref;
+
+					foreach ($invoice->lines as $line) {
+						// Use the warehouse id defined on invoice line else in the setup
+						$warehouseid = ($line->fk_warehouse ? $line->fk_warehouse : getDolGlobalInt($constantforkey));
+
+						// var_dump('fk_product='.$line->fk_product.' batch='.$line->batch.' warehouse='.$line->fk_warehouse.' qty='.$line->qty);
+						if ($line->batch != '' && $warehouseid > 0) {
+							$prod_batch = new Productbatch($db);
+							$prod_batch->find(0, '', '', $line->batch, $warehouseid);
+
+							$mouvP = new MouvementStock($db);
+							$mouvP->setOrigin($invoice->element, $invoice->id);
+
+							$res = $mouvP->livraison($user, $line->fk_product, $warehouseid, $line->qty, $line->price, $labeltakeposmovement, '', '', '', $prod_batch->batch, $prod_batch->id, $inventorycode);
+							if ($res < 0) {
+								dol_htmloutput_errors($mouvP->error, $mouvP->errors, 1);
+								$error++;
+							}
+						} else {
+							$mouvP = new MouvementStock($db);
+							$mouvP->setOrigin($invoice->element, $invoice->id);
+
+							$res = $mouvP->livraison($user, $line->fk_product, $warehouseid, $line->qty, $line->price, $labeltakeposmovement, '', '', '', '', 0, $inventorycode);
+							if ($res < 0) {
+								dol_htmloutput_errors($mouvP->error, $mouvP->errors, 1);
+								$error++;
+							}
 						}
 					}
 				}
 			}
-		}
 
-		if (!$error && $res >= 0) {
+			if (!$error && $res >= 0) {
+				$db->commit();
+			} else {
+				$db->rollback();
+			}
+
+			return 1;
+		} // End actions for "takeposinvoice"
+
+		if ($parameters['currentcontext'] == 'invoicelist' && $action == 'prcaisse_massaction_mergereplaceinvoices') {
+
+			$confirm = GETPOST('confirm', 'alpha');
+			$toselect = GETPOST('toselect', 'array:int');
+
+			if ($confirm != 'yes') {
+				return 0;
+			}
+
+			$check_parameters = [
+				'toselect' => $toselect,
+			];
+			$check = $this->_precheck_mergereplaceinvoices($check_parameters);
+			if (is_int($check) && $check < 0) {
+				return -1;
+			}
+			if (is_array($check) && !empty($check)) {
+				$invoices = $check;
+			} else {
+				return -1;
+			}
+
+			$db->begin();
+
+			// Create new invoice
+			$newinvoice = new Facture($db);
+			$newinvoice->socid = $invoices[0]->socid;
+			$newinvoice->type = Facture::TYPE_STANDARD;
+			$newinvoice->date = dol_now();
+
+			$result = $newinvoice->create($user);
+			if ($result < 0) {
+				$db->rollback();
+				$this->errors[] = $langs->trans('ErrorInvoiceMergeCannotCreate');
+				return -1;
+			}
+
+			// Create new invoice lines
+			foreach ($invoices as $f) {
+				$label = $langs->trans('Ticket').' '.$f->ref.' '.$langs->trans('InvoiceMergeFrom').' '.dol_print_date($f->date, 'daytext');
+
+				$result = $newinvoice->addline(
+					$label,
+					$f->getRemainToPay(),
+					1,      // qty
+					0,      // tva
+				);
+
+				if ($result < 0) {
+					$db->rollback();
+					$this->errors[] = $langs->trans('ErrorInvoiceMergeCannotAddLine');
+					return -1;
+				}
+			}
+
+			// Validate invoice to get Ref
+			$newinvoice->validate($user);
+
+			// Mark all former invoices as replaced
+			foreach ($invoices as $f) {
+				$f->note_private .= $langs->trans('ReplacedBy').' '.$newinvoice->ref;
+				$result = $f->update($user);
+
+				if ($result < 0) {
+					$db->rollback();
+					$this->errors[] = $langs->trans('ErrorInvoiceMergeCannotUpdate');
+					return -1;
+				}
+
+				$result = $f->setCanceled($user, Facture::CLOSECODE_REPLACED);
+
+				if ($result < 0) {
+					$db->rollback();
+					$this->errors[] = $langs->trans('ErrorInvoiceMergeCannotClose');
+					return -1;
+				}
+			}
+
 			$db->commit();
-		} else {
-			$db->rollback();
+
+			header('Location: '.DOL_URL_ROOT.'/compta/facture/card.php?facid='.$newinvoice->id);
+		} // End action "prcaisse_massaction_mergereplaceinvoices"
+	}
+
+	/**
+	 * Overload the addMoreMassActions function : replacing the parent's function with the one below
+	 *
+	 * @param       array<string,mixed>   $parameters     Hook metadata (context, etc...)
+	 * @param       CommonObject          $object         The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
+	 * @param       ?string               $action         Current action (if set). Generally create or edit or null
+	 * @param       HookManager           $hookmanager    Hook manager propagated to allow calling another hook
+	 * @return      int                                   Return integer < 0 on error, 0 on success, 1 to replace standard code
+	 */
+	public function addMoreMassActions($parameters, &$object, &$action, $hookmanager)
+	{
+		global $conf, $user, $langs;
+
+		/* print_r($parameters); print_r($object); echo "action: " . $action; */
+		if ($parameters['currentcontext'] == 'invoicelist') {
+			$picto = img_picto($langs->trans('Invoice'), 'fa-file-invoice-dollar', 'class="infobox-commande pictofixedwidth"');
+			$data_html = $picto.$langs->trans("MergeReplaceInvoices");
+			$this->resprints = '<option value="prcaisse_mergereplaceinvoices" data-html="'.htmlspecialchars($data_html).'">'.$data_html.'</option>';
+		}
+	}
+
+	/**
+	 * Overload the doMassActions function : replacing the parent's function with the one below
+	 *
+	 * @param       array<string,mixed>   $parameters     Hook metadata (context, etc...)
+	 * @param       CommonObject          $object         The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
+	 * @param       ?string               $action         Current action (if set). Generally create or edit or null
+	 * @param       HookManager           $hookmanager    Hook manager propagated to allow calling another hook
+	 * @return      int                                   Return integer < 0 on error, 0 on success, 1 to replace standard code
+	 */
+	public function doMassActions($parameters, &$object, &$action, $hookmanager)
+	{
+		global $conf, $user, $langs, $db;
+
+		$error = 0; // Error counter
+
+		/* print_r($parameters); print_r($object); echo "action: " . $action; */
+		if ($parameters['currentcontext'] == 'invoicelist' && $parameters['massaction'] == 'prcaisse_mergereplaceinvoices') {
+			return $this->_precheck_mergereplaceinvoices($parameters);
 		}
 
-		return 1;
+		return 0;
+	}
+
+	/**
+	 * Pre-check the action prcaisse_mergereplaceinvoices
+	 */
+	private function _precheck_mergereplaceinvoices($parameters) {
+		global $conf, $user, $langs, $db;
+
+		if (empty($parameters['toselect']) || !is_array($parameters['toselect'])) {
+			$this->errors[] = $langs->trans('ErrorInvoiceMergeNoInvoices');
+			return -1;
+		}
+
+		if (count($parameters['toselect']) == 1) {
+			$this->errors[] = $langs->trans('ErrorInvoiceMergeOneInvoices');
+			return -1;
+		}
+
+		$socid = 0;
+		$newsocid = 0;
+		$invoices = [];
+		foreach ($parameters['toselect'] as $facid) {
+			$facture = new Facture($db);
+			if ($facid && $facture->fetch($facid) > 0) {
+				$invoices[] = $facture;
+				$newsocid = $facture->socid;
+			} else {
+				$this->errors[] = $langs->trans('ErrorInvoiceMergeCannotLoadInvoice');
+				return -1;
+			}
+			// Check that invoices have the same socid
+			if ($socid > 0 && $newsocid > 0 && $newsocid != $socid) {
+				$this->errors[] = $langs->trans('ErrorInvoiceMergeDifferentSocId');
+				return -1;
+			} else {
+				$socid = $newsocid;
+			}
+			// Check that all invoices are open
+			if (!in_array($facture->status, [Facture::STATUS_VALIDATED])) {
+				$this->errors[] = $langs->trans('ErrorInvoiceMergeNotOpen');
+				return -1;
+			}
+			// Check that all invoices are standard invoices
+			if (!in_array($facture->type, [Facture::TYPE_STANDARD])) {
+				$this->errors[] = $langs->trans('ErrorInvoiceMergeNotStandard');
+				return -1;
+			}
+		}
+
+		if (empty($invoices)) {
+			$this->errors[] = $langs->trans('ErrorInvoiceMergeNoInvoices');
+			return -1;
+		}
+
+		return $invoices;
+	}
+
+	/**
+	 * Execute action printFieldPreListTitle
+	 *
+	 * @param       array<string,mixed>   $parameters     Hook metadata (context, etc...)
+	 * @param       CommonObject          $object         The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
+	 * @param       ?string               $action         Current action (if set). Generally create or edit or null
+	 * @param       HookManager           $hookmanager    Hook manager propagated to allow calling another hook
+	 * @return      int                                   Return integer < 0 on error, 0 on success, 1 to replace standard code
+	 */
+	public function printFieldPreListTitle($parameters, &$object, &$action, $hookmanager)
+	{
+		global $conf, $user, $langs, $db;
+
+		$error = 0; // Error counter
+
+		$massaction = GETPOST('massaction', 'alpha');
+		$action = GETPOST('action', 'alpha');
+		$confirm = GETPOST('confirm', 'alpha');
+		$toselect = GETPOST('toselect', 'array:int');
+
+		if ($parameters['currentcontext'] == 'invoicelist' && $massaction == 'prcaisse_mergereplaceinvoices') {
+
+			if ($confirm == 'no') {
+				return 0;
+			}
+
+			$check_parameters = [
+				'toselect' => $toselect,
+			];
+			$check = $this->_precheck_mergereplaceinvoices($check_parameters);
+			if (is_int($check) && $check < 0) {
+				return -1;
+			}
+
+			// Confirmation
+			if ($confirm != 'yes') {
+				$form = new Form($db);
+
+				$text = $langs->trans('ConfirmMergeReplaceInvoices');
+				$this->resprints = $form->formconfirm(
+					$_SERVER['PHP_SELF'],
+					$langs->trans('MergeReplaceInvoices'),
+					$text,
+					'prcaisse_massaction_mergereplaceinvoices',
+					[],
+					0,
+					0,
+					0,
+					500,
+					TRUE // Embed this form inside the original Search form to inherit all the hidden fields
+				);
+				return 1;
+			}
+		}
+
 	}
 
 	/**

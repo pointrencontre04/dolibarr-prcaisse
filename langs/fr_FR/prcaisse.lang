@@ -10,6 +10,24 @@ ModulePRCaisseName = PR Caisse
 ModulePRCaisseDesc = Modification de TakePOS pour les besoins spécifiques de l'épicerie du Point Rencontre
 
 #
+# Mass Actions
+#
+MergeReplaceInvoices = Fusion/Remplacement Facture
+ConfirmMergeReplaceInvoices = Voulez-vous vraiment fusionner ces factures ? Toutes les factures sélectionnées seront annulées et remplacées par la nouvelle facture.
+ErrorInvoiceMergeNoInvoices = Erreur : la liste des factures à traiter est vide
+ErrorInvoiceMergeOneInvoices = Erreur : la liste des factures à traiter ne contient qu'une seule facture
+ErrorInvoiceMergeCannotLoadInvoice = Erreur : impossible de charger une des factures
+ErrorInvoiceMergeDifferentSocId = Erreur : les factures à remplacer ne sont pas toutes facturées au même client
+ErrorInvoiceMergeNotOpen = Erreur : les factures à remplacer ne sont pas toutes ouvertes et non payées
+ErrorInvoiceMergeNotStandard = Erreur : les factures à remplacer ne sont pas toutes des factures de doit
+ErrorInvoiceMergeCannotCreate = Erreur : impossible de créer la facture
+ErrorInvoiceMergeAddLine = Erreur : impossible d'ajouter des lignes
+ErrorInvoiceMergeCannotUpdate = Erreur : impossible de mettre à jour les factures originales
+ErrorInvoiceMergeCannotClose = Erreur : impossible de fermer une des facutres originales
+InvoiceMergeFrom = du
+ReplacedBy = Remplacée par
+
+#
 # Admin page
 #
 PRCaisseSetup = PRCaisse setup
@@ -20,7 +38,6 @@ PRCAISSE_MYPARAM1 = My param 1
 PRCAISSE_MYPARAM1Tooltip = My param 1 tooltip
 PRCAISSE_MYPARAM2=My param 2
 PRCAISSE_MYPARAM2Tooltip=My param 2 tooltip
-
 
 #
 # About page
