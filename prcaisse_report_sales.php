@@ -350,7 +350,7 @@ if ($action == 'builddoc' && $permissiontoread) {
 	print '<tr class="liste_titre">';
 	print '<td>'.$langs->trans("Terminal").'</td>';
 	print '<td class="right">'.$langs->trans("SalesCount1").'</td>';
-	print '<td class="right">'.$langs->trans("SalesCount1to4").'</td>';
+	print '<td class="right">'.$langs->trans("SalesCount2to4").'</td>';
 	print '<td class="right">'.$langs->trans("SalesCount5More").'</td>';
 	print '</tr>';
 
