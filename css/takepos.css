@@ -408,13 +408,13 @@
   justify-content: center;
   align-items: center;
   width: 20%;
-  height: 20%;
+  height: 25%;
   padding: 10px;
 }
 @media (min-width: 1400px) {
   .bodytakepos .div5 .wrapper2 {
     width: 16.6666666667%;
-    height: 25%;
+    height: 33%;
   }
 }
 .bodytakepos .div5 .wrapper2 .imgwrapper {
