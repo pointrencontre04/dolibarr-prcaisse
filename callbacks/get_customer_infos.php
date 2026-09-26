@@ -265,7 +265,72 @@ if ($user->hasRight('facture', 'read')) {
 }
 
 
+/**
+ * Add JavaScript callback to display
+ * various customer alerts
+ */
+$alerts = [];
+
+// Bénéficiaire
+if ($date_epicerie_fin && time() > $date_epicerie_fin) {
+    $alerts[] = [
+        'level'   => 'error',
+        'content' => "Accès Épicerie à renouveler",
+    ];
+
+    if ($date_adhesion_fin && time() > $date_adhesion_fin) {
+        $alerts[] = [
+            'level'   => 'warning',
+            'content' => "<p>Adhésion à l'association à renouveler</p>",
+        ];
+    }
+
+}
+
+// Adhérent Solidaire
+if (!$date_epicerie_fin && (!$date_adhesion_fin || time() > $date_adhesion_fin)) {
+    $alerts[] = [
+        'level'   => 'warning',
+        'content' => "<p>Adhésion à l'association à renouveler</p>",
+    ];
+}
+
+if ($note_public || $note_private) {
+    $alerts[] = [
+        'level'   => 'info',
+        'content' => '<p>' . htmlspecialchars($note_public) . '</p><p>' . htmlspecialchars($note_private) . '</p>'
+    ];
+}
+
+
+$json_alerts = json_encode($alerts);
 ?>
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+
+        var alerts = <?php echo $json_alerts; ?>;
+        var html_alerts = [];
+
+        if (alerts.length > 0) {
+            html_alerts = alerts.map(alert => `
+                <div class="customer_alert ${alert.level}">
+                    ${alert.content}
+                </div>
+            `
+            );
+        }
+
+        if (html_alerts.length > 0 && jQuery('#poslines .drag.drop.oddeven').text() == 'Empty') {
+            console.log("Open popup to show customer alerts");
+            setTimeout(() => jQuery.colorbox({className: 'prcaisse-cbox_customer_alerts', html:'<h3>'+jQuery('#customer').text()+'</h3>'+html_alerts.join(''), width:"80%", height:"90%", transition:"none", iframe:false, title:"Alertes client"})
+            , 201);
+        }
+
+    });
+</script>
+
+
 <div class="customer_infos_content">
     <div class="customer_infos_general">
         <div class="date_adhesion <?php echo $date_adhesion_classes; ?>">
