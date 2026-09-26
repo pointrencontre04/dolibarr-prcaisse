@@ -307,8 +307,8 @@ $json_alerts = json_encode($alerts);
 ?>
 
 <script type="text/javascript">
-    jQuery(document).ready(function() {
 
+    showCustomerAlerts = function() {
         var alerts = <?php echo $json_alerts; ?>;
         var html_alerts = [];
 
@@ -321,12 +321,15 @@ $json_alerts = json_encode($alerts);
             );
         }
 
-        if (html_alerts.length > 0 && jQuery('#poslines .drag.drop.oddeven').text() == 'Empty') {
-            console.log("Open popup to show customer alerts");
-            setTimeout(() => jQuery.colorbox({className: 'prcaisse-cbox_customer_alerts', html:'<h3>'+jQuery('#customer').text()+'</h3>'+html_alerts.join(''), width:"80%", height:"90%", transition:"none", iframe:false, title:"Alertes client"})
-            , 201);
-        }
+        jQuery.colorbox({className: 'prcaisse-cbox_customer_alerts', html:'<h3>'+jQuery('#customer').text()+'</h3>'+html_alerts.join(''), width:"80%", height:"90%", transition:"none", iframe:false, title:"Alertes client"})
+    };
 
+    jQuery(document).ready(function() {
+        var has_alerts = <?php echo (bool) (count($alerts) > 0); ?>;
+        if (has_alerts && jQuery('#poslines .drag.drop.oddeven').text() == 'Empty') {
+            console.log("Open popup to show customer alerts");
+            setTimeout(showCustomerAlerts, 201);
+        }
     });
 </script>
 
@@ -369,17 +372,11 @@ $json_alerts = json_encode($alerts);
         </div>
     </div>
     <div class="customer_infos_notes">
-        <?php if ($note_public): ?>
-        <div class="note_public">
-            <div class="label">Note publique&nbsp;:</div>
-            <div class="value"><?php echo dol_escape_htmltag($note_public); ?></div>
-        </div>
-        <?php endif; ?>
-        <?php if ($note_private): ?>
-        <div class="note_private">
-            <div class="label">Note Privée&nbsp;:</div>
-            <div class="value"><?php echo dol_escape_htmltag($note_private); ?></div>
-        </div>
+
+        <?php if ($alerts): ?>
+            <button style="padding: 5px;" type="button" class="classfortooltip badge badge-warning" onclick="showCustomerAlerts();">
+                <i class="fa fa-exclamation-triangle paddingrightonly"></i>Afficher les alertes
+            </button>
         <?php endif; ?>
     </div>
     <?php if ($invoice_history): ?>
