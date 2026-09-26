@@ -265,7 +265,75 @@ if ($user->hasRight('facture', 'read')) {
 }
 
 
+/**
+ * Add JavaScript callback to display
+ * various customer alerts
+ */
+$alerts = [];
+
+// Bénéficiaire
+if ($date_epicerie_fin && time() > $date_epicerie_fin) {
+    $alerts[] = [
+        'level'   => 'error',
+        'content' => "Accès Épicerie à renouveler",
+    ];
+
+    if ($date_adhesion_fin && time() > $date_adhesion_fin) {
+        $alerts[] = [
+            'level'   => 'warning',
+            'content' => "<p>Adhésion à l'association à renouveler</p>",
+        ];
+    }
+
+}
+
+// Adhérent Solidaire
+if (!$date_epicerie_fin && (!$date_adhesion_fin || time() > $date_adhesion_fin)) {
+    $alerts[] = [
+        'level'   => 'warning',
+        'content' => "<p>Adhésion à l'association à renouveler</p>",
+    ];
+}
+
+if ($note_public || $note_private) {
+    $alerts[] = [
+        'level'   => 'info',
+        'content' => '<p>' . htmlspecialchars($note_public) . '</p><p>' . htmlspecialchars($note_private) . '</p>'
+    ];
+}
+
+
+$json_alerts = json_encode($alerts);
 ?>
+
+<script type="text/javascript">
+
+    showCustomerAlerts = function() {
+        var alerts = <?php echo $json_alerts; ?>;
+        var html_alerts = [];
+
+        if (alerts.length > 0) {
+            html_alerts = alerts.map(alert => `
+                <div class="customer_alert ${alert.level}">
+                    ${alert.content}
+                </div>
+            `
+            );
+        }
+
+        jQuery.colorbox({className: 'prcaisse-cbox_customer_alerts', html:'<h3>'+jQuery('#customer').text()+'</h3>'+html_alerts.join(''), width:"80%", height:"90%", transition:"none", iframe:false, title:"Alertes client"})
+    };
+
+    jQuery(document).ready(function() {
+        var has_alerts = <?php echo (bool) (count($alerts) > 0); ?>;
+        if (has_alerts && jQuery('#poslines .drag.drop.oddeven').text() == 'Empty') {
+            console.log("Open popup to show customer alerts");
+            setTimeout(showCustomerAlerts, 201);
+        }
+    });
+</script>
+
+
 <div class="customer_infos_content">
     <div class="customer_infos_general">
         <div class="date_adhesion <?php echo $date_adhesion_classes; ?>">
@@ -304,17 +372,11 @@ if ($user->hasRight('facture', 'read')) {
         </div>
     </div>
     <div class="customer_infos_notes">
-        <?php if ($note_public): ?>
-        <div class="note_public">
-            <div class="label">Note publique&nbsp;:</div>
-            <div class="value"><?php echo dol_escape_htmltag($note_public); ?></div>
-        </div>
-        <?php endif; ?>
-        <?php if ($note_private): ?>
-        <div class="note_private">
-            <div class="label">Note Privée&nbsp;:</div>
-            <div class="value"><?php echo dol_escape_htmltag($note_private); ?></div>
-        </div>
+
+        <?php if ($alerts): ?>
+            <button style="padding: 5px;" type="button" class="classfortooltip badge badge-warning" onclick="showCustomerAlerts();">
+                <i class="fa fa-exclamation-triangle paddingrightonly"></i>Afficher les alertes
+            </button>
         <?php endif; ?>
     </div>
     <?php if ($invoice_history): ?>
