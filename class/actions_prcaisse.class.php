@@ -1032,7 +1032,7 @@ class ActionsPRCaisse extends CommonHookActions
 
 					if (inputField.val() != lastText) {
 						lastText = inputField.val();
-						submitTimeout = setTimeout(callback.bind(this, e), 2000);
+						submitTimeout = setTimeout(callback.bind(this, e), 1000);
 					}
 				});
 			});
