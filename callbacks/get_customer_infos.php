@@ -325,7 +325,7 @@ $json_alerts = json_encode($alerts);
     };
 
     jQuery(document).ready(function() {
-        var has_alerts = <?php echo (bool) (count($alerts) > 0); ?>;
+        var has_alerts = <?php echo json_encode(!empty($alerts)); ?>;
         if (has_alerts && jQuery('#poslines .drag.drop.oddeven').text() == 'Empty') {
             console.log("Open popup to show customer alerts");
             setTimeout(showCustomerAlerts, 201);
