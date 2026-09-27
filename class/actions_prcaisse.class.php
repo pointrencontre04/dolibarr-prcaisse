@@ -1004,7 +1004,7 @@ class ActionsPRCaisse extends CommonHookActions
 
 			$sql = "SELECT DISTINCT s.nom,f.fk_soc FROM ".MAIN_DB_PREFIX."facture f
 			  JOIN ".MAIN_DB_PREFIX."societe s ON f.fk_soc = s.rowid
-			  WHERE module_source='takepos' AND pos_source='1' AND fk_statut <> 0 AND DAYOFWEEK(datef) = DAYOFWEEK(NOW())
+			  WHERE module_source='takepos' AND pos_source='".$pos."' AND fk_statut <> 0 AND DAYOFWEEK(datef) = DAYOFWEEK(NOW())
 			  ORDER BY datef DESC LIMIT " . $max_suggestions;
 			$resql = $db->query($sql);
 			if ($resql) {
