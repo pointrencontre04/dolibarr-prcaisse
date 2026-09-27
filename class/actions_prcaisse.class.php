@@ -995,6 +995,7 @@ class ActionsPRCaisse extends CommonHookActions
 			// Retrieve previous invoices on this POS on the same weekday
 			// to handle quick-selection of recurring customers
 			$pos = (int) $_SESSION['takeposterminal'];
+			$place = (GETPOST('place', 'aZ09') ? GETPOST('place', 'aZ09') : '0'); // $place is id of table for Bar or Restaurant
 
 			// TODO: make this a configuration switch
 			// with option to set the number of suggested customers
@@ -1018,7 +1019,7 @@ class ActionsPRCaisse extends CommonHookActions
 				$resprints .= '<h4>Derniers clients sur la caisse</h4>';
 				$resprints .= '<ul>';
 				foreach ($customers as $c) {
-					$resprints .= '<li class="prcaisse_customer_selection oddeven" onclick="location.href=\'list.php?action=change&contextpage=poslist&idcustomer=' . ((int) $c['fk_soc']) . '&place=0\'">' . htmlspecialchars($c['nom']) . '</li>';
+					$resprints .= '<li class="prcaisse_customer_selection oddeven" onclick="location.href=\'list.php?action=change&contextpage=poslist&idcustomer='.((int) $c['fk_soc']).'&place='.$place.'\'">'.htmlspecialchars($c['nom']).'</li>';
 				}
 				$resprints .= '</ul>';
 				$resprints .= '</div>';
