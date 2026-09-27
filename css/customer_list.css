@@ -1,0 +1,25 @@
+/**
+ * Stylesheet for customer list
+ */
+
+#prcaisse_recurring_customers h4 {
+  margin: 0;
+}
+
+#prcaisse_recurring_customers ul {
+  list-style: none;
+  padding: 0;
+  margin: 5px -5px 15px -5px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+#prcaisse_recurring_customers ul > li {
+  width: calc(100% / 5);
+  padding: 10px;
+  margin: 5px;
+  border: solid 1px var(--colortopbordertitle1);
+  border-radius: 10px;
+}

@@ -950,6 +950,7 @@ class ActionsPRCaisse extends CommonHookActions
 		$action = GETPOST('action', 'alpha');
 		$confirm = GETPOST('confirm', 'alpha');
 		$toselect = GETPOST('toselect', 'array:int');
+		$contextpage = GETPOST('contextpage', 'alpha');
 
 		if ($parameters['currentcontext'] == 'invoicelist' && $massaction == 'prcaisse_mergereplaceinvoices') {
 
@@ -986,6 +987,47 @@ class ActionsPRCaisse extends CommonHookActions
 			}
 		}
 
+		if ($parameters['currentcontext'] == 'thirdpartylist' && $contextpage == 'poslist') {
+
+			$css = file_get_contents(__DIR__ . '/../css/customer_list.css');
+			$resprints = '<style type="text/css">' . $css . '</style>';
+
+			// Retrieve previous invoices on this POS on the same weekday
+			// to handle quick-selection of recurring customers
+			$pos = (int) $_SESSION['takeposterminal'];
+
+			// TODO: make this a configuration switch
+			// with option to set the number of suggested customers
+			$max_suggestions = 10;
+
+			$customers = [];
+
+			$sql = "SELECT DISTINCT s.nom,f.fk_soc FROM ".MAIN_DB_PREFIX."facture f
+			  JOIN ".MAIN_DB_PREFIX."societe s ON f.fk_soc = s.rowid
+			  WHERE module_source='takepos' AND pos_source='1' AND fk_statut <> 0 AND DAYOFWEEK(datef) = DAYOFWEEK(NOW())
+			  ORDER BY datef DESC LIMIT " . $max_suggestions;
+			$resql = $db->query($sql);
+			if ($resql) {
+				while ($obj = $db->fetch_array($resql)) {
+					$customers[] = $obj;
+				}
+			}
+
+			if ($customers) {
+				$resprints .= '<div id="prcaisse_recurring_customers">';
+				$resprints .= '<h4>Derniers clients sur la caisse</h4>';
+				$resprints .= '<ul>';
+				foreach ($customers as $c) {
+					$resprints .= '<li class="prcaisse_customer_selection oddeven" onclick="location.href=\'list.php?action=change&contextpage=poslist&idcustomer=' . ((int) $c['fk_soc']) . '&place=0\'">' . htmlspecialchars($c['nom']) . '</li>';
+				}
+				$resprints .= '</ul>';
+				$resprints .= '</div>';
+			}
+
+			$this->resprints = $resprints;
+
+		}
+
 	}
 
 	/**
@@ -1020,6 +1062,7 @@ class ActionsPRCaisse extends CommonHookActions
 				var lastText = inputField.val();
 
 				$('#searchFormList > .liste_titre').hide();
+				$('#prcaisse_recurring_customers').detach().insertAfter('#searchFormList > .table-fiche-title');
 
 				inputField.get(0).setSelectionRange(lastText.length, lastText.length);
 				inputField.focus();
