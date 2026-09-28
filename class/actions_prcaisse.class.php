@@ -452,6 +452,9 @@ class ActionsPRCaisse extends CommonHookActions
 			$resprints .= ob_get_clean();
 		}
 
+		// Add custom CSS
+		$resprints .= '<style type="text/css">' . file_get_contents(__DIR__ . '/../css/payment.css') . '</style>';
+
 		$this->resprints = $resprints;
 
 		return 0;
