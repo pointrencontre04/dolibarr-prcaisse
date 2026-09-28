@@ -469,6 +469,24 @@ button.calcbutton {
 
 div.paymentbordline {
   background-color: #555 !important;
+  color: #000 !important;
+
+}
+div.paymentbordline.paymentbordlinetotal {
+  background-color: #eee !important;
+  border: solid 1px #000;
+}
+div.paymentbordline.paymentbordlineremain {
+  background-color: #eee !important;
+  border: solid 1px #000;
+}
+div.paymentbordline.paymentbordlineremain .takepospay,
+div.paymentbordline.paymentbordlineremain #remaintopaydisplay {
+  color: #000 !important;
+}
+div.paymentbordline.paymentbordlinetotal .takepospay,
+div.paymentbordline.paymentbordlinetotal #totaldisplay {
+  color: #000 !important;
 }
 div.paymentbordline #totaldisplay, div.paymentbordline.paymentbordlinereceived .takepospay > span, div.paymentbordline.paymentbordlinechange .takepospay > span, div.paymentbordline.paymentbordlineremain .takepospay > span {
   font-size: 150%;
