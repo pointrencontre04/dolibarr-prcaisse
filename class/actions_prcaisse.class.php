@@ -146,6 +146,10 @@ class ActionsPRCaisse extends CommonHookActions
 				jQuery('#poslines #tablelines tr').click(function() {
 					Cookies.set('prcaisse_takepos_lastselected', jQuery(this).attr('id'));
 				});
+				jQuery('#tablelines .prcaisse_line_alert').each(function() {
+					jQuery(this).parent().addClass('prcaisse_line_alert');
+					jQuery(this).remove();
+				});
 			});
 		</script>
 		<?php
@@ -239,6 +243,9 @@ class ActionsPRCaisse extends CommonHookActions
 			if ($value['action'] == 'Split();') {
 				$results[$key]['title'] = '<span class="fa fa-money-check-alt paddingrightonly"></span><div class="trunc">Convertir en acompte</div>';
 				$results[$key]['action'] = 'PRCaisseSwitchInvoiceType();';
+			}
+			if ($value['action'] == 'CloseBill();') {
+				$results[$key]['action'] = 'PRCaisseCloseBill();';
 			}
 		}
 
@@ -483,7 +490,6 @@ class ActionsPRCaisse extends CommonHookActions
 	 *												=0 if OK but we want to process standard actions too,
 	 *												>0 if OK and we want to replace standard actions.
 	 */
-	/*
 	public function completeTakePosInvoiceLine(&$parameters, &$object, &$action, $hookmanager)
 	{
 		global $langs, $conf, $user, $db;
@@ -495,16 +501,17 @@ class ActionsPRCaisse extends CommonHookActions
 		$resprints = '';
 
 		ob_start();
+		if (price2num($parameters['line']->total_ttc) == 0 && !$parameters['line']->remise_percent && !$parameters['line']->remise) {
 		?>
-		<td>
-			<?php var_dump($parameters['line']->subprice); ?>
+		<td class="prcaisse_line_alert">
+			<span class="fa fa-exclamation-triangle"></span>
 		</td>
 		<?php
+		}
 		$resprints .= ob_get_clean();
 
 		$this->resprints = $resprints;
 	}
-	*/
 
 	/**
 	 * Execute action doActions

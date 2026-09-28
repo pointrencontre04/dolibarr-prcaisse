@@ -121,3 +121,32 @@ var PRCaisseSwitchInvoiceType = function() {
 		},
 	});
 };
+
+var PRCaisseCloseBill = function() {
+	// Check lines with empty price and no reduction
+	const callback_url = "<?php echo dol_buildpath('/prcaisse/callbacks/check_invoice_lines.php', 1); ?>";
+    const invoiceid = $("#invoiceid").val();
+	const params = {
+		invoice_id: invoiceid,
+		token: "<?php echo newToken(); ?>"
+	};
+    console.log("Calling check invoice lines invoiceid="+invoiceid);
+	jQuery.ajax({
+		url: callback_url,
+		method: 'POST',
+		data: params,
+		success: function(data_callback) {
+			var data = (typeof data_callback === 'string') ? JSON.parse(data_callback) : data_callback;
+			if (typeof data == "object" && data.status != 'ok') {
+				const reasons = {
+					price_empty: "Une des lignes de produit n'a pas de prix associ&eacute; !"
+				};
+				var reason = data.lines.map((line) => `<li><strong>${line.label}</strong> : ${reasons[line.error] || line.error || 'Erreur inconnue'}</li>`).join('');
+				jQuery.colorbox({className: "prcaisse-cbox_closebill_alerts", html:"<h3>Impossible de valider le ticket</h3><ul>"+reason+"</ul>", width:"80%", height:"90%", transition:"none", iframe:false, title:"Alertes caisse"})
+			} else {
+				CloseBill();
+			}
+		},
+	});
+
+};

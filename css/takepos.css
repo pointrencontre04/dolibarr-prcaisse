@@ -477,3 +477,10 @@ div.paymentbordline #totaldisplay, div.paymentbordline.paymentbordlinereceived .
 div.paymentbordline #totaldisplay.colorgreen, div.paymentbordline.paymentbordlinereceived .takepospay > span.colorgreen, div.paymentbordline.paymentbordlinechange .takepospay > span.colorgreen, div.paymentbordline.paymentbordlineremain .takepospay > span.colorgreen {
   color: lightgreen !important;
 }
+
+#tablelines .prcaisse_line_alert td  {
+  background-color: #ffdddd;
+  color: #ff0000;
+  border-top: solid 1px #ff0000;
+  border-bottom: solid 1px #ff0000;
+}
