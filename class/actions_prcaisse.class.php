@@ -1009,7 +1009,7 @@ class ActionsPRCaisse extends CommonHookActions
 
 			// TODO: make this a configuration switch
 			// with option to set the number of suggested customers
-			$max_suggestions = 10;
+			$max_suggestions = 24;
 
 			$customers = [];
 
