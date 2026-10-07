@@ -26,9 +26,9 @@ if (!defined('NOREQUIREDB')) {
 if (!defined('NOREQUIRESOC')) {
 	define('NOREQUIRESOC', '1');
 }
-if (!defined('NOREQUIRETRAN')) {
-	define('NOREQUIRETRAN', '1');
-}
+// if (!defined('NOREQUIRETRAN')) {
+// 	define('NOREQUIRETRAN', '1');
+// }
 if (!defined('NOCSRFCHECK')) {
 	define('NOCSRFCHECK', 1);
 }
@@ -47,7 +47,6 @@ if (!defined('NOREQUIREHTML')) {
 if (!defined('NOREQUIREAJAX')) {
 	define('NOREQUIREAJAX', '1');
 }
-
 
 /**
  * \file    prcaisse/js/prcaisse.js.php
@@ -86,6 +85,13 @@ if (!$res && file_exists("../../../main.inc.php")) {
 if (!$res) {
 	die("Include of main fails");
 }
+
+// Load translation files required by the page
+$langs_array = ["prcaisse@prcaisse"];
+if (isModEnabled('prbonalim')) {
+	$langs_array[] = 'prbonalim@prbonalim';
+}
+$langs->loadLangs($langs_array);
 
 // Define js type
 header('Content-Type: application/javascript');
@@ -139,10 +145,10 @@ var PRCaisseCloseBill = function() {
 			var data = (typeof data_callback === 'string') ? JSON.parse(data_callback) : data_callback;
 			if (typeof data == "object" && data.status != 'ok') {
 				const reasons = {
-					price_empty: "Une des lignes de produit n'a pas de prix associ&eacute; !"
+					price_empty: "<?php echo dol_escape_js($langs->trans('PRCaisseErrorPriceLineEmpty')); ?>"
 				};
 				var reason = data.lines.map((line) => `<li><strong>${line.label}</strong> : ${reasons[line.error] || line.error || 'Erreur inconnue'}</li>`).join('');
-				jQuery.colorbox({className: "prcaisse-cbox_closebill_alerts", html:"<h3>Impossible de valider le ticket</h3><ul>"+reason+"</ul>", width:"80%", height:"90%", transition:"none", iframe:false, title:"Alertes caisse"})
+				jQuery.colorbox({className: "prcaisse-cbox_closebill_alerts", html:"<h3><?php echo dol_escape_js($langs->trans('PRCaisseErrorCannotValidate')); ?></h3><ul>"+reason+"</ul>", width:"80%", height:"90%", transition:"none", iframe:false, title:"Alertes caisse"})
 			} else {
 				CloseBill();
 			}

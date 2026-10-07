@@ -66,6 +66,12 @@ $pos_source = (int) $_SESSION['takeposterminal'];
 
 $results = [];
 
+// Skip check if ticket is already validated
+if ($invoice->status != Facture::STATUS_DRAFT) {
+    echo json_encode(['status' => 'ok']);
+    exit();
+}
+
 // Charge les lignes
 if (!$invoice->lines) {
     $invoice->fetch_lines();

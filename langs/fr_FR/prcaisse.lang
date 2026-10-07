@@ -10,6 +10,12 @@ ModulePRCaisseName = PR Caisse
 ModulePRCaisseDesc = Modification de TakePOS pour les besoins spécifiques de l'épicerie du Point Rencontre
 
 #
+# POS
+#
+PRCaisseErrorPriceLineEmpty = Une des lignes de produit n'a pas de prix associé !
+PRCaisseErrorCannotValidate = Impossible de valider le ticket
+
+#
 # Mass Actions
 #
 MergeReplaceInvoices = Fusion/Remplacement Facture
