@@ -1028,6 +1028,7 @@ class ActionsPRCaisse extends CommonHookActions
 				$resprints .= '<div id="prcaisse_recurring_customers">';
 				$resprints .= '<h4>Derniers clients sur la caisse</h4>';
 				$resprints .= '<ul>';
+				$list = [];
 				foreach ($customers as $c) {
 					$res = preg_match('/^([^a-z]+) +([A-Z].+)$/', $c['nom'], $matches);
 					if ($res) {
@@ -1035,7 +1036,11 @@ class ActionsPRCaisse extends CommonHookActions
 					} else {
 						$label = $c['nom'];
 					}
-					$resprints .= '<li class="prcaisse_customer_selection oddeven" onclick="location.href=\'list.php?action=change&contextpage=poslist&idcustomer='.((int) $c['fk_soc']).'&place='.$place.'\'">'.htmlspecialchars($label).'</li>';
+					$list[$label] = (int) $c['fk_soc'];
+				}
+				ksort($list);
+				foreach ($list as $label => $id) {
+					$resprints .= '<li class="prcaisse_customer_selection oddeven" onclick="location.href=\'list.php?action=change&contextpage=poslist&idcustomer='.$id.'&place='.$place.'\'">'.htmlspecialchars($label).'</li>';
 				}
 				$resprints .= '</ul>';
 				$resprints .= '</div>';
