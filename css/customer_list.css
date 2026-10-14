@@ -17,7 +17,7 @@
 }
 
 #prcaisse_recurring_customers ul > li {
-  width: calc(100% / 5);
+  width: calc(100% / 6);
   padding: 10px;
   margin: 5px;
   border: solid 1px var(--colortopbordertitle1);
