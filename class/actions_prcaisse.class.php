@@ -1067,28 +1067,57 @@ class ActionsPRCaisse extends CommonHookActions
 		ob_start();
 		?>
 		<script type="text/javascript">
-			jQuery(document).ready(function() {
-				var submitTimeout;
-				var inputField = $('#searchFormList table.liste .liste_titre_filter input[name="search_nom"]');
-				var lastText = inputField.val();
-
+			jQuery(function ($) {
 				$('#searchFormList > .liste_titre').hide();
 				$('#prcaisse_recurring_customers').detach().insertAfter('#searchFormList > .table-fiche-title');
 
-				inputField.get(0).setSelectionRange(lastText.length, lastText.length);
-				inputField.focus();
+				let submitTimeoutObject;
+				let lastText = '';
 
-				inputField.on('keyup', function(e) {
-					clearTimeout(submitTimeout);
-					var callback = function(e) {
-						$(e.target).parents('form').submit();
-					};
+				function refreshResults($form) {
 
-					if (inputField.val() != lastText) {
-						lastText = inputField.val();
-						submitTimeout = setTimeout(callback.bind(this, e), 1000);
+					$.ajax({
+						url: $form.attr('action'),
+						method: $form.attr('method') || 'GET',
+						data: $form.serialize(),
+
+						success: function (html) {
+							const $response = $('<div>').html(html);
+							const $newRows = $response.find(
+								'#searchFormList tr[data-rowid]'
+							);
+							const $tbody = $('#searchFormList .div-table-responsive table tbody');
+							$tbody.find('tr[data-rowid]').remove();
+							$tbody.append($newRows);
+						},
+
+						error: function (xhr) {
+							console.error(xhr);
+						}
+					});
+				}
+
+				$(document).on(
+					'keyup',
+					'#searchFormList input[name="search_nom"]',
+					function () {
+						const $input = $(this);
+						if ($input.val() === lastText) {
+							return;
+						}
+						lastText = $input.val();
+						clearTimeout(submitTimeoutObject);
+						submitTimeoutObject = setTimeout(function () {
+							refreshResults($input.closest('form'));
+						}, 300);
 					}
-				});
+				);
+
+				const $input = $('#searchFormList input[name="search_nom"]');
+				if ($input.length) {
+					lastText = $input.val();
+				}
+
 			});
 		</script>
 		<?php
