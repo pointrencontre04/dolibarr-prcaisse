@@ -1009,7 +1009,7 @@ class ActionsPRCaisse extends CommonHookActions
 
 			// Number of suggested customers
 			$max_suggestions = getDolGlobalString('PRCAISSE_RECURRING_CUSTOMERS_MAX'.$pos);
-			$max_suggestions = ($max_suggestions === '' ? 6 : max(0, (int) $max_suggestions));
+			$max_suggestions = ($max_suggestions === '' ? 5 : max(0, (int) $max_suggestions));
 
 			$customers = [];
 
