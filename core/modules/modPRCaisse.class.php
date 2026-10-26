@@ -76,7 +76,7 @@ class modPRCaisse extends DolibarrModules
 		$this->editor_squarred_logo = '';					// Must be image filename into the module/img directory followed with @modulename. Example: 'myimage.png@prcaisse'
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated', 'experimental_deprecated' or a version string like 'x.y.z'
-		$this->version = '1.0.4';
+		$this->version = '1.0.5';
 		// Url to the file with your last numberversion of this module
 		//$this->url_last_version = 'http://www.example.com/versionmodule.txt';
 
@@ -271,20 +271,20 @@ class modPRCaisse extends DolibarrModules
 		// unit_frequency must be 60 for minute, 3600 for hour, 86400 for day, 604800 for week
 		/* BEGIN MODULEBUILDER CRON */
 		$this->cronjobs = array(
-			//  0 => array(
-			//      'label' => 'MyJob label',
-			//      'jobtype' => 'method',
-			//      'class' => '/prcaisse/class/myobject.class.php',
-			//      'objectname' => 'MyObject',
-			//      'method' => 'doScheduledJob',
-			//      'parameters' => '',
-			//      'comment' => 'Comment',
-			//      'frequency' => 2,
-			//      'unitfrequency' => 3600,
-			//      'status' => 0,
-			//      'test' => 'isModEnabled("prcaisse")',
-			//      'priority' => 50,
-			//  ),
+			0 => array(
+			    'label' => 'Reset POS cash',
+			    'jobtype' => 'method',
+			    'class' => '/prcaisse/class/PRCaisseCronjobs.class.php',
+			    'objectname' => 'PRCaisseCronjobs',
+			    'method' => 'prcaisse_reset_pos_cash',
+			    'parameters' => '01:00',
+			    'comment' => 'Reset once a day at specified time the cash level of POS terminals to its configured value',
+			    'frequency' => 1,
+			    'unitfrequency' => 3600,
+			    'status' => 1,
+			    'test' => 'isModEnabled("prcaisse")',
+			    'priority' => 50,
+			),
 		);
 		/* END MODULEBUILDER CRON */
 		// Example: $this->cronjobs=array(

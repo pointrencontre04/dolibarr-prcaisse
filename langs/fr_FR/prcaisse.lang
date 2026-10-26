@@ -105,3 +105,22 @@ SalesThisMonth = Ventes du mois
 # Widget Sales last month
 #
 SalesLastMonth = Ventes du mois précédent
+
+#
+# Cron Reset POS cash
+#
+PRCaisseCashResetTerminal = Remise à niveau du fond de caisse - %s
+PRCAISSE_CASH_RESET_ENABLED = Activer la remise à niveau
+PRCAISSE_CASH_RESET_ENABLEDTooltip = Si activé, le fond de caisse de ce terminal est remis à niveau par la tâche planifiée « Reset POS cash ».
+PRCAISSE_CASH_RESET_AMOUNT = Fond de caisse par défaut
+PRCAISSE_CASH_RESET_AMOUNTTooltip = Montant par défaut du fond de caisse, réinitialisé par la tâche planifiée « Reset POS cash ».
+PRCAISSE_CASH_DEPOSIT_ACCOUNT = Compte de dépôt
+PRCAISSE_CASH_DEPOSIT_ACCOUNTTooltip = Compte vers lequel l'excédent du compte espèces du terminal est viré, ou depuis lequel le fond de caisse est complété.
+PRCaisseCashResetLabel = Remise à niveau du fond de caisse - %s
+PRCaisseCashResetNotYet = Remise à niveau prévue à %s, rien à faire pour le moment
+PRCaisseCashResetAlreadyDone = Remise à niveau déjà effectuée le %s
+PRCaisseCashResetSetupNotComplete = %s : compte espèces TakePOS ou compte de destination non configuré
+PRCaisseCashResetCurrencyDiffers = %s : le compte espèces et le compte de destination n'ont pas la même devise
+PRCaisseCashResetNDone = %s fond(s) de caisse remis à niveau
+PRCaisseCashResetNErrors = %s erreur(s) lors de la remise à niveau des fonds de caisse
+PRCaisseCashResetNothingToDo = Aucun fond de caisse à remettre à niveau

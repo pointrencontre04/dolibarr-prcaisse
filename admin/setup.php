@@ -110,6 +110,33 @@ if (!$user->admin) {
 
 // Enter here all parameters in your setup page
 
+// Reset of cash fund of TakePOS terminals (scheduled job "Reset POS cash")
+$langs->load("cashdesk");
+
+$nbterminals = max(1, getDolGlobalInt('TAKEPOS_NUM_TERMINALS'));
+for ($terminal = 1; $terminal <= $nbterminals; $terminal++) {
+	$terminalname = getDolGlobalString('TAKEPOS_TERMINAL_NAME_'.$terminal, $langs->trans("TerminalName", $terminal));
+
+	$item = $formSetup->newItem('PRCaisseCashResetTerminal'.$terminal)->setAsTitle();
+	$item->nameText = $langs->trans('PRCaisseCashResetTerminal', $terminalname);
+
+	$item = $formSetup->newItem('PRCAISSE_CASH_RESET_ENABLED'.$terminal)->setAsYesNo();
+	$item->nameText = $langs->trans('PRCAISSE_CASH_RESET_ENABLED');
+	$item->helpText = $langs->transnoentities('PRCAISSE_CASH_RESET_ENABLEDTooltip');
+
+	$item = $formSetup->newItem('PRCAISSE_CASH_RESET_AMOUNT'.$terminal);
+	$item->nameText = $langs->trans('PRCAISSE_CASH_RESET_AMOUNT');
+	$item->helpText = $langs->transnoentities('PRCAISSE_CASH_RESET_AMOUNTTooltip');
+	$item->cssClass = 'width100';
+
+	$item = $formSetup->newItem('PRCAISSE_CASH_DEPOSIT_ACCOUNT'.$terminal)->setAsSelectBankAccount();
+	$item->nameText = $langs->trans('PRCAISSE_CASH_DEPOSIT_ACCOUNT');
+	$item->helpText = $langs->transnoentities('PRCAISSE_CASH_DEPOSIT_ACCOUNTTooltip');
+}
+
+/*
+$formSetup->newItem('NewSection')->setAsTitle();
+
 // Setup conf for selection of an URL
 $item = $formSetup->newItem('PRCAISSE_MYPARAM1');
 $item->fieldAttr['placeholder'] = (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . $_SERVER['HTTP_HOST'];
@@ -184,9 +211,8 @@ $item->fieldOverride = "Value forced, can't be modified";
 $item->cssClass = 'minwidth500';
 
 //$item = $formSetup->newItem('PRCAISSE_MYPARAM13')->setAsDate();	// Not yet implemented
-
+*/
 // End of definition of parameters
-
 
 $setupnotempty += count($formSetup->items);
 
