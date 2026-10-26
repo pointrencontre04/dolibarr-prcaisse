@@ -1007,20 +1007,22 @@ class ActionsPRCaisse extends CommonHookActions
 			$pos = (int) $_SESSION['takeposterminal'];
 			$place = (GETPOST('place', 'aZ09') ? GETPOST('place', 'aZ09') : '0'); // $place is id of table for Bar or Restaurant
 
-			// TODO: make this a configuration switch
-			// with option to set the number of suggested customers
-			$max_suggestions = 24;
+			// Number of suggested customers
+			$max_suggestions = getDolGlobalString('PRCAISSE_RECURRING_CUSTOMERS_MAX'.$pos);
+			$max_suggestions = ($max_suggestions === '' ? 6 : max(0, (int) $max_suggestions));
 
 			$customers = [];
 
-			$sql = "SELECT DISTINCT s.nom,f.fk_soc FROM ".MAIN_DB_PREFIX."facture f
-			  JOIN ".MAIN_DB_PREFIX."societe s ON f.fk_soc = s.rowid
-			  WHERE module_source='takepos' AND pos_source='".$pos."' AND fk_statut <> 0 AND DAYOFWEEK(datef) = DAYOFWEEK(NOW())
-			  ORDER BY datef DESC LIMIT " . $max_suggestions;
-			$resql = $db->query($sql);
-			if ($resql) {
-				while ($obj = $db->fetch_array($resql)) {
-					$customers[] = $obj;
+			if ($max_suggestions > 0) {
+				$sql = "SELECT DISTINCT s.nom,f.fk_soc FROM ".MAIN_DB_PREFIX."facture f
+				  JOIN ".MAIN_DB_PREFIX."societe s ON f.fk_soc = s.rowid
+				  WHERE module_source='takepos' AND pos_source='".$pos."' AND fk_statut <> 0 AND DAYOFWEEK(datef) = DAYOFWEEK(NOW())
+				  ORDER BY datef DESC LIMIT " . $max_suggestions;
+				$resql = $db->query($sql);
+				if ($resql) {
+					while ($obj = $db->fetch_array($resql)) {
+						$customers[] = $obj;
+					}
 				}
 			}
 

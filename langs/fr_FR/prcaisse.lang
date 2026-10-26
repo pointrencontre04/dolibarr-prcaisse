@@ -107,14 +107,21 @@ SalesThisMonth = Ventes du mois
 SalesLastMonth = Ventes du mois précédent
 
 #
+# Setup per terminal
+#
+PRCaisseSetupRecurringCustomers = Clients récurrents
+PRCAISSE_RECURRING_CUSTOMERS_MAX = Nombre de clients récurrents
+PRCAISSE_RECURRING_CUSTOMERS_MAXTooltip = Nombre maximum de clients proposés dans la liste « Derniers clients sur la caisse » (clients ayant une facture sur ce terminal le même jour de la semaine). Vide = 6, 0 = liste désactivée.
+
+#
 # Cron Reset POS cash
 #
-PRCaisseCashResetTerminal = Remise à niveau du fond de caisse - %s
-PRCAISSE_CASH_RESET_ENABLED = Activer la remise à niveau
+PRCaisseSetupCashReset = Remise à niveau du fond de caisse
+PRCAISSE_CASH_RESET_ENABLED = Activer la remise à niveau du fond de caisse
 PRCAISSE_CASH_RESET_ENABLEDTooltip = Si activé, le fond de caisse de ce terminal est remis à niveau par la tâche planifiée « Reset POS cash ».
 PRCAISSE_CASH_RESET_AMOUNT = Fond de caisse par défaut
 PRCAISSE_CASH_RESET_AMOUNTTooltip = Montant par défaut du fond de caisse, réinitialisé par la tâche planifiée « Reset POS cash ».
-PRCAISSE_CASH_DEPOSIT_ACCOUNT = Compte de dépôt
+PRCAISSE_CASH_DEPOSIT_ACCOUNT = Compte de dépôt du fond de caisse pour la remise à niveau
 PRCAISSE_CASH_DEPOSIT_ACCOUNTTooltip = Compte vers lequel l'excédent du compte espèces du terminal est viré, ou depuis lequel le fond de caisse est complété.
 PRCaisseCashResetLabel = Remise à niveau du fond de caisse - %s
 PRCaisseCashResetNotYet = Remise à niveau prévue à %s, rien à faire pour le moment

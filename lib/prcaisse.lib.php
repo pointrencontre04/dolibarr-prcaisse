@@ -34,7 +34,7 @@ function prcaisseAdminPrepareHead()
 	// $extrafields = new ExtraFields($db);
 	// $extrafields->fetch_name_optionals_label('myobject');
 
-	$langs->load("prcaisse@prcaisse");
+	$langs->loadLangs(array("cashdesk", "prcaisse@prcaisse"));
 
 	$h = 0;
 	$head = array();
@@ -43,6 +43,15 @@ function prcaisseAdminPrepareHead()
 	$head[$h][1] = $langs->trans("Settings");
 	$head[$h][2] = 'settings';
 	$h++;
+
+	// One tab per TakePOS terminal
+	$numterminals = max(1, getDolGlobalInt('TAKEPOS_NUM_TERMINALS', 1));
+	for ($i = 1; $i <= $numterminals; $i++) {
+		$head[$h][0] = dol_buildpath("/prcaisse/admin/terminal.php", 1).'?terminal='.$i;
+		$head[$h][1] = getDolGlobalString('TAKEPOS_TERMINAL_NAME_'.$i, $langs->trans("TerminalName", $i));
+		$head[$h][2] = 'terminal'.$i;
+		$h++;
+	}
 
 	/*
 	$head[$h][0] = dol_buildpath("/prcaisse/admin/myobject_extrafields.php", 1);

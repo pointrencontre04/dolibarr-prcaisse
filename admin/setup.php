@@ -109,30 +109,7 @@ if (!$user->admin) {
 
 
 // Enter here all parameters in your setup page
-
-// Reset of cash fund of TakePOS terminals (scheduled job "Reset POS cash")
-$langs->load("cashdesk");
-
-$nbterminals = max(1, getDolGlobalInt('TAKEPOS_NUM_TERMINALS'));
-for ($terminal = 1; $terminal <= $nbterminals; $terminal++) {
-	$terminalname = getDolGlobalString('TAKEPOS_TERMINAL_NAME_'.$terminal, $langs->trans("TerminalName", $terminal));
-
-	$item = $formSetup->newItem('PRCaisseCashResetTerminal'.$terminal)->setAsTitle();
-	$item->nameText = $langs->trans('PRCaisseCashResetTerminal', $terminalname);
-
-	$item = $formSetup->newItem('PRCAISSE_CASH_RESET_ENABLED'.$terminal)->setAsYesNo();
-	$item->nameText = $langs->trans('PRCAISSE_CASH_RESET_ENABLED');
-	$item->helpText = $langs->transnoentities('PRCAISSE_CASH_RESET_ENABLEDTooltip');
-
-	$item = $formSetup->newItem('PRCAISSE_CASH_RESET_AMOUNT'.$terminal);
-	$item->nameText = $langs->trans('PRCAISSE_CASH_RESET_AMOUNT');
-	$item->helpText = $langs->transnoentities('PRCAISSE_CASH_RESET_AMOUNTTooltip');
-	$item->cssClass = 'width100';
-
-	$item = $formSetup->newItem('PRCAISSE_CASH_DEPOSIT_ACCOUNT'.$terminal)->setAsSelectBankAccount();
-	$item->nameText = $langs->trans('PRCAISSE_CASH_DEPOSIT_ACCOUNT');
-	$item->helpText = $langs->transnoentities('PRCAISSE_CASH_DEPOSIT_ACCOUNTTooltip');
-}
+// Settings per TakePOS terminal are in terminal.php
 
 /*
 $formSetup->newItem('NewSection')->setAsTitle();
