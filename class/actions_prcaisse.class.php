@@ -1009,7 +1009,7 @@ class ActionsPRCaisse extends CommonHookActions
 
 			// Number of suggested customers
 			$max_suggestions = getDolGlobalString('PRCAISSE_RECURRING_CUSTOMERS_MAX'.$pos);
-			$max_suggestions = ($max_suggestions === '' ? 5 : max(0, (int) $max_suggestions));
+			$max_suggestions = ($max_suggestions === '' ? 6 : max(0, (int) $max_suggestions));
 
 			$customers = [];
 
@@ -1017,19 +1017,17 @@ class ActionsPRCaisse extends CommonHookActions
 				// Sort by last visit (datef), name (s.nom) or first name (label built below)
 				$sortfield = getDolGlobalString('PRCAISSE_RECURRING_CUSTOMERS_SORT'.$pos, 'firstname');
 				$sortorder = (getDolGlobalString('PRCAISSE_RECURRING_CUSTOMERS_ORDER'.$pos) == 'desc' ? 'DESC' : 'ASC');
-				// Customers are grouped, so sort by date of their last invoice
 				if ($sortfield == 'datef') {
-					$sqlorder = "MAX(f.datef) ".$sortorder;
+					$sqlorder = "f.datef ".$sortorder;
 				} elseif ($sortfield == 'lastname') {
 					$sqlorder = "s.nom ".$sortorder;
 				} else {
-					$sqlorder = "MAX(f.datef) DESC"; // Sorting by first name needs a regex post processing, set datef as a fallback here
+					$sqlorder = "f.datef DESC"; // Sorting by first name needs a regex post processing, set datef as a fallback here
 				}
 
-				$sql = "SELECT s.nom,f.fk_soc FROM ".MAIN_DB_PREFIX."facture f
+				$sql = "SELECT DISTINCT s.nom,f.fk_soc FROM ".MAIN_DB_PREFIX."facture f
 				  JOIN ".MAIN_DB_PREFIX."societe s ON f.fk_soc = s.rowid
 				  WHERE module_source='takepos' AND pos_source='".$pos."' AND fk_statut <> 0 AND DAYOFWEEK(datef) = DAYOFWEEK(NOW())
-				  GROUP BY s.nom,f.fk_soc
 				  ORDER BY ".$sqlorder." LIMIT " . $max_suggestions;
 				$resql = $db->query($sql);
 				if ($resql) {
