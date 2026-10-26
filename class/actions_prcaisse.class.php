@@ -1014,10 +1014,21 @@ class ActionsPRCaisse extends CommonHookActions
 			$customers = [];
 
 			if ($max_suggestions > 0) {
+				// Sort by last visit (datef), name (s.nom) or first name (label built below)
+				$sortfield = getDolGlobalString('PRCAISSE_RECURRING_CUSTOMERS_SORT'.$pos, 'firstname');
+				$sortorder = (getDolGlobalString('PRCAISSE_RECURRING_CUSTOMERS_ORDER'.$pos) == 'desc' ? 'DESC' : 'ASC');
+				if ($sortfield == 'datef') {
+					$sqlorder = "f.datef ".$sortorder;
+				} elseif ($sortfield == 'lastname') {
+					$sqlorder = "s.nom ".$sortorder;
+				} else {
+					$sqlorder = "f.datef DESC"; // Sorting by first name needs a regex post processing, set datef as a fallback here
+				}
+
 				$sql = "SELECT DISTINCT s.nom,f.fk_soc FROM ".MAIN_DB_PREFIX."facture f
 				  JOIN ".MAIN_DB_PREFIX."societe s ON f.fk_soc = s.rowid
 				  WHERE module_source='takepos' AND pos_source='".$pos."' AND fk_statut <> 0 AND DAYOFWEEK(datef) = DAYOFWEEK(NOW())
-				  ORDER BY datef DESC LIMIT " . $max_suggestions;
+				  ORDER BY ".$sqlorder." LIMIT " . $max_suggestions;
 				$resql = $db->query($sql);
 				if ($resql) {
 					while ($obj = $db->fetch_array($resql)) {
@@ -1031,16 +1042,27 @@ class ActionsPRCaisse extends CommonHookActions
 				$resprints .= '<h4>Derniers clients sur la caisse</h4>';
 				$resprints .= '<ul>';
 				$list = [];
-				foreach ($customers as $c) {
-					$res = preg_match('/^([^a-z]+) +([A-Z].+)$/', $c['nom'], $matches);
-					if ($res) {
-						$label = $matches[2] . ' ' . $matches[1]; // Invert First and Last names
-					} else {
-						$label = $c['nom'];
+				if ($sortfield == 'firstname') { // Sort by first aname, processing needs an intelligent guess on name format
+					foreach ($customers as $c) {
+						$res = preg_match('/^([^a-z]+) +([A-Z].+)$/', $c['nom'], $matches);
+						if ($res) {
+							$label = $matches[2] . ' ' . $matches[1]; // Invert First and Last names
+						} else {
+							$label = $c['nom'];
+						}
+						$list[$label] = (int) $c['fk_soc'];
 					}
-					$list[$label] = (int) $c['fk_soc'];
+					if ($sortorder == 'DESC') {
+						krsort($list);
+					} else {
+						ksort($list);
+					}
+				} else {
+					// Already sorted by the SQL request
+					foreach ($customers as $c) {
+						$list[$c['nom']] = (int) $c['fk_soc'];
+					}
 				}
-				ksort($list);
 				foreach ($list as $label => $id) {
 					$resprints .= '<li class="prcaisse_customer_selection oddeven" onclick="location.href=\'list.php?action=change&contextpage=poslist&idcustomer='.$id.'&place='.$place.'\'">'.htmlspecialchars($label).'</li>';
 				}

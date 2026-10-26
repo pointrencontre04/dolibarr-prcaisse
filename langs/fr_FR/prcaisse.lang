@@ -112,6 +112,13 @@ SalesLastMonth = Ventes du mois précédent
 PRCaisseSetupRecurringCustomers = Clients récurrents
 PRCAISSE_RECURRING_CUSTOMERS_MAX = Nombre de clients récurrents
 PRCAISSE_RECURRING_CUSTOMERS_MAXTooltip = Nombre maximum de clients proposés dans la liste « Derniers clients sur la caisse » (clients ayant une facture sur ce terminal le même jour de la semaine). Vide = 6, 0 = liste désactivée.
+PRCAISSE_RECURRING_CUSTOMERS_SORT = Tri des clients récurrents
+PRCAISSE_RECURRING_CUSTOMERS_ORDER = Ordre de tri des clients récurrents
+PRCaisseSortByFirstName = Par prénom
+PRCaisseSortByName = Par nom
+PRCaisseSortByLastVisit = Par dernier passage sur la caisse
+PRCaisseSortAsc = Croissant
+PRCaisseSortDesc = Décroissant
 
 #
 # Cron Reset POS cash

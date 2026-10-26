@@ -98,6 +98,19 @@ $item->helpText = $langs->transnoentities('PRCAISSE_RECURRING_CUSTOMERS_MAXToolt
 $item->fieldAttr['placeholder'] = '6';
 $item->cssClass = 'width100';
 
+$item = $formSetup->newItem('PRCAISSE_RECURRING_CUSTOMERS_SORT'.$terminal)->setAsSelect(array(
+	'firstname' => $langs->trans('PRCaisseSortByFirstName'),
+	'lastname' => $langs->trans('PRCaisseSortByName'),
+	'datef' => $langs->trans('PRCaisseSortByLastVisit'),
+));
+$item->nameText = $langs->trans('PRCAISSE_RECURRING_CUSTOMERS_SORT');
+
+$item = $formSetup->newItem('PRCAISSE_RECURRING_CUSTOMERS_ORDER'.$terminal)->setAsSelect(array(
+	'asc' => $langs->trans('PRCaisseSortAsc'),
+	'desc' => $langs->trans('PRCaisseSortDesc'),
+));
+$item->nameText = $langs->trans('PRCAISSE_RECURRING_CUSTOMERS_ORDER');
+
 // Reset of cash fund (scheduled job "Reset POS cash")
 $formSetup->newItem('PRCaisseSetupCashReset')->setAsTitle();
 
