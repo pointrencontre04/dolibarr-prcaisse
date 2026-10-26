@@ -109,7 +109,7 @@ SalesLastMonth = Ventes du mois précédent
 #
 # Setup per terminal
 #
-PRCaisseSetupRecurringCustomers = Clients récurrents
+PRCaisseSetupRecurringCustomers = Clients récurrents par jour de la semaine
 PRCAISSE_RECURRING_CUSTOMERS_MAX = Nombre de clients récurrents
 PRCAISSE_RECURRING_CUSTOMERS_MAXTooltip = Nombre maximum de clients proposés dans la liste « Derniers clients sur la caisse » (clients ayant une facture sur ce terminal le même jour de la semaine). Vide = 6, 0 = liste désactivée.
 PRCAISSE_RECURRING_CUSTOMERS_SORT = Tri des clients récurrents
