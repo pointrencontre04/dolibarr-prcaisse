@@ -14,6 +14,21 @@ ModulePRCaisseDesc = Modification de TakePOS pour les besoins spécifiques de l'
 #
 PRCaisseErrorPriceLineEmpty = Une des lignes de produit n'a pas de prix associé !
 PRCaisseErrorCannotValidate = Impossible de valider le ticket
+PRCaisseAdvancedPayments = Paiements / Opérations avancées
+PRCaisseConvertToDeposit = Convertir en acompte
+PRCaissePaymentsActionButtons = Opérations avancées
+PRCaisseChangePaymentMode = Changer le mode de paiement
+PRCaisseChangePaymentModeComingSoon = Le changement du mode de paiement sera bientôt disponible.
+PRCaisseDeletePayment = Supprimer le paiement
+PRCaisseDeletePaymentComingSoon = La suppression du paiement sera bientôt disponible.
+PRCaisseAppliedDeposits = Acomptes appliqués
+PRCaissePayments = Paiements
+PRCaisseNoPayment = Aucun paiement sur ce ticket
+PRCaisseLabel = Libellé
+PRCaisseDate = Date
+PRCaisseAmount = Montant réglé
+PRCaisseTerminal = Terminal
+PRCaissePaymentMode = Mode de paiement
 
 #
 # Mass Actions

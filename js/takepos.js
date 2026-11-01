@@ -1,5 +1,9 @@
 jQuery(document).ready(function() {
     if (jQuery('body.bodytakepos').length > 0) {
+
+        // Convert CSS marker to CSS class for ActionButton
+        jQuery('.prcaisse_action_payment').closest('button.actionbutton').addClass('prcaisse_btn_payment');
+
         var currentAction = '';
         jQuery(document).on('keypress', function (e) {
             console.log(e.originalEvent.charCode);

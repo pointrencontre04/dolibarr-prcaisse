@@ -1,0 +1,48 @@
+.prcaisse_advanced_payments {
+    padding: 15px;
+    font-size: 16px;
+}
+
+.prcaisse_advanced_payments h3 {
+    margin: 20px 0 10px;
+}
+
+.prcaisse_advanced_payments .actions_band {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.prcaisse_advanced_payments .actions_band:empty {
+    display: none;
+}
+
+.prcaisse_advanced_payments button.action {
+    min-height: 50px;
+    padding: 10px 20px;
+    background-color: #ccc;
+    color: #000;
+    border: 2px solid #eee;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.prcaisse_advanced_payments button.action_change_mode {
+    background-color: #55f;
+    color: #fff;
+}
+
+.prcaisse_advanced_payments button.action_delete {
+    background-color: #da0000;
+    color: #fff;
+}
+
+.prcaisse_advanced_payments button.action_delete .fa-trash,
+.prcaisse_advanced_payments button.action_delete .fa-trash:hover:before {
+    color: #fff;
+}
+
+.prcaisse_advanced_payments table.noborder {
+    width: auto;
+}

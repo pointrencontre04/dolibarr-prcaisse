@@ -264,7 +264,11 @@
 			background-color: #ceb8ff !important;
 		}
 		*/
-		&#action6 {
+
+		.prcaisse_action_payment {
+			display: none;
+		}
+		&.prcaisse_btn_payment {
 			background-color: #555 !important;
 			color: #fff !important;
 		}
@@ -293,7 +297,7 @@
 		color: #000 !important;
 	}
 
-	.fa-trash {
+	.fa-trash, .fa-trash:hover:before {
 		color: #fff !important;
 	}
 

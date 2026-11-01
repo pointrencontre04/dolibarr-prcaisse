@@ -1,0 +1,51 @@
+/**
+ * Stylesheet for the popup of advanced payments in TakePOS
+ */
+
+.prcaisse_advanced_payments {
+	padding: 15px;
+	font-size: 16px;
+
+	h3 {
+		margin: 20px 0 10px;
+	}
+
+	.actions_band {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+
+		&:empty {
+			display: none;
+		}
+	}
+
+	button.action {
+		min-height: 50px;
+		padding: 10px 20px;
+		background-color: #ccc;
+		color: #000;
+		border: 2px solid #eee;
+		border-radius: 3px;
+		font-size: 16px;
+		cursor: pointer;
+	}
+
+	button.action_change_mode {
+		background-color: #55f;
+		color: #fff;
+	}
+
+	button.action_delete {
+		background-color: #da0000;
+		color: #fff;
+
+		.fa-trash, .fa-trash:hover:before {
+			color: #fff;
+		}
+	}
+
+	table.noborder {
+		width: auto;
+	}
+}

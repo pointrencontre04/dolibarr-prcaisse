@@ -83,3 +83,49 @@ function prcaisseAdminPrepareHead()
 
 	return $head;
 }
+
+/**
+ * Check if the payment mode of a payment can be changed: the current terminal
+ * made the payment, the payment was made today and the terminal is not closed.
+ *
+ * The terminal of a payment is the one of its invoice, as in the cash control report.
+ *
+ * @param	DoliDB	$db			Database handler
+ * @param	object	$payment	Payment with properties module_source, pos_source and datep (database format)
+ * @return	bool				True if payment mode can be changed
+ */
+function prcaisseIsPaymentEditable($db, $payment)
+{
+	global $conf;
+
+	require_once DOL_DOCUMENT_ROOT.'/compta/cashcontrol/class/cashcontrol.class.php';
+
+	$terminal = empty($_SESSION['takeposterminal']) ? '' : (string) $_SESSION['takeposterminal'];
+	if ($terminal === '' || $payment->module_source != 'takepos' || (string) $payment->pos_source !== $terminal) {
+		return false;
+	}
+
+	$now = dol_now();
+	if (dol_print_date($db->jdate($payment->datep), '%Y%m%d') != dol_print_date($now, '%Y%m%d')) {
+		return false;
+	}
+
+	// A month_close or day_close left empty means the whole period is closed
+	$month = (int) dol_print_date($now, '%m');
+	$day = (int) dol_print_date($now, '%d');
+	$sql = "SELECT COUNT(rowid) as nb FROM ".MAIN_DB_PREFIX."pos_cash_fence";
+	$sql .= " WHERE entity = ".((int) $conf->entity);
+	$sql .= " AND posnumber = '".$db->escape($terminal)."'";
+	$sql .= " AND status = ".((int) CashControl::STATUS_VALIDATED);
+	$sql .= " AND year_close = ".((int) dol_print_date($now, '%Y'));
+	$sql .= " AND (month_close = ".$month." OR month_close = 0 OR month_close IS NULL)";
+	$sql .= " AND (day_close = ".$day." OR day_close = 0 OR day_close IS NULL)";
+
+	$resql = $db->query($sql);
+	if (!$resql) {
+		return false;
+	}
+	$obj = $db->fetch_object($resql);
+
+	return ($obj->nb == 0);
+}

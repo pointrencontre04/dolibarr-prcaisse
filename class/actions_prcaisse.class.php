@@ -230,24 +230,43 @@ class ActionsPRCaisse extends CommonHookActions
 	 */
 	public function ActionButtons(&$parameters, &$object, &$action, $hookmanager)
 	{
+		global $langs;
+
 		if (!in_array('takeposfrontend', $hookmanager->contextarray)) {
 			return 0;
 		}
 
-		// Replace the Split button with a button to
-		// convert the invoice to a TYPE_DEPOSIT
+		$langs->load('prcaisse@prcaisse');
 
 		$results = $parameters['menus'];
 
+		// Add the Advanced Payments button after the discount button,
+		// or before the payment button if there is no discount button
+		$advanced_payments_position = null;
+
 		foreach ($results as $key => $value) {
-			if ($value['action'] == 'Split();') {
-				$results[$key]['title'] = '<span class="fa fa-money-check-alt paddingrightonly"></span><div class="trunc">Convertir en acompte</div>';
-				$results[$key]['action'] = 'PRCaisseSwitchInvoiceType();';
+			if ($value['action'] == 'Reduction();') {
+				$advanced_payments_position = $key + 1;
 			}
 			if ($value['action'] == 'CloseBill();') {
+				// TakePOS has no class key for its buttons: the marker
+				// lets js/takepos.js add a class to the payment button
+				$results[$key]['title'] = '<span class="prcaisse_action_payment"></span>'.$value['title'];
 				$results[$key]['action'] = 'PRCaisseCloseBill();';
+				if ($advanced_payments_position === null) {
+					$advanced_payments_position = $key;
+				}
 			}
 		}
+
+		if ($advanced_payments_position === null) {
+			$advanced_payments_position = count($results);
+		}
+
+		array_splice($results, $advanced_payments_position, 0, [[
+			'title' => '<span class="fa fa-money-check-alt paddingrightonly"></span><div class="trunc">'.$langs->trans('PRCaisseAdvancedPayments').'</div>',
+			'action' => 'PRCaisseAdvancedPayments();',
+		]]);
 
 		$this->results[] = $results;
 

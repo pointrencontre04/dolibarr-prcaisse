@@ -361,7 +361,10 @@
     flex-direction: row;
   }
 }
-.bodytakepos button.actionbutton#action6 {
+.bodytakepos button.actionbutton .prcaisse_action_payment {
+  display: none;
+}
+.bodytakepos button.actionbutton.prcaisse_btn_payment {
   background-color: #555 !important;
   color: #fff !important;
 }
@@ -384,7 +387,7 @@
   background-color: #ddd !important;
   color: #000 !important;
 }
-.bodytakepos .fa-trash {
+.bodytakepos .fa-trash, .bodytakepos .fa-trash:hover:before {
   color: #fff !important;
 }
 .bodytakepos .div4 {

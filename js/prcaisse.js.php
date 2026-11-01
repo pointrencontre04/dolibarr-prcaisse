@@ -123,9 +123,17 @@ var PRCaisseSwitchInvoiceType = function() {
 		method: 'POST',
 		data: params,
 		success: function(data) {
+			$.colorbox.close();
 			Refresh();
 		},
 	});
+};
+
+var PRCaisseAdvancedPayments = function() {
+	const page_url = "<?php echo dol_buildpath('/prcaisse/prcaisse_advanced_payments.php', 1); ?>";
+    const invoiceid = $("#invoiceid").val();
+    console.log("Open popup of advanced payments on invoiceid="+invoiceid);
+	$.colorbox({href:page_url+"?place="+place+"&invoiceid="+invoiceid, width:"80%", height:"90%", transition:"none", iframe:"true", title:""});
 };
 
 var PRCaisseCloseBill = function() {
