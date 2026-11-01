@@ -1018,7 +1018,7 @@ class ActionsPRCaisse extends CommonHookActions
 
 		if ($parameters['currentcontext'] == 'thirdpartylist' && $contextpage == 'poslist') {
 
-			$css = file_get_contents(__DIR__ . '/../css/customer_list.css');
+			$css = file_get_contents(__DIR__ . '/../css/customer_list_recurring.css');
 			$resprints = '<style type="text/css">' . $css . '</style>';
 
 			// Retrieve previous invoices on this POS on the same weekday
