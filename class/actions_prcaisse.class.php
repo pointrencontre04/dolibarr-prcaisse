@@ -322,7 +322,8 @@ class ActionsPRCaisse extends CommonHookActions
 			if ($bonalim_list) {
 				$bonsalim_total = 0;
 				foreach ($bonalim_list as $b) {
-					$bonsalim_total += $b->amount_left;
+					// Round each amount: a floating point residue must not show the button
+					$bonsalim_total += (float) price2num($b->amount_left, 'MT');
 				}
 			} else {
 				$bonsalim_total = 0;
@@ -412,7 +413,13 @@ class ActionsPRCaisse extends CommonHookActions
 						amountpayed = <?php echo $invoice->total_ttc; ?>;
 					}
 					console.log("We click on the payment mode to pay amount = "+amountpayed);
-					parent.$("#poslines").load("invoice.php?place=<?php echo $place; ?>&action=valid&token=<?php echo newToken(); ?>&pay=<?php echo modPRBonAlim::BONALIM_PAYMENT_CODE; ?>&amount="+amountpayed+"&excess="+excess+"&invoiceid="+invoiceid+"&accountid="+accountid, function() {
+					parent.$("#poslines").load("invoice.php?place=<?php echo $place; ?>&action=valid&token=<?php echo newToken(); ?>&pay=<?php echo modPRBonAlim::BONALIM_PAYMENT_CODE; ?>&amount="+amountpayed+"&excess="+excess+"&invoiceid="+invoiceid+"&accountid="+accountid, function(response, status) {
+						// On failure, do not call Refresh(): it would wipe the error message
+						if (status == "error" || parent.$("#poslines").find("div.error").length > 0) {
+							console.error("BonAlim payment failed: status="+status+" message="+parent.$("#poslines").find("div.error").text());
+							parent.$.colorbox.close();
+							return;
+						}
 						if (amountpayed > <?php echo $remaintopay; ?> || amountpayed == <?php echo $remaintopay; ?> || amountpayed==0 ) {
 							console.log("Close popup");
 							parent.$.colorbox.close();
@@ -630,6 +637,7 @@ class ActionsPRCaisse extends CommonHookActions
 					if ($amountofpayment <= 0 || $amountofpayment > $remaintopay) {
 						$amountofpayment = $remaintopay;
 					}
+					$amountofpayment = (float) price2num($amountofpayment, 'MT');
 
 					// Consume BonAlim that are validated, older first
 					// (do not check date_start and date_end for BonAlim validity)
@@ -654,7 +662,7 @@ class ActionsPRCaisse extends CommonHookActions
 								$res = $b->consume($amountofpayment, $invoice->id, $user);
 								if ($res < 0) {
 									$error++;
-									dol_htmloutput_errors($langs->trans('Error').' '.$$b->error, $$b->errors, 1);
+									dol_htmloutput_errors($langs->trans('Error').' '.$b->error, $b->errors, 1);
 								}
 
 								// Save Payment
@@ -772,6 +780,11 @@ class ActionsPRCaisse extends CommonHookActions
 				$db->commit();
 			} else {
 				$db->rollback();
+
+				// Reload the invoice and leave the "valid" action, so that TakePOS
+				// displays the unpaid ticket and not a sale that has been rolled back
+				$invoice->fetch($invoice->id);
+				$action = '';
 			}
 
 			return 1;
@@ -1018,7 +1031,7 @@ class ActionsPRCaisse extends CommonHookActions
 
 		if ($parameters['currentcontext'] == 'thirdpartylist' && $contextpage == 'poslist') {
 
-			$css = file_get_contents(__DIR__ . '/../css/customer_list.css');
+			$css = file_get_contents(__DIR__ . '/../css/customer_list_recurring.css');
 			$resprints = '<style type="text/css">' . $css . '</style>';
 
 			// Retrieve previous invoices on this POS on the same weekday
